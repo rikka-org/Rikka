@@ -1,5 +1,5 @@
 import { existsSync } from "fs";
-import { mkdir, unlink, writeFile } from "fs/promises";
+import { mkdir, rmdir, unlink, writeFile } from "fs/promises";
 import { join } from "path";
 import { GetDiscordInstallPath } from "../Utils/AppFinder";
 
@@ -28,7 +28,8 @@ export async function UninjectRikka() {
     if (!discordInstall) return;
 
     // Delete the rikka.js file
-    unlink(join(discordInstall, "Rikka.js"))
+    rmdir(join(discordInstall, "Rikka.js"))
+        .catch(e => { throw new Error(`Failed to delete Rikka.js! ${e}`) });
 
     console.log("Rikka uninjected successfully!");
 }
