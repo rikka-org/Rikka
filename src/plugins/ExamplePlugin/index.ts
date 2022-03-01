@@ -14,9 +14,4 @@ export default class ExamplePlugin extends RikkaPlugin {
     public override discordReady(): void {
         console.log("Put your init code here!");
     }
-
-    public override unload(): void {
-        super.unload();
-        console.log("Put your unloading code here!");
-    }
 }

@@ -4,8 +4,8 @@
   "description": "Rikka is a fast, free as in freedom Discord client mod loader.",
   "main": "out/index.js",
   "scripts": {
-    "install": "node out/Installer/installer.js --no-exit-codes",
-    "uninstall": "node out/Installer/uninstall.js --no-exit-codes",
+    "installrikka": "node out/Installer/installer.js --no-exit-codes",
+    "uninstallrikka": "node out/Installer/uninstall.js --no-exit-codes",
     "build": "tsc -p tsconfig.json",
     "watch": "tsc -w -p tsconfig.json",
     "test": "node out/index.js"
@@ -22,6 +22,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "electron": "^16.0.6"
+    "electron": "^16.0.6",
+    "prompt": "^1.2.2"
   }
 }
