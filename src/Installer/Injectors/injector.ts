@@ -1,12 +1,16 @@
-import { existsSync } from "fs";
-import { mkdir, rmdir, unlink, writeFile } from "fs/promises";
-import { join } from "path";
+import { existsSync } from "node:fs";
+import { mkdir, rmdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { GetDiscordInstallPath } from "../Utils/AppFinder";
+import { addFlatpakPerms } from "./flatpakPermAdder";
+import { switchToRoot } from "./su";
 
 const discordInstall = GetDiscordInstallPath();
 
 export async function InjectRikka() {    
     if (!discordInstall) return;
+
+    if(!await switchToRoot()) return;
 
     /** Failsafe for corrupted installs. */
     if(!existsSync(discordInstall)) await mkdir(discordInstall)
@@ -27,8 +31,10 @@ export async function InjectRikka() {
 export async function UninjectRikka() {
     if (!discordInstall) return;
 
+    if(!await switchToRoot()) return;
+
     // Delete the rikka.js file
-    rmdir(join(discordInstall, "Rikka.js"))
+    await rmdir(discordInstall, { recursive: true })
         .catch(e => { throw new Error(`Failed to delete Rikka.js! ${e}`) });
 
     console.log("Rikka uninjected successfully!");

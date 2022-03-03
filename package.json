@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "electron": "^16.0.6",
-    "prompt": "^1.2.2"
+    "prompt": "^1.2.2",
+    "sudo-prompt": "^9.2.1"
   }
 }
