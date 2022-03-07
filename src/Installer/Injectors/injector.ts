@@ -17,7 +17,7 @@ export async function InjectRikka() {
         .catch(e => { throw new Error(`Failed to create directory for Rikka! ${e}`) });
         
     // Write a file to the Discord installation directory that calls a require() on the Rikka module.
-    writeFile(join(discordInstall, "Rikka.js"), `require("${join(__dirname, "..", "..", "Rikka.js")}");`)
+    writeFile(join(discordInstall, "Rikka.js"), `require("${join(__dirname, "..", "..")}");`)
         .catch(e => { throw new Error(`Failed to write Rikka.js! ${e}`) });
     writeFile(join(discordInstall, 'package.json'), JSON.stringify({
         name: 'discord',

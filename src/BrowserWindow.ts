@@ -3,13 +3,18 @@ import { join } from "path";
 import { IPC_Consts } from "./API/Rikka/Constants/IPC_Consts";
 
 export class PatchedWindow extends BrowserWindow {
+    //@ts-ignore
     constructor(options: BrowserWindowConstructorOptions) {
-        super(options);
         console.log("Loading patched window");
 
         let originalPL;
 
-        if (options.webPreferences && options.webPreferences.nodeIntegration) {
+        // Some random Discord dark magic
+        //@ts-ignore
+        if (options.webContents) {
+
+        }
+        else if (options.webPreferences && options.webPreferences.nodeIntegration) {
             options.webPreferences.preload = join(__dirname, "preloadSplash.js");
         } else if (options.webPreferences && options.webPreferences.offscreen) {
             originalPL = options.webPreferences.preload;
@@ -26,8 +31,8 @@ export class PatchedWindow extends BrowserWindow {
         const BWindow = new BrowserWindow(options);
         const ogloadURL = BWindow.loadURL.bind(BWindow);
         Object.defineProperty(BWindow, "loadURL", {
+            get: () => PatchedWindow.loadURL.bind(BWindow, ogloadURL),
             configurable: true,
-            get: () => PatchedWindow.loadURL.bind(BWindow, ogloadURL)
         });
 
         BWindow.on("maximize", () => BWindow.webContents.send(IPC_Consts.IPC_MAXIMIZE));
