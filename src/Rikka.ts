@@ -2,6 +2,7 @@ import { dirname, join } from "path";
 import { LoadPlugins } from "./PluginLoader/Plugins";
 import electron from "electron";
 import Module from "module";
+import { PatchedWindow } from "./BrowserWindow";
 
 console.log("Rikka is starting...");
 
@@ -16,6 +17,20 @@ const discPackage = require(join(discordAsar, "package.json"));
 //@ts-ignore - Completely and utterly wrong
 electron.app.setAppPath(discPackage.name, discordAsar);
 electron.app.name = discPackage.name;
+
+
+const electronExports = new Proxy(electron, {
+    get (target, prop) {
+        switch(prop) {
+            case 'BrowserWindow': return PatchedWindow;
+            //@ts-ignore
+            default: return target[prop];
+        }
+    }
+});
+
+delete require.cache[electronPath]?.exports;
+require.cache[electronPath]!.exports = electronExports;
 
 electron.app.once('ready', () => {
     LoadPlugins();
