@@ -2,7 +2,7 @@ import { join } from "path";
 import { BrowserWindow, BrowserWindowConstructorOptions, LoadURLOptions } from "electron";
 import { IPC_Consts } from "./API/Rikka/Constants/IPC_Consts";
 
-class PatchedWindow extends BrowserWindow {
+export default class PatchedWindow extends BrowserWindow {
     //@ts-ignore
     constructor(options: BrowserWindowConstructorOptions) {
         let originalPL;
@@ -43,5 +43,3 @@ class PatchedWindow extends BrowserWindow {
         return ogLoadUrl(url, opts);
     }
 }
-
-module.exports = PatchedWindow;

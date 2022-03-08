@@ -1,7 +1,7 @@
-const Module = require('module');
+import Module from "module";
 import { dirname, join } from "path";
 import electron from "electron";
-const PatchedWindow = require("./browserWindow");
+import PatchedWindow from "./PatchedWindow";
 
 if(!require.main) throw new Error("Rikka is not running as a module!");
 
@@ -57,5 +57,5 @@ electron.app.setAppPath(discPackage.name, discordAsar);
 electron.app.name = discPackage.name;
 
 console.log("Discord is loading...");
-//@ts-ignore - Also completely and utterly wrong
+//@ts-ignore
 Module._load(join(discordAsar, discPackage.main), null, true);

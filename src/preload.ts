@@ -11,6 +11,8 @@ require('module').Module.globalPaths.push(join(__dirname, 'NodeMod'));
 
 // Initializing Rikka loader
 const rikka = new Rikka();
+//@ts-ignore
+global.rikka = rikka;
 
 const discordPreload = ipcRenderer.sendSync(IPC_Consts.GET_PRELOAD);
 if (discordPreload) {
