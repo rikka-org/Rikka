@@ -3,6 +3,10 @@ import { IPC_Consts } from "../../API/Rikka/Constants/IPC_Consts";
 
 if (!ipcMain) throw new Error("Main process not found");
 
+/** for some reason, after millions of years of evolution,
+* countless updates, and many great minds coming together,
+* we still have to manually fucking define this bullshit
+*/
 function DevToolsOpen(e: Electron.IpcMainInvokeEvent, opts: Electron.OpenDevToolsOptions, window: BrowserWindow) {
     e.sender.openDevTools(opts);
     if (window) {
