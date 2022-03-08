@@ -14,15 +14,7 @@ export default class Rikka {
 
     private async start() {
         this.rikkaStartup();
-        this.testDomMod();
         this.PluginManager.loadPlugins();
-    }
-
-    private testDomMod() {
-        console.log("Testing dom mod");
-        const node = document.createElement("div");
-        node.innerHTML = "Hello world";
-        document.body.appendChild(node);
     }
 
     private async rikkaStartup() {

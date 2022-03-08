@@ -11,6 +11,7 @@ export default class PluginsManager {
     }
 
     private loadPlugin(pluginName: string) {
+        console.log(this.plugins);
         const plugin = this.plugins.get(pluginName);
         if (!plugin) throw new Error(`Failed to load plugin: ${pluginName}`);
         if (plugin.enabled) return;
@@ -43,18 +44,17 @@ export default class PluginsManager {
     mountPlugin(pluginName: string) {
         try {
             const plugin = require(resolve(this.pluginDirectory, pluginName));
+            console.log(`Mounting ${resolve(this.pluginDirectory, pluginName)}`);
             if (!plugin) throw new Error(`Failed to mount plugin: ${pluginName}`);
 
-            this.plugins.set(pluginName, plugin);
+            this.plugins.set(pluginName, new plugin.default());
         } catch (e) {
-            console.error(`Failed to load plugin: ${pluginName}. ${e}`);
+            console.error(`Failed to mount plugin: ${pluginName}. ${e}`);
         }
     }
 
     loadPlugins() {
         readdirSync(this.pluginDirectory).forEach(file => this.mountPlugin(file));
-        ( [...this.plugins.values()] ).forEach(element => {
-            this.loadPlugin(element.name);
-        });
+        this.plugins.forEach((plugin, name) => this.loadPlugin(name));
     }
 }
