@@ -1,20 +1,16 @@
-import { BrowserWindow, BrowserWindowConstructorOptions, LoadURLOptions } from "electron";
 import { join } from "path";
+import { BrowserWindow, BrowserWindowConstructorOptions, LoadURLOptions } from "electron";
 import { IPC_Consts } from "./API/Rikka/Constants/IPC_Consts";
 
-export class PatchedWindow extends BrowserWindow {
+class PatchedWindow extends BrowserWindow {
     //@ts-ignore
     constructor(options: BrowserWindowConstructorOptions) {
-        console.log("Loading patched window");
-
         let originalPL;
-
         // Some random Discord dark magic
         //@ts-ignore
         if (options.webContents) {
-
-        }
-        else if (options.webPreferences && options.webPreferences.nodeIntegration) {
+            // no idea what the hell this is for
+        } else if (options.webPreferences && options.webPreferences.nodeIntegration) {
             options.webPreferences.preload = join(__dirname, "preloadSplash.js");
         } else if (options.webPreferences && options.webPreferences.offscreen) {
             originalPL = options.webPreferences.preload;
@@ -46,4 +42,6 @@ export class PatchedWindow extends BrowserWindow {
     static loadURL(ogLoadUrl: any, url: string, opts: LoadURLOptions) {
         return ogLoadUrl(url, opts);
     }
-} 
+}
+
+module.exports = PatchedWindow;

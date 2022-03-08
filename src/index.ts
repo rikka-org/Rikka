@@ -1,24 +1,42 @@
+const Module = require('module');
 import { dirname, join } from "path";
-import { LoadPlugins } from "./PluginLoader/Plugins";
 import electron from "electron";
-import Module from "module";
-import { PatchedWindow } from "./BrowserWindow";
+const PatchedWindow = require("./browserWindow");
+
+if(!require.main) throw new Error("Rikka is not running as a module!");
+
+const electronPath = require.resolve('electron');
+const discordAsar = join(dirname(require.main!.filename), "..", "app.asar");
+require.main.filename = join(discordAsar, 'app_bootstrap/index.js');
+
 require('./IPC/Rikka/main');
 
 console.log("Rikka is starting...");
 
-const electronPath = require.resolve("electron");
+let _patched = false;
+const appSetAppUserModelId = electron.app.setAppUserModelId;
+function setAppUserModelId (...args: any[]) {
+  //@ts-ignore WTF?
+  appSetAppUserModelId.apply(this as any, args as any);
+  if (!_patched) {
+    _patched = true;
+  }
+}
 
-if(!require.main) throw new Error("Rikka is not running as a module!");
+electron.app.setAppUserModelId = setAppUserModelId;
 
-const discordAsar = join(dirname(require.main!.filename), "..", "app.asar");
-require.main.filename = join(discordAsar, 'app_bootstrap/index.js');
-
-const discPackage = require(join(discordAsar, "package.json"));
-//@ts-ignore - Completely and utterly wrong
-electron.app.setAppPath(discPackage.name, discordAsar);
-electron.app.name = discPackage.name;
-
+if (!electron.safeStorage) {
+  //@ts-ignore you know torvalds was right - private properties are fucking stupid
+  electron.safeStorage = {
+    isEncryptionAvailable: () => false,
+    encryptString: () => {
+      throw new Error('Unavailable');
+    },
+    decryptString: () => {
+      throw new Error('Unavailable');
+    }
+  };
+}
 
 const electronExports = new Proxy(electron, {
     get (target, prop) {
@@ -32,6 +50,11 @@ const electronExports = new Proxy(electron, {
 
 delete require.cache[electronPath]?.exports;
 require.cache[electronPath]!.exports = electronExports;
+
+const discPackage = require(join(discordAsar, "package.json"));
+//@ts-ignore - Completely and utterly wrong
+electron.app.setAppPath(discPackage.name, discordAsar);
+electron.app.name = discPackage.name;
 
 console.log("Discord is loading...");
 //@ts-ignore - Also completely and utterly wrong
