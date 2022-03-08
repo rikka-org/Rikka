@@ -1,7 +1,9 @@
+import PluginsManager from "./managers/Plugins";
 import StyleManager from "./managers/StyleManager";
 
 export default class Rikka {
     private styleManager = new StyleManager();
+    private PluginManager = new PluginsManager();
 
     constructor() {
         if (document.readyState === 'loading')
@@ -13,6 +15,7 @@ export default class Rikka {
     private async start() {
         this.rikkaStartup();
         this.testDomMod();
+        this.PluginManager.loadPlugins();
     }
 
     private testDomMod() {

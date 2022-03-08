@@ -10,8 +10,4 @@ export default class ExamplePlugin extends RikkaPlugin {
     inject() {
         console.log("Example Plugin is starting...");
     }
-
-    public override discordReady(): void {
-        console.log("Put your init code here!");
-    }
 }
