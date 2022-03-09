@@ -1,5 +1,6 @@
-import Rikka from "../../../../Rikka";
+import { rikkaInstance } from "../../../../preload";
 import PluginsManager from "../../../../Rikka/managers/Plugins";
+import { rikka } from "../../../../Typings/Rikka/global";
 import API from "../../NodeMod/powercord/entities/API";
 
 /**

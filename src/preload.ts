@@ -13,6 +13,7 @@ require('module').Module.globalPaths.push(join(__dirname, 'NodeMod'));
 const rikka = new Rikka();
 //@ts-ignore
 global.rikka = rikka;
+export const rikkaInstance = rikka;
 
 const discordPreload = ipcRenderer.sendSync(IPC_Consts.GET_PRELOAD);
 if (discordPreload) {
