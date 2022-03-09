@@ -3,14 +3,14 @@ import { resolve } from "path";
 import { RikkaPlugin } from "../../Common/Plugin";
 
 export default class PluginsManager {
-    readonly pluginDirectory = resolve(__dirname, '..', '..', 'plugins');
-    private plugins = new Map<string, RikkaPlugin>();
+    readonly pluginDirectory = PluginsManager.getPluginDirectory();
+    protected plugins = new Map<string, RikkaPlugin>();
 
     constructor() {
         console.log(`Using plugins directory: ${this.pluginDirectory}`);
     }
 
-    private loadPlugin(pluginName: string) {
+    protected loadPlugin(pluginName: string) {
         console.log(this.plugins);
         const plugin = this.plugins.get(pluginName);
         if (!plugin) throw new Error(`Failed to load plugin: ${pluginName}`);
@@ -19,7 +19,7 @@ export default class PluginsManager {
         plugin.inject();
     }
 
-    private unloadPlugin(pluginName: string) {
+    protected unloadPlugin(pluginName: string) {
         const plugin = this.plugins.get(pluginName);
         if (!plugin) throw new Error(`Failed to unload plugin: ${pluginName}`);
         if (!plugin.enabled) return;
@@ -56,5 +56,9 @@ export default class PluginsManager {
     loadPlugins() {
         readdirSync(this.pluginDirectory).forEach(file => this.mountPlugin(file));
         this.plugins.forEach((plugin, name) => this.loadPlugin(name));
+    }
+
+    static getPluginDirectory() {
+        return resolve(__dirname, '..', '..', 'plugins');
     }
 }

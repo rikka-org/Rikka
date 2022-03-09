@@ -3,10 +3,14 @@ import { RikkaPlugin } from '../../Common/Plugin';
 import * as pkg from './package.json';
 
 export default class ExamplePlugin extends RikkaPlugin {
-    name = "Example Plugin";
-    description = "An example plugin for Rikka.";
-    author = "V3L0C1T13S";
-    license = "MIT";
+    Manifest = {
+        name: "Example Plugin",
+        description: "An example plugin for Rikka.",
+        author: "V3L0C1T13S",
+        license: "MIT",
+        version: pkg.version,
+        dependencies: []
+    }
 
     inject() {
         console.log("Example Plugin is starting...");
