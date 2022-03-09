@@ -26,9 +26,11 @@ export default class Plugin {
 
     }
 
-    _load() {};
+    _load() {}
 
     startPlugin() {
         
     }
 }
+
+module.exports = Plugin;

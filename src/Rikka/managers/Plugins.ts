@@ -55,7 +55,13 @@ export default class PluginsManager {
 
     loadPlugins() {
         readdirSync(this.pluginDirectory).forEach(file => this.mountPlugin(file));
-        this.plugins.forEach((plugin, name) => this.loadPlugin(name));
+        this.plugins.forEach((plugin, name) => {
+            try {
+                this.loadPlugin(name);
+            } catch (e) {
+                console.error(e);
+            }
+        });
     }
 
     static getPluginDirectory() {

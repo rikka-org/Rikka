@@ -14,6 +14,15 @@ export default class PCPluginsManager {
         if (plugin.ready) return;
 
         plugin._load();
+        plugin.startPlugin();
+    }
+
+    enablePlugin(pluginName: string) {
+        const plugin = this.plugins.get(pluginName);
+        if (!plugin) throw new Error(`Failed to enable plugin: ${pluginName}`);
+        if (plugin.ready) return;
+
+        plugin.startPlugin();
     }
 
     static getPluginDirectory() {
@@ -34,6 +43,12 @@ export default class PCPluginsManager {
 
     loadPlugins() {
         readdirSync(this.pluginDirectory).forEach(file => this.mountPlugin(file));
-        this.plugins.forEach((plugin, name) => this.loadPlugin(name));
+        this.plugins.forEach((plugin, name) => {
+            try {
+                this.loadPlugin(name);
+            } catch (e) {
+                console.error(e);
+            }
+        });
     }
 }
