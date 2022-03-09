@@ -6,9 +6,10 @@
   "scripts": {
     "installrikka": "node out/Installer/installer.js --no-exit-codes",
     "uninstallrikka": "node out/Installer/uninstall.js --no-exit-codes",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && npm run copy-files",
     "watch": "tsc -w -p tsconfig.json",
-    "test": "node out/index.js"
+    "test": "node out/index.js",
+    "copy-files": "copyfiles -u 1 src/**/*.pem out/"
   },
   "keywords": [
     "discord",
@@ -23,9 +24,18 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
+    "codemirror": "^5.65.2",
+    "copyfiles": "^2.4.1",
     "electron": "^17.1.1",
+    "keytar": "^7.9.0",
+    "less": "^4.1.2",
+    "node-watch": "^0.7.3",
     "prompt": "^1.2.2",
+    "rimraf": "^3.0.2",
+    "sass": "^1.49.9",
+    "stylus": "^0.56.0",
+    "sucrase": "^3.20.3",
     "sudo-prompt": "^9.2.1",
-    "keytar": "^7.9.0"
+    "unzip-crx": "^0.2.0"
   }
 }
