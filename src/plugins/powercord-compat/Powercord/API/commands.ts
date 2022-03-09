@@ -1,6 +1,6 @@
-import Rikka from "../../../Rikka";
-import PluginsManager from "../../../Rikka/managers/Plugins";
-import API from "../NodeMod/powercord/entities/API";
+import Rikka from "../../../../Rikka";
+import PluginsManager from "../../../../Rikka/managers/Plugins";
+import API from "../../NodeMod/powercord/entities/API";
 
 /**
  * @typedef PowercordChatCommand
