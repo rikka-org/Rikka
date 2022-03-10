@@ -1,6 +1,6 @@
 import { join } from "path";
 import { BrowserWindow, BrowserWindowConstructorOptions, LoadURLOptions } from "electron";
-import { IPC_Consts } from "./API/Rikka/Constants/IPC_Consts";
+import { IPC_Consts } from "./Rikka/API/Constants";
 
 export default class PatchedWindow extends BrowserWindow {
     //@ts-ignore
@@ -22,6 +22,12 @@ export default class PatchedWindow extends BrowserWindow {
                 options.webPreferences.preload = join(__dirname, "preload.js");
             } else
                 options.webPreferences.preload = join(__dirname, "preloadSplash.js");
+        }
+
+        // Used to enable Wayland Streaming on Linux
+        if (process.platform === "linux" && options.webPreferences) {
+            options.webPreferences.ozoneplatformhint = "wayland";
+            options.webPreferences.enablewebrtcpipewirecapturer = true;
         }
 
         const BWindow = new BrowserWindow(options);

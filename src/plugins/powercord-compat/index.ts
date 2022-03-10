@@ -17,12 +17,15 @@ export default class PowercordCompat extends RikkaPlugin {
 
     private powercord = new Powercord();
 
+    private powercord_modules_directory = join(__dirname, 'powercord-git', 'src', 'fake_node_modules');
+    private placein_modules_directory = join(__dirname, 'NodeMod');
+
     async inject() {
         console.log("Powercord compat is enabled!");
         // Push NodeMod directly to the global scope
         // require('module').Module.globalPaths.push(join(__dirname, 'NodeMod'));
         global.powercord = this.powercord;
-        require('module').Module.globalPaths.push(join(__dirname, 'powercord-git', 'src', 'fake_node_modules'));
+        require('module').Module.globalPaths.push(this.powercord_modules_directory);
         this.powercord.pluginManager.loadPlugins();
     }
 }

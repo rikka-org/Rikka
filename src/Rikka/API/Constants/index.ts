@@ -7,4 +7,5 @@ export namespace IPC_Consts {
     export const OPEN_WINDOW = "RIKKA_OPEN_WINDOW";
     export const CLEAR_CACHE = "RIKKA_CLEAR_CACHE";
     export const __COMPILE_SASS = "RIKKA___COMPILE_SASS";
+    export const GET_CHROMIUM_FLAGS = "RIKKA_GET_CHROMIUM_FLAGS";
 }

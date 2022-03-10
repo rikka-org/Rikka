@@ -1,7 +1,7 @@
 import { ipcRenderer, webFrame } from "electron";
 import { join } from "path";
-import { IPC_Consts } from "./API/Rikka/Constants/IPC_Consts";
 import Rikka from "./Rikka";
+import { IPC_Consts } from "./Rikka/API/Constants";
 
 Object.defineProperty(window, 'platform', {
     get: () => (webFrame.top! as any).context.window.platform

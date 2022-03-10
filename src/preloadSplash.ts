@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
 import { join } from "path";
-import { IPC_Consts } from "./API/Rikka/Constants/IPC_Consts";
+import { IPC_Consts } from "./Rikka/API/Constants";
 
 // Begin adding fake modules
 require('module').Module.globalPaths.push(join(__dirname, "Nodemod"));

@@ -39,6 +39,14 @@ export default class PCPluginsManager {
             console.error(`Failed to mount plugin: ${pluginName}. ${e}`);
         }
     }
+    
+    remountPlugin(pluginName: string) {
+        const plugin = this.plugins.get(pluginName);
+        if (!plugin) throw new Error(`Failed to remount plugin: ${pluginName}`);
+        if (plugin.ready) return;
+
+        this.mountPlugin(pluginName);
+    }
 
     loadPlugins() {
         readdirSync(this.pluginDir).forEach(file => this.mountPlugin(file));
@@ -49,5 +57,9 @@ export default class PCPluginsManager {
                 console.error(e);
             }
         });
+    }
+
+    get(key: string) {
+        return this.plugins.get(key);
     }
 }

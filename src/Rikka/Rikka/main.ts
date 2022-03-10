@@ -1,5 +1,5 @@
 import { ipcMain, BrowserWindow } from "electron";
-import { IPC_Consts } from "../../API/Rikka/Constants/IPC_Consts";
+import { IPC_Consts } from "../API/Constants";
 
 if (!ipcMain) throw new Error("Main process not found");
 
@@ -31,9 +31,12 @@ function clearCache(e: Electron.IpcMainInvokeEvent) {
     });
 }
 
+function getChromiumFlags() {
 
+}
 
 ipcMain.on(IPC_Consts.GET_PRELOAD, e => e.returnValue = (e.sender as WebContents)._rikkaPreload);
 ipcMain.handle(IPC_Consts.OPEN_DEVTOOLS, DevToolsOpen);
 ipcMain.handle(IPC_Consts.CLOSE_DEVTOOLS, DevToolsClose);
 ipcMain.handle(IPC_Consts.CLEAR_CACHE, clearCache);
+ipcMain.on(IPC_Consts.GET_CHROMIUM_FLAGS, e => e.returnValue = getChromiumFlags());
