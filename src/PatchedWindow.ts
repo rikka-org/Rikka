@@ -24,12 +24,6 @@ export default class PatchedWindow extends BrowserWindow {
                 options.webPreferences.preload = join(__dirname, "preloadSplash.js");
         }
 
-        // Used to enable Wayland Streaming on Linux
-        if (process.platform === "linux" && options.webPreferences) {
-            options.webPreferences.ozoneplatformhint = "wayland";
-            options.webPreferences.enablewebrtcpipewirecapturer = true;
-        }
-
         const BWindow = new BrowserWindow(options);
         const ogloadURL = BWindow.loadURL.bind(BWindow);
         Object.defineProperty(BWindow, "loadURL", {

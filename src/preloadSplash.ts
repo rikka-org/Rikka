@@ -4,7 +4,7 @@ import { IPC_Consts } from "./Rikka/API/Constants";
 
 // Begin adding fake modules
 require('module').Module.globalPaths.push(join(__dirname, "Nodemod"));
-require("./IPC/Rikka/renderer");
+require("./Rikka/IPC/renderer");
 
 // Original preload
 const preloader = ipcRenderer.sendSync(IPC_Consts.GET_PRELOAD);

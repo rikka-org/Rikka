@@ -7,7 +7,7 @@ Object.defineProperty(window, 'platform', {
     get: () => (webFrame.top as any).context.window.platform
 });
 // Adding fake modules
-require('module').Module.globalPaths.push(join(__dirname, 'NodeMod'));
+//require('module').Module.globalPaths.push(join(__dirname, 'NodeMod'));
 
 // Initializing Rikka loader
 const rikka = new Rikka();
