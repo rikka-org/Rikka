@@ -32,7 +32,7 @@ export default class PowercordCompat extends RikkaPlugin {
         //this.bindWebpack();
         // Place-ins are pushed first so they can override the Powercord modules
         require('module').Module.globalPaths.push(this.placein_modules_directory);
-        require('module').Module.globalPaths.push(join(__dirname, 'powercord-git', 'src', 'fake_node_modules'));
+        require('module').Module.globalPaths.push(this.powercord_modules_directory);
         if(this.experimentalPreload) {
             console.log("Experimental preload is enabled!");
             require("./powercord-git/src/preload");
