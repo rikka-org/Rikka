@@ -9,7 +9,7 @@
     "build": "tsc -p tsconfig.json && npm run copy-files",
     "watch": "tsc -w -p tsconfig.json",
     "test": "node out/index.js",
-    "copy-files": "copyfiles -u 1 src/**/*.pem out/"
+    "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/.exists out/"
   },
   "keywords": [
     "discord",

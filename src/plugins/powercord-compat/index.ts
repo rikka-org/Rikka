@@ -1,6 +1,7 @@
+import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import { RikkaPlugin } from "../../Common/Plugin";
-
+import { RikkaPowercord } from "./Common/Constants";
 import pkg from "./package.json";
 import Powercord from "./Powercord";
 
@@ -18,6 +19,13 @@ export default class PowercordCompat extends RikkaPlugin {
 
     private powercord_modules_directory = join(__dirname, 'powercord-git', 'src', 'fake_node_modules');
     private placein_modules_directory = join(__dirname, 'NodeMod');
+    private experimentalPreload: boolean = false;
+
+    private createDataDirectory() {
+        if(!existsSync(RikkaPowercord.Constants.RKPOWERCORD_FOLDER)) {
+            mkdirSync(RikkaPowercord.Constants.RKPOWERCORD_FOLDER);
+        }
+    }
 
     inject() {
         console.log("Powercord compat is enabled!");
@@ -25,6 +33,13 @@ export default class PowercordCompat extends RikkaPlugin {
         // Place-ins are pushed first so they can override the Powercord modules
         require('module').Module.globalPaths.push(this.placein_modules_directory);
         require('module').Module.globalPaths.push(join(__dirname, 'powercord-git', 'src', 'fake_node_modules'));
+        if(this.experimentalPreload) {
+            console.log("Experimental preload is enabled!");
+            require("./powercord-git/src/preload");
+            return;
+        }
+
+        this.createDataDirectory();
 
         global.powercord = new Powercord(true);
         this.powercord = powercord;

@@ -5,17 +5,17 @@
  */
 
 const { join } = require('path');
+import { RikkaPowercord } from '../../Common/Constants';
 
-const RKPOWERCORD_FOLDER = join(__dirname, '..', 'powercord-data')
-module.exports = Object.freeze({
+export = Object.freeze({
   I18N_WEBSITE: 'https://i18n.powercord.dev/projects/powercord',
   REPO_URL: 'powercord-org/powercord',
   WEBSITE: 'https://powercord.dev',
 
   // Runtime
-  SETTINGS_FOLDER: join(RKPOWERCORD_FOLDER, 'settings'),
-  CACHE_FOLDER: join(RKPOWERCORD_FOLDER, '.cache'),
-  LOGS_FOLDER: join(RKPOWERCORD_FOLDER, '.logs'),
+  SETTINGS_FOLDER: join(RikkaPowercord.Constants.RKPOWERCORD_FOLDER, 'settings'),
+  CACHE_FOLDER: join(RikkaPowercord.Constants.RKPOWERCORD_FOLDER, '.cache'),
+  LOGS_FOLDER: join(RikkaPowercord.Constants.RKPOWERCORD_FOLDER, '.logs'),
 
   // Powercords promotional stuff
   DISCORD_INVITE: 'gs4ZMbBfCh',

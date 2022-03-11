@@ -5,8 +5,24 @@ import { join } from "path";
 import modules from "../powercord-git/src/Powercord/modules";
 import Webpack from "../powercord-git/src/fake_node_modules/powercord/webpack";
 import * as pkg from "../package.json"
+import vPowercord from "../powercord-git/src/Powercord";
 
 let hide_rikka = false;
+
+export class PowercordV2 extends vPowercord {
+    pluginManager = new PCPluginsManager();
+
+    //@ts-ignore
+    constructor(hidden: boolean = false) {
+        // Call Updatable constructor
+        //@ts-ignore
+        Updatable.call(this, join(__dirname, '..', '..'), '', 'powercord-compat');
+        //@ts-ignore
+        global.powercord = this;
+        //@ts-ignore
+        this.init();
+    }
+}
 
 export default class Powercord extends Updatable {
     private apiManager = new APIManager();
@@ -25,12 +41,8 @@ export default class Powercord extends Updatable {
     }
 
     get rikkapc_version() {
-        let caller = arguments.callee.caller;
-        while (caller.caller) {
-            caller = caller.caller;
-        }
         if (hide_rikka) {
-            console.log(`A plugin is trying to access Rikka's version when Rikka is hidden. ${caller.name}`);
+            console.warn("A plugin is trying to access Rikka's version when Rikka is hidden.");
             return;
         }
         return pkg.version;
@@ -43,7 +55,7 @@ export default class Powercord extends Updatable {
     async init() {
         // Webpack & Modules
         console.log("ok 243242345");
-        //await Webpack.init();
+        await Webpack.init();
         //await Promise.all(modules.map(mdl => mdl()));
         this.emit('initializing');
 

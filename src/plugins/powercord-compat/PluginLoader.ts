@@ -1,6 +1,6 @@
 import { readdirSync } from "fs";
 import { resolve } from "path";
-import Plugin from "./NodeMod/powercord/entities/Plugin";
+import Plugin from "./NodeMod/entities/Plugin";
 
 export default class PCPluginsManager {
     readonly pluginDir = PCPluginsManager.getPluginDirectory();
