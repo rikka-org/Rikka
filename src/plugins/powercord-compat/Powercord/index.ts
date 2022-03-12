@@ -24,7 +24,34 @@ export class PowercordV2 extends vPowercord {
     }
 }
 
-export default class Powercord extends Updatable {
+export default class PowercordEmu extends Updatable {
+    private api = new APIManager();
+    private pluginManager = new PCPluginsManager();
+
+    constructor(hidden: boolean = false) {
+        super(join(__dirname, '..', '..'), '', 'powercord-compat');
+        hide_rikka = hidden;
+        this.init();
+    }
+
+    async init() {
+        console.log("Starting Powercord Emulator");
+    }
+
+    get rikkapc_version() {
+        if (hide_rikka) {
+            console.warn("A plugin is trying to access Rikka's version when Rikka is hidden.");
+            return;
+        }
+        return pkg.version;
+    }
+
+    get settings() {
+        return [];
+    }
+}
+
+export class Powercord extends Updatable {
     private apiManager = new APIManager();
     pluginManager = new PCPluginsManager();
     api = this.apiManager;
@@ -54,9 +81,8 @@ export default class Powercord extends Updatable {
 
     async init() {
         // Webpack & Modules
-        console.log("ok 243242345");
         await Webpack.init();
-        //await Promise.all(modules.map(mdl => mdl()));
+        await Promise.all(modules.map(mdl => mdl()));
         this.emit('initializing');
 
         await this.startup();
