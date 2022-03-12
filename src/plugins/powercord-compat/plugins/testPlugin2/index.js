@@ -8,5 +8,19 @@ module.exports = class testPlugin2 extends Plugin {
             console.log("Rikkapc detected!");
         else
             console.log("Rikkapc not detected!");
+        
+        this.testCommandMount();
+        console.log("Test complete!");
+    }
+
+    testCommandMount() {
+        powercord.api.commands.registerCommand({
+            command: 'testCommandMount',
+            description: 'Test command mount',
+            usage: '{c}testCommandMount',
+            executor: () => {
+                console.log("Hello mate");
+            }
+        });
     }
 }

@@ -6,6 +6,11 @@ import { IPC_Consts } from "./Rikka/API/Constants";
 Object.defineProperty(window, 'platform', {
     get: () => (webFrame.top as any).context.window.platform
 });
+
+Object.defineProperty(window, '_', {
+    get: () => (webFrame.top as any).context.window._
+});
+
 // Adding fake modules
 //require('module').Module.globalPaths.push(join(__dirname, 'NodeMod'));
 

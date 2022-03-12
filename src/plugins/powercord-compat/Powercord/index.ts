@@ -10,6 +10,7 @@ let hide_rikka = false;
 export default class PowercordEmu extends Updatable {
     api = new APIManager();
     private pluginManager = new PCPluginsManager();
+    initialized: boolean = false;
 
     constructor(hidden: boolean = false) {
         super(join(__dirname, '..', '..'), '', 'powercord-compat');
@@ -20,7 +21,7 @@ export default class PowercordEmu extends Updatable {
     }
 
     async init() {
-        console.log("Starting Powercord Emulator");
+        Logger.trace("Starting Powercord Emulator");
 
         this.emit('initializing');
 
@@ -29,8 +30,11 @@ export default class PowercordEmu extends Updatable {
     }
 
     async startup() {
+        await this.api.startAPIs();
         this.emit('settingsReady');
-        this.pluginManager.loadPlugins();
+
+        await this.pluginManager.loadPlugins();
+        this.initialized = true;
     }
 
     get rikkapc_version() {
