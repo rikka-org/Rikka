@@ -1,7 +1,13 @@
-export default class Plugin {
+import PCPluginsManager from "../../../PluginLoader";
+import Updatable from "./Updatable";
+
+export default class Plugin extends Updatable {
     ready = false;
-    entityID?: string;
     styles: any;
+
+    constructor() {
+        super(PCPluginsManager.getPluginDirectory());
+    }
 
     async _unload () {
         try {

@@ -1,46 +1,41 @@
 import PCPluginsManager from "../PluginLoader";
-import APIManager from "../powercord-git/src/Powercord/managers/apis";
-import Updatable from "../powercord-git/src/fake_node_modules/powercord/entities/Updatable";
 import { join } from "path";
-import modules from "../powercord-git/src/Powercord/modules";
-import Webpack from "../powercord-git/src/fake_node_modules/powercord/webpack";
 import * as pkg from "../package.json"
-import vPowercord from "../powercord-git/src/Powercord";
+import Updatable from "../NodeMod/powercord/entities/Updatable";
+import APIManager from "./managers/API";
+import Logger from "../Common/Logger";
 
 let hide_rikka = false;
 
-export class PowercordV2 extends vPowercord {
-    pluginManager = new PCPluginsManager();
-
-    //@ts-ignore
-    constructor(hidden: boolean = false) {
-        // Call Updatable constructor
-        //@ts-ignore
-        Updatable.call(this, join(__dirname, '..', '..'), '', 'powercord-compat');
-        //@ts-ignore
-        global.powercord = this;
-        //@ts-ignore
-        this.init();
-    }
-}
-
 export default class PowercordEmu extends Updatable {
-    private api = new APIManager();
+    api = new APIManager();
     private pluginManager = new PCPluginsManager();
 
     constructor(hidden: boolean = false) {
         super(join(__dirname, '..', '..'), '', 'powercord-compat');
+        // Hack to make plugins work
+        global.powercord =  this;
         hide_rikka = hidden;
         this.init();
     }
 
     async init() {
         console.log("Starting Powercord Emulator");
+
+        this.emit('initializing');
+
+        await this.startup();
+        this.emit('loaded');
+    }
+
+    async startup() {
+        this.emit('settingsReady');
+        this.pluginManager.loadPlugins();
     }
 
     get rikkapc_version() {
         if (hide_rikka) {
-            console.warn("A plugin is trying to access Rikka's version when Rikka is hidden.");
+            Logger.trace("A plugin is trying to access Rikka's version when Rikka is hidden.");
             return;
         }
         return pkg.version;
@@ -51,7 +46,7 @@ export default class PowercordEmu extends Updatable {
     }
 }
 
-export class Powercord extends Updatable {
+/* export class Powercord extends Updatable {
     private apiManager = new APIManager();
     pluginManager = new PCPluginsManager();
     api = this.apiManager;
@@ -97,4 +92,4 @@ export class Powercord extends Updatable {
         await this.pluginManager.loadPlugins();
         this.initialized = true;
     }
-}
+} */

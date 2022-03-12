@@ -32,7 +32,10 @@ export default class PowercordCompat extends RikkaPlugin {
         //this.bindWebpack();
         // Place-ins are pushed first so they can override the Powercord modules
         require('module').Module.globalPaths.push(this.placein_modules_directory);
-        require('module').Module.globalPaths.push(this.powercord_modules_directory);
+
+        /** DEPRECATED. This method was hacky anyways. */
+        //require('module').Module.globalPaths.push(this.powercord_modules_directory);
+        
         if(this.experimentalPreload) {
             console.log("Experimental preload is enabled!");
             require("./powercord-git/src/preload");
@@ -43,39 +46,5 @@ export default class PowercordCompat extends RikkaPlugin {
 
         global.powercord = new Powercord(true);
         this.powercord = powercord;
-    }
-
-    private bindWebpack() {
-        const getFunctions = [
-            ['querySelector', false],
-            ['querySelectorAll', true],
-            ['getElementById', false],
-            ['getElementsByClassName', true],
-            ['getElementsByName', true],
-            ['getElementsByTagName', true],
-            ['getElementsByTagNameNS', true]
-        ];
-
-        for (const [getMethod, isCollection] of getFunctions) {
-            //@ts-ignore
-            const realGetter = document[getMethod].bind(document);
-            if (isCollection) {
-                //@ts-ignore
-                document[getMethod] = (...args) => {
-                    const webpack = require('powercord/webpack');
-                    const nodes = Array.from(realGetter(...args));
-                    nodes.forEach((node) => webpack.__lookupReactReference(node));
-                    return nodes;
-                };
-            } else {
-                //@ts-ignore
-                document[getMethod] = (...args: any[]) => {
-                    const webpack = require('powercord/webpack');
-                    const node = realGetter(...args);
-                    webpack.__lookupReactReference(node);
-                    return node;
-                };
-            }
-        }
     }
 }

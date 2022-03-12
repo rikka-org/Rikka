@@ -1,6 +1,6 @@
 import { readdirSync } from "fs";
 import { resolve } from "path";
-import Plugin from "./NodeMod/entities/Plugin";
+import Plugin from "./NodeMod/powercord/entities/Plugin";
 
 export default class PCPluginsManager {
     readonly pluginDir = PCPluginsManager.getPluginDirectory();
@@ -34,7 +34,6 @@ export default class PCPluginsManager {
             if (!pluginClass) throw new Error(`Failed to mount plugin: ${pluginName}`);
 
             this.plugins.set(pluginName, plugin);
-            console.log("not here");
         } catch (e) {
             console.error(`Failed to mount plugin: ${pluginName}. ${e}`);
         }
