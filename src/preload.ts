@@ -11,6 +11,22 @@ Object.defineProperty(window, '_', {
     get: () => (webFrame.top as any).context.window._
 });
 
+Object.defineProperty(window, 'webpackChunkdiscord_app', {
+    get: () => (webFrame.top! as any).context.window.webpackChunkdiscord_app
+  });
+
+  Object.defineProperty(window, 'GLOBAL_ENV', {
+    get: () => (webFrame.top! as any).context.window.GLOBAL_ENV
+  });
+
+  Object.defineProperty(window, 'DiscordSentry', {
+    get: () => (webFrame.top! as any).context.window.DiscordSentry
+  });
+
+  Object.defineProperty(window, '__SENTRY__', {
+    get: () => (webFrame.top! as any).context.window.__SENTRY__
+  });
+
 // Adding fake modules
 //require('module').Module.globalPaths.push(join(__dirname, 'NodeMod'));
 

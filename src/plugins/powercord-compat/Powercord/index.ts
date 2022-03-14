@@ -1,4 +1,4 @@
-import PCPluginsManager from "../PluginLoader";
+import PCPluginsManager from "./managers/PluginLoader";
 import { join } from "path";
 import * as pkg from "../package.json"
 import Updatable from "../NodeMod/powercord/entities/Updatable";
@@ -7,7 +7,7 @@ import Logger from "../Common/Logger";
 
 let hide_rikka = false;
 
-export default class PowercordEmu extends Updatable {
+export default class Powercord extends Updatable {
     api = new APIManager();
     private pluginManager = new PCPluginsManager();
     initialized: boolean = false;

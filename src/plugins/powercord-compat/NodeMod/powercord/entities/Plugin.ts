@@ -1,4 +1,4 @@
-import PCPluginsManager from "../../../PluginLoader";
+import PCPluginsManager from "../../../Powercord/managers/PluginLoader";
 import Updatable from "./Updatable";
 
 export default class Plugin extends Updatable {

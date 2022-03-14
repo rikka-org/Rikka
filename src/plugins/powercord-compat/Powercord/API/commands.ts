@@ -1,27 +1,9 @@
 import PluginsManager from "../../../../Rikka/managers/Plugins";
+import Logger from "../../Common/Logger";
 import API from "../../NodeMod/powercord/entities/API";
 
-/**
- * @typedef PowercordChatCommand
- * @property {String} command Command name
- * @property {String[]} aliases Command aliases
- * @property {String} description Command description
- * @property {String} usage Command usage
- * @property {Function} executor Command executor
- * @property {Function|undefined} autocomplete Autocompletion method
- * @property {Boolean|undefined} showTyping Whether typing status should be shown or not
- */
-
-/**
- * Powercord chat commands API
- * @property {Object.<String, PowercordChatCommand>} commands Registered commands
- */
-class CommandsAPI extends API {
-    constructor() {
-        super();
-
-        this.commands = {};
-    }
+export = class CommandsAPI extends API {
+    commands = new Map<string, any>();
 
     get prefix() {
         return powercord.settings.get('prefix', '.');
@@ -57,18 +39,15 @@ class CommandsAPI extends API {
         //@ts-ignore
         const [, origin] = stackTrace?.match(new RegExp(`${global._.escapeRegExp(PluginsManager.getPluginDirectory())}.([-\\w]+)`));
 
-        if (typeof command === 'string') {
-            console.error('no');
-            return;
-        }
-        if (this.commands[command.command]) {
-            throw new Error(`Command ${command.command} is already registered!`);
-        }
+        if (typeof command === "string") return;
 
-        this.commands[command.command] = {
+        if (this.commands.get(command.command.toString())) throw new Error(`Command ${command.command} is already registered!`);
+
+        this.commands.set(command.command.toString(), {
             ...command,
             origin
-        };
+        });
+        Logger.trace(`Registered command ${command.command}`);
     }
 
     /**
@@ -76,10 +55,8 @@ class CommandsAPI extends API {
      * @param {String} command Command name to unregister
      */
     unregisterCommand(command: string) {
-        if (this.commands[command]) {
-            delete this.commands[command];
+        if (this.commands.get(command)) {
+            this.commands.delete(command);
         }
     }
 }
-
-module.exports = CommandsAPI;
