@@ -16,8 +16,9 @@ export default class Updatable extends Events {
             // It might be pre-defined by plugin manager
             this.entityID = entityID;
         }
+        console.log(`EID: ${this.entityID}`);
 
-        this.entityPath = join(this.basePath, this.entityID || "");
+        this.entityPath = join(this.basePath, this.entityID ?? "fixme-eid-undefined");
 
         if (!updateIdentifier) {
             updateIdentifier = `${this.basePath.split(/[\\/]/).pop()}_${this.entityID}`;

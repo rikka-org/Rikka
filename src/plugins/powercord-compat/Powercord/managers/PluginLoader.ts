@@ -29,7 +29,16 @@ export default class PCPluginsManager {
     mountPlugin(pluginName: string) {
         try {
             const pluginClass = require(resolve(this.pluginDir, pluginName));
+            pluginClass.entityID = pluginName;
             const plugin = new pluginClass();
+            Object.defineProperties(plugin, {
+                entityID: {
+                    get: () => pluginName,
+                    set: () => {
+                        throw new Error('Cannot set entityID');
+                    }
+                }
+            })
             console.log(`Mounting ${resolve(this.pluginDir, pluginName)}`);
             if (!pluginClass) throw new Error(`Failed to mount plugin: ${pluginName}`);
 
@@ -38,7 +47,7 @@ export default class PCPluginsManager {
             console.error(`Failed to mount plugin: ${pluginName}. ${e}`);
         }
     }
-    
+
     remountPlugin(pluginName: string) {
         const plugin = this.plugins.get(pluginName);
         if (!plugin) throw new Error(`Failed to remount plugin: ${pluginName}`);

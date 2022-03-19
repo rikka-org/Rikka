@@ -1,9 +1,15 @@
 import PCPluginsManager from "./managers/PluginLoader";
-import { join } from "path";
+import { join, resolve } from "path";
 import * as pkg from "../package.json"
 import Updatable from "../NodeMod/powercord/entities/Updatable";
 import APIManager from "./managers/API";
 import Logger from "../Common/Logger";
+import { RikkaPowercord } from "../Common/Constants";
+import modules from "./modules";
+
+const Webpack = require("../NodeMod/powercord/webpack");
+
+const powercordModules = require(resolve(RikkaPowercord.Constants.powercordDir, "modules"));
 
 let hide_rikka = false;
 
@@ -14,15 +20,21 @@ export default class Powercord extends Updatable {
 
     constructor(hidden: boolean = false) {
         super(join(__dirname, '..', '..'), '', 'powercord-compat');
-        // Hack to make plugins work
-        global.powercord =  this;
         hide_rikka = hidden;
-        this.init();
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.init());
+        } else {
+            this.init();
+        }
     }
 
     async init() {
         Logger.trace("Starting Powercord Emulator");
 
+        await Webpack.init();
+
+        //await Promise.all(powercordModules.map((mdl: () => any) => mdl()));
+        await Promise.all(modules.map((mdl: () => any) => mdl()));
         this.emit('initializing');
 
         await this.startup();
@@ -49,51 +61,3 @@ export default class Powercord extends Updatable {
         return [];
     }
 }
-
-/* export class Powercord extends Updatable {
-    private apiManager = new APIManager();
-    pluginManager = new PCPluginsManager();
-    api = this.apiManager;
-
-    private initialized = false;
-
-    constructor(hidden: boolean = false) {
-        super(join(__dirname, '..', '..'), '', 'powercord-compat');
-        console.log("ok");
-        hide_rikka = hidden;
-        // why in gods unholy name this has to be here? i don't know. but it works.
-        global.powercord = this;
-        this.init();
-    }
-
-    get rikkapc_version() {
-        if (hide_rikka) {
-            console.warn("A plugin is trying to access Rikka's version when Rikka is hidden.");
-            return;
-        }
-        return pkg.version;
-    }
-
-    get settings() {
-        return [];
-    }
-
-    async init() {
-        // Webpack & Modules
-        await Webpack.init();
-        await Promise.all(modules.map(mdl => mdl()));
-        this.emit('initializing');
-
-        await this.startup();
-        this.emit('loaded');
-    }
-
-    async startup() {
-        await this.apiManager.startAPIs();
-        this.emit('settingsReady');
-
-        console.log("ok");
-        await this.pluginManager.loadPlugins();
-        this.initialized = true;
-    }
-} */
