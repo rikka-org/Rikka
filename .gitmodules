@@ -1,3 +1,6 @@
 [submodule "src/plugins/powercord-compat/powercord-git"]
 	path = src/plugins/powercord-compat/powercord-git
 	url = https://github.com/powercord-org/powercord.git
+[submodule "src/plugins/powercord-compat/plugins/powercord-no-swearing"]
+	path = src/plugins/powercord-compat/plugins/powercord-no-swearing
+	url = https://github.com/Lisenaaaa/powercord-no-swearing.git
