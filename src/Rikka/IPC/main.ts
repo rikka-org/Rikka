@@ -1,5 +1,9 @@
 import { ipcMain, BrowserWindow } from "electron";
-import { IPC_Consts } from "../API/Constants";
+import { IPC_Consts } from "@rikka/API/Constants";
+import { FileHandle, readFile } from "fs/promises";
+import sass from "sass";
+import { existsSync, PathLike } from "fs";
+import { dirname, join } from "path";
 
 if (!ipcMain) throw new Error("Main process not found");
 
@@ -35,8 +39,36 @@ function getChromiumFlags() {
 
 }
 
+function compileSass(_: any, file: PathLike | FileHandle) {
+    return new Promise((resolve, reject) => {
+        readFile(file, 'utf8').then(rawScss => {
+            sass.render({
+                data: rawScss,
+                importer: (url: any, prev: any) => {
+                    url = url.replace('file:///', '');
+                    if (existsSync(url)) {
+                        return { file: url };
+                    }
+
+                    const prevFile = prev === 'stdin' ? file : prev.replace(/https?:\/\/(?:[a-z]+\.)?discord(?:app)?\.com/i, '');
+                    return {
+                        file: join(dirname(decodeURI(prevFile)), url).replace(/\\/g, '/')
+                    };
+                }
+            }, (err, compiled) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(compiled?.css.toString());
+            });
+        });
+    });
+}
+
 ipcMain.on(IPC_Consts.GET_PRELOAD, e => e.returnValue = (e.sender as WebContents)._rikkaPreload);
 ipcMain.handle(IPC_Consts.OPEN_DEVTOOLS, DevToolsOpen);
 ipcMain.handle(IPC_Consts.CLOSE_DEVTOOLS, DevToolsClose);
 ipcMain.handle(IPC_Consts.CLEAR_CACHE, clearCache);
+ipcMain.handle(IPC_Consts.__COMPILE_SASS, compileSass)
+ipcMain.handle(IPC_Consts.GET_WINDOW_MAXIMIZED, e => BrowserWindow.fromWebContents(e.sender)?.isMaximized());
 ipcMain.on(IPC_Consts.GET_CHROMIUM_FLAGS, e => e.returnValue = getChromiumFlags());

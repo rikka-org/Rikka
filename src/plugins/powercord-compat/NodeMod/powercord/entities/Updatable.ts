@@ -2,7 +2,7 @@ const Events = require('events');
 import { join } from "path";
 import Logger from "../../../Common/Logger";
 
-export default class Updatable extends Events {
+export = class Updatable extends Events {
     basePath: string;
     entityID?: string;
     entityPath: string;

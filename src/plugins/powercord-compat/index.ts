@@ -32,10 +32,16 @@ export default class PowercordCompat extends RikkaPlugin {
         global.NEW_BACKEND = true;
     }
 
+    private registerIPC() {
+        const ipcmain = require("./ipc/main");
+        const ipcrenderer = require("./ipc/renderer");
+    }
+
     async inject() {
         console.log("Powercord compat is enabled!");
 
         this.setGlobals();
+        this.registerIPC();
         // Place-ins are pushed first so they can override the Powercord modules
         require('module').Module.globalPaths.push(this.placein_modules_directory);
         if (this.experimentalPreload) {

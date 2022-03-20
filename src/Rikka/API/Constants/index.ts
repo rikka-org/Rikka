@@ -8,4 +8,5 @@ export namespace IPC_Consts {
     export const CLEAR_CACHE = "RIKKA_CLEAR_CACHE";
     export const __COMPILE_SASS = "RIKKA___COMPILE_SASS";
     export const GET_CHROMIUM_FLAGS = "RIKKA_GET_CHROMIUM_FLAGS";
+    export const GET_WINDOW_MAXIMIZED = "RIKKA_GET_WINDOW_MAXIMIZED";
 }

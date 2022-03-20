@@ -1,10 +1,12 @@
-import { readdirSync } from "fs";
-import { resolve } from "path";
+import { readdirSync, readFileSync } from "fs";
+import { join, resolve, sep } from "path";
 import RikkaPlugin from "@rikka/Common/Plugin";
+import { NodeVM } from "vm2";
 
 export default class PluginsManager {
     readonly pluginDirectory = PluginsManager.getPluginDirectory();
     protected plugins = new Map<string, RikkaPlugin>();
+    private virtualMachines = new Map<string, NodeVM>();
 
     constructor() {
         console.log(`Using plugins directory: ${this.pluginDirectory}`);
@@ -43,8 +45,43 @@ export default class PluginsManager {
 
     mountPlugin(pluginName: string) {
         try {
-            const plugin = require(resolve(this.pluginDirectory, pluginName));
-            console.log(`Mounting ${resolve(this.pluginDirectory, pluginName)}`);
+            const currentDir = join(this.pluginDirectory, pluginName);
+            const pluginManifest = (() => {
+                try {
+                    const manifest = require(resolve(currentDir, 'manifest.json'));
+                    if (manifest) return manifest;
+                } catch (e) {
+                    console.log("No manifest");
+                }
+            })();
+
+            if (pluginManifest && pluginManifest.sandboxed) {
+                const permsNeeded = (() => {
+                    const permsNeeded = pluginManifest.permissions;
+                    if (permsNeeded) return permsNeeded;
+                })();
+
+                const vm = new NodeVM({
+                    console: 'off',
+                    sandbox: {},
+                    require: {
+                        external: (() => {
+                            // Convert each @rikka to the directory above us
+                            const external = permsNeeded.modules.map((p: string) => p.replace(/^@rikka\//, `${__dirname.replace(RegExp(sep.repeat(2), 'g'), '/')}/../`));
+                            console.log(`External: ${external}`);
+                            return external.modules;
+                        })(),
+                        builtin: ['tslib'],
+                        root: currentDir,
+                    },
+                });
+                this.virtualMachines.set(pluginName, vm);
+                return;
+            }
+
+            const plugin = require(currentDir);
+
+            console.log(`Mounting ${currentDir}`);
             if (!plugin) throw new Error(`Failed to mount plugin: ${pluginName}`);
 
             this.plugins.set(pluginName, new plugin.default());
@@ -58,6 +95,16 @@ export default class PluginsManager {
         this.plugins.forEach((plugin, name) => {
             try {
                 this.loadPlugin(name);
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+        this.virtualMachines.forEach((vm, name) => {
+            try {
+                const dir = join(this.pluginDirectory, name);
+                const code = readFileSync(join(dir, "index.js"), 'utf8');
+                vm.run(code);
             } catch (e) {
                 console.error(e);
             }

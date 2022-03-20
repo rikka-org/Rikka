@@ -1,15 +1,12 @@
 import PCPluginsManager from "./managers/PluginLoader";
-import { join, resolve } from "path";
+import { join } from "path";
 import * as pkg from "../package.json"
 import Updatable from "../NodeMod/powercord/entities/Updatable";
 import APIManager from "./managers/API";
 import Logger from "../Common/Logger";
 import { RikkaPowercord } from "../Common/Constants";
 import modules from "./modules";
-
 const Webpack = require("../NodeMod/powercord/webpack");
-
-const powercordModules = require(resolve(RikkaPowercord.Constants.powercordDir, "modules"));
 
 let hide_rikka = false;
 
@@ -17,6 +14,7 @@ export default class Powercord extends Updatable {
     api = new APIManager();
     private pluginManager = new PCPluginsManager();
     initialized: boolean = false;
+    settings: any;
 
     constructor(hidden: boolean = true) {
         super(join(__dirname, '..', '..'), '', 'powercord-compat');
@@ -30,6 +28,7 @@ export default class Powercord extends Updatable {
 
     async init() {
         Logger.trace("Starting Powercord Emulator");
+        const isOverlay = (/overlay/).test(location.pathname);
 
         await Webpack.init();
 
@@ -38,14 +37,34 @@ export default class Powercord extends Updatable {
         this.emit('initializing');
 
         await this.startup();
+        console.log("ok done with startup");
+
+        if (this.settings.get('hideToken', true)) {
+            const tokenModule = await require('powercord/webpack').getModule(['hideToken']);
+            tokenModule.hideToken = () => void 0;
+            setImmediate(() => tokenModule.showToken()); // just to be sure
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (this.account && this.settings.get('settingsSync', false))
+                powercord.api.settings.upload();
+        });
+
         this.emit('loaded');
     }
 
     async startup() {
         await this.api.startAPIs();
+        this.settings = powercord.api.settings.buildCategoryObject('pc-general');
         this.emit('settingsReady');
 
+        console.log("coremods loading");
+        const coremods = require('./coremods');
+        await coremods.load();
+        console.log("done");
         await this.pluginManager.loadPlugins();
+        console.log("plugins loaded");
+
         this.initialized = true;
     }
 
@@ -55,9 +74,5 @@ export default class Powercord extends Updatable {
             return;
         }
         return pkg.version;
-    }
-
-    get settings() {
-        return [];
     }
 }

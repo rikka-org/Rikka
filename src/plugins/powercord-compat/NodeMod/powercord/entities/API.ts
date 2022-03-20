@@ -3,7 +3,7 @@ import Logger from "../../../Common/Logger";
 const Events = require('events');
 
 
-export default class API extends Events {
+export = class API extends Events {
   ready: boolean = false;
 
   async _load(): Promise<void> {

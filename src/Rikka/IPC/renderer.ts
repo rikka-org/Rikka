@@ -1,5 +1,5 @@
 import { BrowserWindow, ipcRenderer, webFrame } from "electron";
-import { IPC_Consts } from "../API/Constants";
+import { IPC_Consts } from "@rikka/API/Constants";
 
 if (!ipcRenderer) throw new Error("Renderer process not found");
 

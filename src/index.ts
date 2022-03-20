@@ -1,7 +1,7 @@
 import Module from "module";
 import { dirname, join } from "path";
 import electron from "electron";
-import PatchedWindow from "./PatchedWindow";
+import PatchedWindow from "#root/PatchedWindow";
 
 if (!require.main) throw new Error("Rikka is not running as a module!");
 
