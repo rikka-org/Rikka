@@ -38,7 +38,7 @@ export function GetDiscordInstallPath(): string {
     let discordInstall: string = "";
     switch (process.platform) {
         case "win32":
-            discordInstall = WindowsPaths.find(p => existsSync(p)) || noPath();
+            discordInstall = WindowsPaths.find(p => existsSync(p)) || "";
 
             /** Windows DiscordCanary installs need to be found using a regexp, 
              * since the app directory has a version number. For example, it could be app-1.0.45.  
@@ -50,13 +50,13 @@ export function GetDiscordInstallPath(): string {
 
             break;
         case "darwin":
-            discordInstall = MacOSPaths.find(p => existsSync(p)) || noPath();
+            discordInstall = MacOSPaths.find(p => existsSync(p)) || "";
             break;
         case "linux":
-            discordInstall = LinuxPaths.find(p => existsSync(p)) || noPath();
+            discordInstall = LinuxPaths.find(p => existsSync(p)) || "";
             break;
         default:
-            discordInstall = noPath();
+            discordInstall = "";
             break;
     }
 
