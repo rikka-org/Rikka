@@ -1,4 +1,6 @@
 const { Plugin } = require('powercord/entities');
+const { inject } = require('powercord/injector');
+const { messages } = require('powercord/webpack');
 
 module.exports = class testPlugin2 extends Plugin {
     startPlugin() {
@@ -10,6 +12,7 @@ module.exports = class testPlugin2 extends Plugin {
             console.log("Rikkapc not detected!");
         
         this.testCommandMount();
+        this.testBotMsg();
         console.log("Test complete!");
     }
 
@@ -23,4 +26,38 @@ module.exports = class testPlugin2 extends Plugin {
             }
         });
     }
+
+    testBotMsg() {
+        inject('botMsgTest', messages, 'sendMessage', (message) => {
+            const regex = new RegExp("sus", "gmi");
+            if (regex.test(message[1].content)) {
+              setTimeout(() => this.sendEphemeralMessage("sus sus sus among us real real he said sus real real"));
+            }
+        });
+    }
+
+    getModule (name) {
+        let module;
+        webpackChunkdiscord_app.push([
+          [ Math.random() ],
+          {},
+          (r) => {
+            module =
+            module ||
+            Object.values(r.c).find(
+              (m) => m?.exports?.default && m.exports.default[name]
+            );
+          }
+        ]);
+        return module;
+    }
+
+    sendEphemeralMessage (content) {
+        this.getModule('sendMessage').exports.default.sendBotMessage(
+          this.getModule(
+            'getLastSelectedChannelId'
+          ).exports.default.getChannelId(),
+          content
+        );
+      }
 }
