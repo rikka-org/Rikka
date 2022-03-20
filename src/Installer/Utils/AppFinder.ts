@@ -1,6 +1,5 @@
 import { existsSync, readdirSync } from "fs";
 import { join } from "path";
-import os from "os";
 
 export const WindowsPaths = [
     join(process.env.LOCALAPPDATA!, "DiscordCanary"),

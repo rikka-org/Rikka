@@ -5,9 +5,10 @@ import { createElement } from "../../../powercord-git/src/fake_node_modules/powe
 import PCPluginsManager from "../../../Powercord/managers/PluginLoader";
 import Updatable from "./Updatable";
 
-export default class Plugin extends Updatable {
+export = class Plugin extends Updatable {
     ready = false;
     styles: any = {};
+    settings = powercord.api.settings.buildCategoryObject(this.entityID);
 
     constructor() {
         super(PCPluginsManager.getPluginDirectory());
@@ -65,17 +66,11 @@ export default class Plugin extends Updatable {
         return compile();
     }
 
-    async pluginWillUnload() {
-
-    }
+    async pluginWillUnload() {}
 
     _load() {
         this.startPlugin();
     }
 
-    startPlugin() {
-
-    }
+    startPlugin() {}
 }
-
-module.exports = Plugin;
