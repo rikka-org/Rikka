@@ -1,5 +1,5 @@
 /** A base class for all plugins. */
-export abstract class RikkaPlugin {
+export default abstract class RikkaPlugin {
     /** The name of this plugin, shows up in the plugin list, etc. */
     readonly abstract Manifest: PluginManifest;
 

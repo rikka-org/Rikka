@@ -1,6 +1,6 @@
 import { join } from "path";
 import { BrowserWindow, BrowserWindowConstructorOptions, LoadURLOptions } from "electron";
-import { IPC_Consts } from "./Rikka/API/Constants";
+import { IPC_Consts } from "@rikka/API/Constants";
 
 export default class PatchedWindow extends BrowserWindow {
     //@ts-ignore

@@ -18,7 +18,7 @@ export default class Powercord extends Updatable {
     private pluginManager = new PCPluginsManager();
     initialized: boolean = false;
 
-    constructor(hidden: boolean = false) {
+    constructor(hidden: boolean = true) {
         super(join(__dirname, '..', '..'), '', 'powercord-compat');
         hide_rikka = hidden;
         if (document.readyState === 'loading') {

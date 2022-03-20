@@ -1,10 +1,6 @@
 import { ipcRenderer } from "electron";
-import { join } from "path";
-import { IPC_Consts } from "./Rikka/API/Constants";
-
-// Begin adding fake modules
-require('module').Module.globalPaths.push(join(__dirname, "Nodemod"));
-require("./Rikka/IPC/renderer");
+import { IPC_Consts } from "@rikka/API/Constants";
+import * as ipcrenderer from "@rikka/IPC/renderer";
 
 // Original preload
 const preloader = ipcRenderer.sendSync(IPC_Consts.GET_PRELOAD);

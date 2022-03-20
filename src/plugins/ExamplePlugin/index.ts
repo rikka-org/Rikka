@@ -1,4 +1,4 @@
-import { RikkaPlugin } from '../../Common/Plugin';
+import RikkaPlugin from '@rikka/Common/Plugin';
 /** BS workaround for TS not including .json by default (Seriously, why is this not a default M$?) */
 import * as pkg from './package.json';
 

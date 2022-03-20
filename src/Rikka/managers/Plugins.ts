@@ -1,6 +1,6 @@
 import { readdirSync } from "fs";
 import { resolve } from "path";
-import { RikkaPlugin } from "../../Common/Plugin";
+import RikkaPlugin from "@rikka/Common/Plugin";
 
 export default class PluginsManager {
     readonly pluginDirectory = PluginsManager.getPluginDirectory();

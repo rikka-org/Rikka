@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
-import { RikkaPlugin } from "../../Common/Plugin";
+import RikkaPlugin from "@rikka/Common/Plugin";
 import { RikkaPowercord } from "./Common/Constants";
 import Logger from "./Common/Logger";
 import pkg from "./package.json";

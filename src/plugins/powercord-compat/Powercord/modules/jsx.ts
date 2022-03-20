@@ -1,10 +1,13 @@
 const JsxCompiler = require('powercord/compilers/jsx');
 
-module.exports = () => {
-  // noinspection JSDeprecatedSymbols
+interface compilerModule extends NodeJS.Module {
+    _compile(code: string, filename: string): void;
+}
+
+export = () => {
   require.extensions['.jsx'] = (module, filename) => {
     const compiler = new JsxCompiler(filename);
     const compiled = compiler.compile();
-    module._compile(compiled, filename);
+    (module as compilerModule)._compile(compiled, filename);
   };
 };

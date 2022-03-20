@@ -1,2 +1,0 @@
-# Nodemod
-The Nodemod directory contains fake node modules that are pushed to the global namespace. This mimics Powercord's modular design, and allows direct loading of other client mods fake node modules.

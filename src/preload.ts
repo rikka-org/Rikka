@@ -1,8 +1,20 @@
 import { ipcRenderer, webFrame } from "electron";
-import { join } from "path";
-import Rikka from "./Rikka";
-import { IPC_Consts } from "./Rikka/API/Constants";
+import Rikka from "@rikka/index";
+import { IPC_Consts } from "@rikka/API/Constants";
 
+function defineWindowGetter(key: string, getter: () => any) {
+  Object.defineProperty(window, key, {
+    get: getter,
+  });
+}
+
+function defineWebframe(key: string) {
+  defineWindowGetter(key, () => (webFrame.top as any).context.window[key]);
+}
+
+defineWebframe("platform");
+defineWebframe("_");
+defineWebframe("webpackChunkdiscord_app");
 Object.defineProperty(window, 'platform', {
   get: () => (webFrame.top as any).context.window.platform
 });
