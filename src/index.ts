@@ -2,13 +2,15 @@ import Module from "module";
 import { dirname, join } from "path";
 import electron from "electron";
 import PatchedWindow from "./PatchedWindow";
-import * as ipcmain from "@rikka/IPC/main";
 
 if (!require.main) throw new Error("Rikka is not running as a module!");
+
 
 const electronPath = require.resolve('electron');
 const discordAsar = join(dirname(require.main!.filename), "..", "app.asar");
 require.main.filename = join(discordAsar, 'app_bootstrap/index.js');
+
+const ipcmain = require("./Rikka/IPC/main");
 
 console.log("Rikka is starting...");
 

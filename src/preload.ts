@@ -12,9 +12,6 @@ function defineWebframe(key: string) {
   defineWindowGetter(key, () => (webFrame.top as any).context.window[key]);
 }
 
-defineWebframe("platform");
-defineWebframe("_");
-defineWebframe("webpackChunkdiscord_app");
 Object.defineProperty(window, 'platform', {
   get: () => (webFrame.top as any).context.window.platform
 });
