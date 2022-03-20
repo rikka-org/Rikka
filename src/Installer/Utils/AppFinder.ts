@@ -1,8 +1,9 @@
-import { existsSync } from "fs";
-import path from "path";
+import { existsSync, readdirSync } from "fs";
+import { join } from "path";
+import os from "os";
 
 export const WindowsPaths = [
-    "C:\\Program Files (x86)\\Discord\\DiscordCanary",
+    join(process.env.LOCALAPPDATA!, "DiscordCanary"),
 ]
 
 export const MacOSPaths = [
@@ -33,6 +34,15 @@ export function GetDiscordInstallPath(): string {
     switch(process.platform) {
         case "win32":
             discordInstall = WindowsPaths.find(p => existsSync(p)) || "";
+
+            /** Windows DiscordCanary installs need to be found using a regexp, 
+             * since the app directory has a version number. For example, it could be app-1.0.45.  
+             * */
+            const dirs = discordInstall ? readdirSync(discordInstall) : [];
+            // filter out the directories that don't match the regexp.
+            const latestVersion = dirs.filter(p => p.startsWith('app-')).reverse()[0];
+            if(latestVersion) discordInstall = join(discordInstall, latestVersion);
+
             break;
         case "darwin":
             discordInstall = MacOSPaths.find(p => existsSync(p)) || "";
@@ -47,5 +57,5 @@ export function GetDiscordInstallPath(): string {
             break;
     }
 
-    return path.join(discordInstall, 'resources', 'app');
+    return join(discordInstall, 'resources', 'app');
 }
