@@ -68,10 +68,10 @@ export default class PluginsManager {
                         external: (() => {
                             // Convert each @rikka to the directory above us
                             const external = permsNeeded.modules.map((p: string) => p.replace(/^@rikka\//, `${__dirname.replace(RegExp(sep.repeat(2), 'g'), '/')}/../`));
+                            external.push(require.resolve('tslib'));
                             console.log(`External: ${external}`);
                             return external.modules;
                         })(),
-                        builtin: ['tslib'],
                         root: currentDir,
                     },
                 });
@@ -108,6 +108,12 @@ export default class PluginsManager {
             } catch (e) {
                 console.error(e);
             }
+        });
+    }
+
+    protected shutdownVMs() {
+        this.virtualMachines.forEach((vm) => {
+            vm.run(`process.exit(0);`);
         });
     }
 

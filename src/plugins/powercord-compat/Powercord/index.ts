@@ -15,6 +15,11 @@ export default class Powercord extends Updatable {
     private pluginManager = new PCPluginsManager();
     initialized: boolean = false;
     settings: any;
+    gitInfos = {
+        upstream: '???',
+        branch: '???',
+        revision: '???'
+      };
 
     constructor(hidden: boolean = true) {
         super(join(__dirname, '..', '..'), '', 'powercord-compat');
@@ -32,11 +37,11 @@ export default class Powercord extends Updatable {
 
         await Webpack.init();
 
-        //await Promise.all(powercordModules.map((mdl: () => any) => mdl()));
         await Promise.all(modules.map((mdl: () => any) => mdl()));
         this.emit('initializing');
 
         await this.startup();
+        this.gitInfos = await this.pluginManager.get('pc-updater')?.getGitInfos();
         console.log("ok done with startup");
 
         if (this.settings.get('hideToken', true)) {
