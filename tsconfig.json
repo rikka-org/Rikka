@@ -39,6 +39,7 @@
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     "plugins": [
       { "transform": "typescript-transform-paths" },
+      { "transform": "tsc-progress", "name": "tsc", "color": "green" },
     ],
     // "rootDirs": ["src"],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like `./node_modules/@types`. */

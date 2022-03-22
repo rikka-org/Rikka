@@ -16,23 +16,6 @@ export const LinuxPaths = [
     "/var/lib/flatpak/app/com.discordapp.DiscordCanary/x86_64/beta/active/files/discord-canary/"
 ]
 
-function promptPath() {
-    let result: string = "";
-    const inputPath = prompt("Please enter the path to Discord:", "");
-    if (!inputPath) result = promptPath();
-    else if (!existsSync(inputPath)) {
-        console.warn("Path does not exist!");
-        result = promptPath();
-    }
-
-    return result;
-}
-
-function noPath() {
-    console.log("Couldn't find Discord installation path. Please manually specify the path.");
-    // Get path from user input in stdin
-    return promptPath();
-}
 /** Finds the Discord installation path based on platform. */
 export function GetDiscordInstallPath(): string {
     let discordInstall: string = "";

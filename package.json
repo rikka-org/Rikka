@@ -10,7 +10,8 @@
     "build": "tsc -p tsconfig.json && npm run copy-files",
     "watch": "tsc -w -p tsconfig.json",
     "test": "node out/index.js",
-    "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/.exists src/**/*.json src/**/*.scss out/"
+    "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/.exists src/**/*.json src/**/*.scss out/",
+    "clean": "rimraf out"
   },
   "keywords": [
     "discord",
@@ -22,7 +23,10 @@
   "devDependencies": {
     "@types/node": "^17.0.21",
     "@types/prompt": "^1.1.2",
+    "cpy-cli": "^4.1.0",
+    "rimraf": "^3.0.2",
     "ts-patch": "^2.0.1",
+    "tsc-progress": "^1.0.4",
     "tslib": "^2.3.1",
     "typescript-transform-paths": "^3.3.1"
   },
@@ -32,8 +36,6 @@
     "electron": "^17.1.1",
     "less": "^4.1.2",
     "node-watch": "^0.7.3",
-    "prompt": "^1.2.2",
-    "rimraf": "^3.0.2",
     "sass": "^1.49.9",
     "stylus": "^0.56.0",
     "sucrase": "^3.20.3",
