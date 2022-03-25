@@ -10,19 +10,19 @@ export async function InjectRikka() {
     if (!discordInstall) return;
 
     /** We don't need to elevate to modify home directories */
-    if (process.platform !== "win32")
+    if (discordInstall.needsElevation)
         if (!await switchToRoot()) return;
 
     /** Failsafe for corrupted installs. */
-    if(!existsSync(discordInstall)) await mkdir(discordInstall)
+    if(!existsSync(discordInstall.path)) await mkdir(discordInstall.path, { recursive: true })
         .catch(e => { throw new Error(`Failed to create directory for Rikka! ${e}`) });
         
     // Write a file to the Discord installation directory that calls a require() on the Rikka module.
-    writeFile(join(discordInstall, "Rikka.js"), 
+    writeFile(join(discordInstall.path, "Rikka.js"), 
         `require(\`${__dirname.replace(RegExp(sep.repeat(2), 'g'), '/')}/../..\`)`
     )
         .catch(e => { throw new Error(`Failed to write Rikka.js! ${e}`) });
-    writeFile(join(discordInstall, 'package.json'), JSON.stringify({
+    writeFile(join(discordInstall.path, 'package.json'), JSON.stringify({
         name: 'discord',
         main: 'Rikka.js'
         })
@@ -34,11 +34,11 @@ export async function InjectRikka() {
 export async function UninjectRikka() {
     if (!discordInstall) return;
 
-    if (process.platform !== "win32")
+    if (discordInstall.needsElevation)
         if(!await switchToRoot()) return;
 
     // Delete the rikka.js file
-    await rm(discordInstall, { recursive: true })
+    await rm(discordInstall.path, { recursive: true })
         .catch(e => { throw new Error(`Failed to delete Rikka.js! ${e}`) });
 
     console.log("Rikka uninjected successfully!");
