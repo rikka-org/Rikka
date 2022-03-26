@@ -22,10 +22,17 @@ export default class PowercordCompat extends RikkaPlugin {
 
     private experimentalPreload: boolean = true;
 
-    private createDataDirectory() {
-        if (!existsSync(RikkaPowercord.Constants.RKPOWERCORD_FOLDER)) {
-            mkdirSync(RikkaPowercord.Constants.RKPOWERCORD_FOLDER);
+    private mkdDirIfNotExists(dir: string, recursive: boolean = false) {
+        if (!existsSync(dir)) {
+            mkdirSync(dir, { recursive: recursive });
         }
+    }
+
+    private createPowercordDataDir() {
+        this.mkdDirIfNotExists(RikkaPowercord.Constants.RKPOWERCORD_FOLDER, true);
+        this.mkdDirIfNotExists(RikkaPowercord.Constants.RKPOWERCORD_SETTINGS, true);
+        this.mkdDirIfNotExists(RikkaPowercord.Constants.RKPOWERCORD_CACHE, true);
+        this.mkdDirIfNotExists(RikkaPowercord.Constants.RKPOWERCORD_LOGS, true);
     }
 
     private setGlobals() {
@@ -33,7 +40,6 @@ export default class PowercordCompat extends RikkaPlugin {
     }
 
     private registerIPC() {
-        const ipcmain = require("./ipc/main");
         const ipcrenderer = require("./ipc/renderer");
     }
 
@@ -49,8 +55,9 @@ export default class PowercordCompat extends RikkaPlugin {
             require('module').Module.globalPaths.push(this.powercord_modules_directory);
         }
 
-        this.createDataDirectory();
+        this.createPowercordDataDir();
 
+        require('./preloader');
         // Might be assigned already
         if (this.powercord) {
             Logger.trace("Powercord already initialized");

@@ -35,7 +35,6 @@ export default class Powercord extends Updatable {
 
     async init() {
         Logger.trace("Starting Powercord Emulator");
-        const isOverlay = (/overlay/).test(location.pathname);
 
         await Webpack.init();
 
