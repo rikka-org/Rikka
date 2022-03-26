@@ -4,7 +4,7 @@
  * https://powercord.dev/porkord-license
  */
 
- if (!global.NEW_BACKEND) {
+if (!global.NEW_BACKEND) {
   module.exports = require('./old.webpack.js');
   return;
 }

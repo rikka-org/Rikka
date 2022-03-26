@@ -54,13 +54,13 @@ require.cache[electronPath]!.exports = electronExports;
 
 electron.app.once('ready', () => {
   // Buggy as hell, and introduces security issues
-  /** electron.session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders }, done) => {
+  electron.session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders }, done) => {
     Object.keys(responseHeaders!)
       .filter(k => (/^content-security-policy/i).test(k))
       .map(k => (delete responseHeaders![k]));
 
     done({ responseHeaders });
-  }); */
+  });
 });
 
 const discPackage = require(join(discordAsar, "package.json"));

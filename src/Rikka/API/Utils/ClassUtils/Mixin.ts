@@ -3,7 +3,7 @@ type GConstructor<T = {}> = new (...args: any[]) => T;
 
 
 /** Mixin function that uses generics */
-export function Mixin<TBase extends GConstructor, TClass extends GConstructor<TBase>>(Base: TBase, Class: TClass): TClass {
+export default function Mixin<TBase extends GConstructor, TClass extends GConstructor<TBase>>(Base: TBase, Class: TClass): TClass {
     // @ts-ignore
     return class extends Base {
         constructor(...args: any[]) {

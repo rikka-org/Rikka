@@ -1,5 +1,4 @@
 import { ipcRenderer, webFrame } from "electron";
-import Rikka from "@rikka/index";
 import { IPC_Consts } from "@rikka/API/Constants";
 
 function defineWindowGetter(key: string, getter: () => any) {
@@ -40,10 +39,10 @@ Object.defineProperty(window, '__SENTRY__', {
 //require('module').Module.globalPaths.push(join(__dirname, 'NodeMod'));
 
 // Initializing Rikka loader
+import Rikka from "@rikka/index";
 const rikka = new Rikka();
-//@ts-ignore
+// @ts-ignore
 global.rikka = rikka;
-export const rikkaInstance = rikka;
 
 const discordPreload = ipcRenderer.sendSync(IPC_Consts.GET_PRELOAD);
 if (discordPreload) {

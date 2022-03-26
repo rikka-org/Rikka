@@ -58,12 +58,9 @@ export = class SettingsAPI extends API {
     _fluxProps(category: string) {
         return {
             settings: store.getSettings(category),
-            //@ts-ignore
-            getSetting: (setting, defaultValue) => store.getSetting(category, setting, defaultValue),
-            //@ts-ignore
-            updateSetting: (setting, value) => actions.updateSetting(category, setting, value),
-            //@ts-ignore
-            toggleSetting: (setting, defaultValue) => actions.toggleSetting(category, setting, defaultValue)
+            getSetting: (setting: string, defaultValue: any) => store.getSetting(category, setting, defaultValue),
+            updateSetting: (setting: string, value: any) => actions.updateSetting(category, setting, value),
+            toggleSetting: (setting: string, defaultValue: any) => actions.toggleSetting(category, setting, defaultValue)
         };
     }
 

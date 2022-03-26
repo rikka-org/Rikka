@@ -12,21 +12,21 @@ export default class PluginsManager {
         console.log(`Using plugins directory: ${this.pluginDirectory}`);
     }
 
-    protected loadPlugin(pluginName: string) {
+    private loadPlugin(pluginName: string) {
         console.log(this.plugins);
         const plugin = this.plugins.get(pluginName);
         if (!plugin) throw new Error(`Failed to load plugin: ${pluginName}`);
         if (plugin.enabled) return;
 
-        plugin.inject();
+        plugin._load();
     }
 
-    protected unloadPlugin(pluginName: string) {
+    private unloadPlugin(pluginName: string) {
         const plugin = this.plugins.get(pluginName);
         if (!plugin) throw new Error(`Failed to unload plugin: ${pluginName}`);
         if (!plugin.enabled) return;
 
-        plugin.unload();
+        plugin._unload();
     }
 
     enablePlugin(pluginName: string) {
@@ -43,7 +43,7 @@ export default class PluginsManager {
         this.unloadPlugin(pluginName);
     }
 
-    mountPlugin(pluginName: string) {
+    private mountPlugin(pluginName: string) {
         try {
             const currentDir = join(this.pluginDirectory, pluginName);
             const pluginManifest = (() => {
@@ -68,11 +68,13 @@ export default class PluginsManager {
                         external: (() => {
                             // Convert each @rikka to the directory above us
                             const external = permsNeeded.modules.map((p: string) => p.replace(/^@rikka\//, `${__dirname.replace(RegExp(sep.repeat(2), 'g'), '/')}/../`));
-                            external.push(require.resolve('tslib'));
                             console.log(`External: ${external}`);
                             return external.modules;
                         })(),
                         root: currentDir,
+                        builtin: [
+                            'tslib',
+                        ]
                     },
                 });
                 this.virtualMachines.set(pluginName, vm);
@@ -111,7 +113,18 @@ export default class PluginsManager {
         });
     }
 
-    protected shutdownVMs() {
+    async _shutdown() {
+        await this.unloadPlugins();
+        await this.shutdownVMs();
+    }
+
+    private unloadPlugins() {
+        this.plugins.forEach((plugin, name) => {
+            this.unloadPlugin(name);
+        });
+    }
+
+    private shutdownVMs() {
         this.virtualMachines.forEach((vm) => {
             vm.run(`process.exit(0);`);
         });

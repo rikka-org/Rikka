@@ -1,4 +1,4 @@
-import { Rikka } from "../../Rikka";
+import Rikka from "@rikka/index";
 import StyleManager from "../../Rikka/managers/StyleManager";
 
 

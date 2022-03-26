@@ -35,4 +35,15 @@ export default class APIManager {
             }
         });
     }
+
+    /** Shuts down the API manager */
+    async _shutdown() {
+        this.unloadAPIs();
+    }
+
+    private unloadAPIs() {
+        this.loadedApis.forEach(api => {
+            api._unload();
+        });
+    }
 }

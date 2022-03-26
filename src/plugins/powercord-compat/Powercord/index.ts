@@ -27,7 +27,9 @@ export default class Powercord extends Updatable {
         revision: '???'
     };
 
-    account? = null;
+    private account? = null;
+
+    private isLinking = false;
 
     constructor(hidden: boolean = true) {
         super(join(__dirname, '..', '..'), '', 'powercord-compat');
@@ -51,7 +53,6 @@ export default class Powercord extends Updatable {
         await this.startup();
         // @ts-ignore
         this.gitInfos = await this.pluginManager.get('pc-updater')?.getGitInfos();
-        console.log("ok done with startup");
 
         if (this.settings.get('hideToken', true)) {
             const tokenModule = await require('powercord/webpack').getModule(['hideToken']);
@@ -72,12 +73,10 @@ export default class Powercord extends Updatable {
         this.settings = powercord.api.settings.buildCategoryObject('pc-general');
         this.emit('settingsReady');
 
-        console.log("coremods loading");
         const coremods = require('./coremods');
         await coremods.load();
-        console.log("done");
+
         await this.pluginManager.loadPlugins();
-        console.log("plugins loaded");
 
         this.initialized = true;
     }

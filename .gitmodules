@@ -10,3 +10,6 @@
 [submodule "src/plugins/powercord-compat/plugins/At-Someone"]
 	path = src/plugins/powercord-compat/plugins/At-Someone
 	url = https://github.com/SammCheese/At-Someone
+[submodule "src/plugins/powercord-compat/plugins/bdCompat"]
+	path = src/plugins/powercord-compat/plugins/bdCompat
+	url = https://github.com/Juby210/bdCompat.git

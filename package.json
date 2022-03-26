@@ -31,11 +31,13 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "dependencies": {
+    "callsite": "^1.0.0",
     "codemirror": "^5.65.2",
     "copyfiles": "^2.4.1",
     "electron": "^17.1.1",
     "less": "^4.1.2",
     "node-watch": "^0.7.3",
+    "object-assign": "^4.1.1",
     "sass": "^1.49.9",
     "stylus": "^0.56.0",
     "sucrase": "^3.20.3",

@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2018-2020 aetheryx & Bowser65
- * All Rights Reserved. Licensed under the Porkord License
- * https://powercord.dev/porkord-license
- */
-
-const { join } = require('path');
 import { RikkaPowercord } from '../../Common/Constants';
 
 export = Object.freeze({
@@ -12,10 +5,9 @@ export = Object.freeze({
   REPO_URL: 'powercord-org/powercord',
   WEBSITE: 'https://powercord.dev',
 
-  // Runtime
-  SETTINGS_FOLDER: join(RikkaPowercord.Constants.RKPOWERCORD_FOLDER, 'settings'),
-  CACHE_FOLDER: join(RikkaPowercord.Constants.RKPOWERCORD_FOLDER, '.cache'),
-  LOGS_FOLDER: join(RikkaPowercord.Constants.RKPOWERCORD_FOLDER, '.logs'),
+  SETTINGS_FOLDER: RikkaPowercord.Constants.RKPOWERCORD_SETTINGS,
+  CACHE_FOLDER: RikkaPowercord.Constants.RKPOWERCORD_CACHE,
+  LOGS_FOLDER: RikkaPowercord.Constants.RKPOWERCORD_LOGS,
 
   // Powercords promotional stuff
   DISCORD_INVITE: 'gs4ZMbBfCh',

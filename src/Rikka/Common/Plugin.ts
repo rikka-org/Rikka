@@ -4,11 +4,23 @@ export default abstract class RikkaPlugin {
     readonly abstract Manifest: PluginManifest;
 
     enabled: boolean = false;
-    
+    ready: boolean = false;
+
+    /** Internal loading function, plugins aren't supposed to use this. */
+    async _load() {
+        this.inject();
+
+        this.ready = true;
+    }
+
     /** Called during preloadsplash */
     preload(): void {}
     /** Called when this plugin is being injected into the Discord client. */
     abstract inject(): void;
 
-    unload(): void {}
+    async _unload() {
+        this.uninject();
+    }
+
+    uninject(): void {}
 }
