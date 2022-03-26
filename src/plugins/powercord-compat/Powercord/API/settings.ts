@@ -1,13 +1,21 @@
 const { Flux } = require('powercord/webpack');
-
 import API from "../../NodeMod/powercord/entities/API";
+
 import store from "./settingsStore/store";
 import * as actions from "./settingsStore/actions";
+
 import Logger from "../../Common/Logger";
 
 export = class SettingsAPI extends API {
     store = store;
     private tabs: { [key: string]: any } = {};
+    private _interval: NodeJS.Timer;
+
+    constructor() {
+        super();
+        setTimeout(this.download.bind(this), 1500);
+        this._interval = setInterval(this.upload.bind(this), 10 * 60 * 1000);
+    }
 
     registerSettings(tabId: string | number, props: { category: any; render: any; }) {
         Logger.trace(`Creating settings tab ${tabId}`);

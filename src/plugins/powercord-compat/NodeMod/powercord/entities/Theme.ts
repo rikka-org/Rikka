@@ -8,6 +8,12 @@ export = class Theme extends Updatable {
     manifest: any;
     applied: boolean;
 
+    private style: HTMLElement = createElement('style', {
+        id: `theme-${this.entityID}`,
+        'data-powercord': true,
+        'data-theme': true
+    });
+
     constructor(themeID: string | undefined, manifest: any) {
         const styleManager: any = typeof powercord !== 'undefined' ? powercord.styleManager : global.sm;
         super((styleManager).themesDir, themeID);
@@ -17,23 +23,21 @@ export = class Theme extends Updatable {
         this.applied = false;
     }
 
+    private async _doCompile() {
+        this.style.innerHTML = await this.compiler.compile();
+    }
+
     apply() {
         if (!this.applied) {
             this.applied = true;
-            const style = createElement('style', {
-                id: `theme-${this.entityID}`,
-                'data-powercord': true,
-                'data-theme': true
-            });
-            document.head.appendChild(style);
-            this._doCompile = async () => {
-                style.innerHTML = await this.compiler.compile();
-            };
+            document.head.appendChild(this.style);
 
             this.compiler.enableWatcher();
             this.compiler.on('src-update', this._doCompile);
             return this._doCompile();
         }
+
+        return;
     }
 
     remove() {

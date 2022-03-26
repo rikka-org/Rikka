@@ -4,7 +4,6 @@ import * as pkg from "../package.json"
 import Updatable from "../NodeMod/powercord/entities/Updatable";
 import APIManager from "./managers/API";
 import Logger from "../Common/Logger";
-import { RikkaPowercord } from "../Common/Constants";
 import modules from "./modules";
 import styleManager from "./managers/styleManager";
 const Webpack = require("../NodeMod/powercord/webpack");
@@ -13,15 +12,22 @@ let hide_rikka = false;
 
 export default class Powercord extends Updatable {
     api = new APIManager();
+
     pluginManager = new PCPluginsManager();
+
     styleManager = new styleManager();
+
     initialized: boolean = false;
+
     settings: any;
+
     gitInfos = {
         upstream: '???',
         branch: '???',
         revision: '???'
-      };
+    };
+
+    account? = null;
 
     constructor(hidden: boolean = true) {
         super(join(__dirname, '..', '..'), '', 'powercord-compat');
@@ -38,10 +44,12 @@ export default class Powercord extends Updatable {
 
         await Webpack.init();
 
+        // Could someone good with routing make this better?
         await Promise.all(modules.map((mdl: () => any) => mdl()));
         this.emit('initializing');
 
         await this.startup();
+        // @ts-ignore
         this.gitInfos = await this.pluginManager.get('pc-updater')?.getGitInfos();
         console.log("ok done with startup");
 

@@ -6,7 +6,7 @@ export = class CommandsAPI extends API {
     commands = new Map<string, any>();
 
     get prefix() {
-        return '!';
+        return powercord.settings.get('prefix', '.');
     }
 
     get find() {

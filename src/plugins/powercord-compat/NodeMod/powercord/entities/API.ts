@@ -1,6 +1,6 @@
 import Logger from "../../../Common/Logger";
 
-const Events = require('events');
+import Events from "events";
 
 
 export = class API extends Events {

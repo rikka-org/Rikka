@@ -1,7 +1,7 @@
 const { FluxDispatcher } = require('powercord/webpack');
 import ActionTypes from "./constants";
 
-export function toggleSetting(category: any, setting: any, defaultValue?: any) {
+export function toggleSetting(category: string, setting: any, defaultValue?: any) {
     FluxDispatcher.dispatch({
         type: ActionTypes.TOGGLE_SETTING,
         category,
@@ -10,7 +10,7 @@ export function toggleSetting(category: any, setting: any, defaultValue?: any) {
     });
 }
 
-export function updateSettings(category: any, settings: any) {
+export function updateSettings(category: string, settings: any) {
     FluxDispatcher.dispatch({
         type: ActionTypes.UPDATE_SETTINGS,
         category,
@@ -18,7 +18,7 @@ export function updateSettings(category: any, settings: any) {
     });
 }
 
-export function updateSetting(category: any, setting: any, value: any) {
+export function updateSetting(category: string, setting: any, value: any) {
     FluxDispatcher.dispatch({
         type: ActionTypes.UPDATE_SETTING,
         category,
@@ -27,7 +27,7 @@ export function updateSetting(category: any, setting: any, value: any) {
     });
 }
 
-export function deleteSetting(category: any, setting: any) {
+export function deleteSetting(category: string, setting: any) {
     FluxDispatcher.dispatch({
         type: ActionTypes.DELETE_SETTING,
         category,

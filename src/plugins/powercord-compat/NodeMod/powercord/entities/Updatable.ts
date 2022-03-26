@@ -1,12 +1,18 @@
-const Events = require('events');
+import Events from "events";
+import { existsSync } from "fs";
 import { join } from "path";
 import Logger from "../../../Common/Logger";
 
 export = class Updatable extends Events {
     basePath: string;
+
     entityID?: string;
+
     entityPath: string;
+
     updateIdentifier: string;
+
+    private __shortCircuit: boolean = false;
 
     constructor(basePath: string, entityID?: string, updateIdentifier?: string) {
         super();
@@ -29,6 +35,10 @@ export = class Updatable extends Events {
     async _checkForUpdates(): Promise<boolean> {
         Logger.trace("Stub %d", this.entityID);
         return false;
+    }
+
+    isUpdatable() {
+        return existsSync(join(this.basePath, this.entityID??"FIXME", '.git')) && !this.__shortCircuit;
     }
 
 
