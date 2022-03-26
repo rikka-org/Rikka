@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import Logger from "../../../Common/Logger";
 import constants from "../../../NodeMod/powercord/constants";
 import ActionTypes from "./constants";
 const { Flux, FluxDispatcher } = require('powercord/webpack');
@@ -30,6 +31,7 @@ const settings = Object.fromEntries(
 );
 
 function updateSettings(category: string | number, newSettings: any) {
+    Logger.trace(`Updating settings ${category} to ${newSettings}`);
     if (!settings[category]) {
         settings[category] = {};
     }
@@ -37,6 +39,8 @@ function updateSettings(category: string | number, newSettings: any) {
 }
 
 function updateSetting(category: string, setting: string, value: undefined) {
+    Logger.trace(`Updating setting ${category}.${setting} to ${value}`);
+    
     if (!settings[category]) {
         settings[category] = {};
     }

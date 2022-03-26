@@ -10,6 +10,7 @@ export = class SettingsAPI extends API {
     private tabs: { [key: string]: any } = {};
 
     registerSettings(tabId: string | number, props: { category: any; render: any; }) {
+        Logger.trace(`Creating settings tab ${tabId}`);
         if (this.tabs[tabId]) {
             throw new Error(`Settings tab ${tabId} is already registered!`);
         }

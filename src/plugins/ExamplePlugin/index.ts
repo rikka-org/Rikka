@@ -14,6 +14,10 @@ export default class ExamplePlugin extends RikkaPlugin {
 
     inject() {
         console.log("Example Plugin is starting...");
+        // this.domInject();
+    }
+
+    private domInject() {
         const divNode = document.createElement("div");
         divNode.innerHTML = "<style>* { transition: 300ms cubic-bezier(0.22, 0.6, 0.12, 1.05); }</style>";
         document.head.appendChild(divNode);
