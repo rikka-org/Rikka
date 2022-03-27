@@ -2,15 +2,15 @@ import Module from "module";
 import { dirname, join } from "path";
 import electron from "electron";
 import PatchedWindow from "./PatchedWindow";
+import { preloadPlugins } from "@rikka/Preload";
 
 if (!require.main) throw new Error("Rikka is not running as a module!");
-
 
 const electronPath = require.resolve('electron');
 const discordAsar = join(dirname(require.main!.filename), "..", "app.asar");
 require.main.filename = join(discordAsar, 'app_bootstrap/index.js');
 
-const ipcmain = require("./Rikka/IPC/main");
+import * as ipcmain from "@rikka/IPC/main";
 
 console.log("Rikka is starting...");
 
@@ -27,7 +27,7 @@ function setAppUserModelId(...args: any[]) {
 electron.app.setAppUserModelId = setAppUserModelId;
 
 if (!electron.safeStorage) {
-  //@ts-ignore you know torvalds was right - private properties are fucking stupid
+  // @ts-ignore you know torvalds was right - private properties are fucking stupid
   electron.safeStorage = {
     isEncryptionAvailable: () => false,
     encryptString: () => {
@@ -67,6 +67,9 @@ const discPackage = require(join(discordAsar, "package.json"));
 //@ts-ignore - Completely and utterly wrong
 electron.app.setAppPath(discPackage.name, discordAsar);
 electron.app.name = discPackage.name;
+
+// Loading plugins
+preloadPlugins();
 
 console.log("Discord is loading...");
 //@ts-ignore
