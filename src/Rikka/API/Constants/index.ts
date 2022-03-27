@@ -6,7 +6,7 @@ export namespace IPC_Consts {
     export const CLOSE_DEVTOOLS = "RIKKA_CLOSE_DEVTOOLS";
     export const OPEN_WINDOW = "RIKKA_OPEN_WINDOW";
     export const CLEAR_CACHE = "RIKKA_CLEAR_CACHE";
-    export const __COMPILE_SASS = "RIKKA___COMPILE_SASS";
+    export const __COMPILE_SASS = "RIKKA_COMPILE_SASS";
     export const GET_CHROMIUM_FLAGS = "RIKKA_GET_CHROMIUM_FLAGS";
     export const GET_WINDOW_MAXIMIZED = "RIKKA_GET_WINDOW_MAXIMIZED";
 }

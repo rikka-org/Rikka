@@ -6,7 +6,7 @@ import APIManager from "./managers/API";
 import Logger from "../Common/Logger";
 import modules from "./modules";
 import styleManager from "./managers/styleManager";
-const Webpack = require("../NodeMod/powercord/webpack");
+import Webpack from "../powercord-git/src/fake_node_modules/powercord/webpack";
 
 let hide_rikka = false;
 
@@ -46,13 +46,11 @@ export default class Powercord extends Updatable {
 
         await Webpack.init();
 
-        // Could someone good with routing make this better?
         await Promise.all(modules.map((mdl: () => any) => mdl()));
         this.emit('initializing');
 
         await this.startup();
-        // @ts-ignore
-        this.gitInfos = await this.pluginManager.get('pc-updater')?.getGitInfos();
+        (this.gitInfos = await this.pluginManager.get('pc-updater') as any)?.getGitInfos();
 
         if (this.settings.get('hideToken', true)) {
             const tokenModule = await require('powercord/webpack').getModule(['hideToken']);

@@ -12,6 +12,14 @@ export default class PluginsManager {
         console.log(`Using plugins directory: ${this.pluginDirectory}`);
     }
 
+    private preloadPlugin(pluginName: string) {
+        const plugin = this.plugins.get(pluginName);
+        if (!plugin) throw new Error(`Failed to preload plugin: ${pluginName}`);
+        if (plugin.enabled) return;
+
+        plugin._preload();
+    }
+
     private loadPlugin(pluginName: string) {
         console.log(this.plugins);
         const plugin = this.plugins.get(pluginName);
@@ -43,7 +51,7 @@ export default class PluginsManager {
         this.unloadPlugin(pluginName);
     }
 
-    private mountPlugin(pluginName: string) {
+    private mountPlugin(pluginName: string, preload: boolean = false) {
         try {
             const currentDir = join(this.pluginDirectory, pluginName);
             const pluginManifest = (() => {
@@ -55,7 +63,7 @@ export default class PluginsManager {
                 }
             })();
 
-            if (pluginManifest && pluginManifest.sandboxed) {
+            if (pluginManifest && pluginManifest.sandboxed && !preload) {
                 const permsNeeded = (() => {
                     const permsNeeded = pluginManifest.permissions;
                     if (permsNeeded) return permsNeeded;
@@ -92,15 +100,23 @@ export default class PluginsManager {
         }
     }
 
-    loadPlugins() {
-        readdirSync(this.pluginDirectory).forEach(file => this.mountPlugin(file));
+    loadPlugins(preload: boolean = false) {
+        readdirSync(this.pluginDirectory).forEach(file => this.mountPlugin(file, preload));
         this.plugins.forEach((plugin, name) => {
             try {
+                if (preload) {
+                    this.preloadPlugin(name);
+                    return;
+                }
+
                 this.loadPlugin(name);
             } catch (e) {
                 console.error(e);
             }
         });
+
+        // Sandboxed plugins should NEVER be preloaded, as the main thread has higher permissions.
+        if (preload) return;
 
         this.virtualMachines.forEach((vm, name) => {
             try {
