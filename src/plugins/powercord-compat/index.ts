@@ -44,6 +44,12 @@ export default class PowercordCompat extends RikkaPlugin {
         const ipcrenderer = require("./ipc/renderer");
     }
 
+    preInject() {
+        console.log("Powercord compat preinjecting...");
+        const ipcmain = require("./ipc/main");
+        console.log("Done preinjecting Powercord compat!");
+    }
+
     async inject() {
         console.log("Powercord compat is enabled!");
 
