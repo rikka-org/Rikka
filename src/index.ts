@@ -10,7 +10,7 @@ const electronPath = require.resolve('electron');
 const discordAsar = join(dirname(require.main!.filename), "..", "app.asar");
 require.main.filename = join(discordAsar, 'app_bootstrap/index.js');
 
-import * as ipcmain from "@rikka/IPC/main";
+require("@rikka/IPC/main");
 
 console.log("Rikka is starting...");
 
