@@ -55,13 +55,13 @@ export default class PowercordCompat extends RikkaPlugin {
 
         this.setGlobals();
         this.registerIPC();
-        require('./preloader');
         // Place-ins are pushed first so they can override the Powercord modules
         require('module').Module.globalPaths.push(this.placein_modules_directory);
         if (this.experimentalPreload) {
             // All other modules are pushed after so they can be overridden by Place-ins
             require('module').Module.globalPaths.push(this.powercord_modules_directory);
         }
+        require('./preloader');
 
         this.createPowercordDataDir();
 
