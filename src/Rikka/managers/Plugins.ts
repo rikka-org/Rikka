@@ -74,15 +74,17 @@ export default class PluginsManager {
                     sandbox: {},
                     require: {
                         external: (() => {
-                            // Convert each @rikka to the directory above us
-                            const external = permsNeeded.modules.map((p: string) => p.replace(/^@rikka\//, `${__dirname.replace(RegExp(sep.repeat(2), 'g'), '/')}/../`));
-                            console.log(`External: ${external}`);
-                            return external.modules;
+                            // Push tslib into the sandbox.
+                            const tslib = require.resolve('tslib');
+                            console.log(tslib);
+
+                            // Allow rikka APIs to be used.
+                            const rikka = join(__dirname, "..", "API");
+
+                            // Allow the plugin to use the sandbox.
+                            return [tslib, rikka];
                         })(),
                         root: currentDir,
-                        builtin: [
-                            'tslib',
-                        ]
                     },
                 });
                 this.virtualMachines.set(pluginName, vm);
