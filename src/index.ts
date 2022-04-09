@@ -39,10 +39,14 @@ if (!electron.safeStorage) {
   };
 }
 
-const electronExports = new Proxy(electron, {
+const electronExports: any = new Proxy(electron, {
   get(target, prop) {
     switch (prop) {
       case 'BrowserWindow': return PatchedWindow;
+
+      // I don't know why, but for some reason if this isn't here everything fucking breaks
+      case 'default': return electronExports;
+      case '__esModule': return true
       //@ts-ignore
       default: return target[prop];
     }
