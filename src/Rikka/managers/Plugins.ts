@@ -21,7 +21,6 @@ export default class PluginsManager {
     }
 
     private loadPlugin(pluginName: string) {
-        console.log(this.plugins);
         const plugin = this.plugins.get(pluginName);
         if (!plugin) throw new Error(`Failed to load plugin: ${pluginName}`);
         if (plugin.enabled) return;
@@ -76,7 +75,6 @@ export default class PluginsManager {
                         external: (() => {
                             // Push tslib into the sandbox.
                             const tslib = require.resolve('tslib');
-                            console.log(tslib);
 
                             // Allow rikka APIs to be used.
                             const rikka = join(__dirname, "..", "API");
@@ -93,7 +91,6 @@ export default class PluginsManager {
 
             const plugin = require(currentDir);
 
-            console.log(`Mounting ${currentDir}`);
             if (!plugin) throw new Error(`Failed to mount plugin: ${pluginName}`);
 
             this.plugins.set(pluginName, new plugin.default());
