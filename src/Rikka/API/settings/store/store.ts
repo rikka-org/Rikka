@@ -73,7 +73,7 @@ export class SettingsStore {
 
     /** Get a setting by its category and key */
     getSetting(category: string, key: string) {
-        const [ categoryName, settings ] = this.getSettings(category);
+        const [, settings ] = this.getSettings(category);
 
         return settings[key];
     }
