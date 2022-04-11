@@ -1,5 +1,4 @@
 dist
 out
-settings
 *.tsbuildinfo
 node_modules
