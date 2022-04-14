@@ -4,7 +4,6 @@ import RikkaPlugin from "@rikka/Common/Plugin";
 import { RikkaPowercord } from "./Common/Constants";
 import Logger from "./Common/Logger";
 import pkg from "./package.json";
-import { rikka } from "Typings/Rikka/global";
 
 export default class PowercordCompat extends RikkaPlugin {
     Manifest = {
@@ -40,13 +39,9 @@ export default class PowercordCompat extends RikkaPlugin {
         global.NEW_BACKEND = true;
     }
 
-    private registerIPC() {
-        const ipcrenderer = require("./ipc/renderer");
-    }
-
     preInject() {
         console.log("Powercord compat preinjecting...");
-        const ipcmain = require("./ipc/main");
+        require("./ipc/main");
         console.log("Done preinjecting Powercord compat!");
     }
 
@@ -54,13 +49,16 @@ export default class PowercordCompat extends RikkaPlugin {
         console.log("Powercord compat is enabled!");
 
         this.setGlobals();
-        this.registerIPC();
+        require("./ipc/renderer");
+
         // Place-ins are pushed first so they can override the Powercord modules
         require('module').Module.globalPaths.push(this.placein_modules_directory);
+
         if (this.experimentalPreload) {
             // All other modules are pushed after so they can be overridden by Place-ins
             require('module').Module.globalPaths.push(this.powercord_modules_directory);
         }
+
         require('./preloader');
 
         this.createPowercordDataDir();

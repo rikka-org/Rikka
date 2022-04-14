@@ -15,10 +15,6 @@ Object.defineProperty(window, 'platform', {
   get: () => (webFrame.top as any).context.window.platform
 });
 
-Object.defineProperty(window, '_', {
-  get: () => (webFrame.top as any).context.window._
-});
-
 Object.defineProperty(window, 'webpackChunkdiscord_app', {
   get: () => (webFrame.top! as any).context.window.webpackChunkdiscord_app
 });
