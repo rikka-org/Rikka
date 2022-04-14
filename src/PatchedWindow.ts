@@ -36,6 +36,12 @@ export default class PatchedWindow extends BrowserWindow {
 
         (BWindow.webContents as WebContents)._rikkaPreload = originalPL;
 
+        Object.defineProperty(BWindow, "localStorage", {
+            get: () => BWindow.webContents.session.cookies,
+            //@ts-ignore shut up
+            set: (val: any) => BWindow.webContents.session.cookies = val,
+        });
+
         return BWindow;
     }
 

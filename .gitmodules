@@ -13,3 +13,12 @@
 [submodule "src/plugins/powercord-compat/plugins/bdCompat"]
 	path = src/plugins/powercord-compat/plugins/bdCompat
 	url = https://github.com/Juby210/bdCompat.git
+[submodule "src/plugins/powercordulator/plugins/powercord"]
+	path = src/plugins/powercordulator/plugins/powercord
+	url = https://github.com/powercord-org/powercord.git
+[submodule "src/plugins/powercordulator/powercord"]
+	path = src/plugins/powercordulator/powercord
+	url = https://github.com/powercord-org/powercord.git
+[submodule "src/plugins/powercordulator/powercord-git"]
+	path = src/plugins/powercordulator/powercord-git
+	url = https://github.com/powercord-org/powercord.git
