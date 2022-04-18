@@ -22,9 +22,9 @@ export default class Powercord extends Updatable {
     settings: any;
 
     gitInfos = {
-        upstream: '???',
-        branch: '???',
-        revision: '???'
+        upstream: 'https://github.com/powercord-org/powercord',
+        branch: 'v2',
+        revision: '7'
     };
 
     private account? = null;
@@ -50,7 +50,7 @@ export default class Powercord extends Updatable {
         this.emit('initializing');
 
         await this.startup();
-        (this.gitInfos = await this.pluginManager.get('pc-updater') as any)?.getGitInfos();
+        //(this.gitInfos = await this.pluginManager.get('pc-updater') as any)?.getGitInfos();
 
         if (this.settings.get('hideToken', true)) {
             const tokenModule = await require('powercord/webpack').getModule(['hideToken']);
