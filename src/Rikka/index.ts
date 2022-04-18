@@ -5,8 +5,11 @@ import StyleManager from "./managers/StyleManager";
 export default class Rikka {
     private styleManager = new StyleManager();
     private PluginManager = new PluginsManager();
-    APIManager = new APIManager();
 
+    /** Deprecated way of accessing plugin APIs */
+    //private APIManager = new APIManager();
+
+    /** Is Rikka fully loaded? */
     private ready: boolean = false;
 
     constructor() {
@@ -28,12 +31,12 @@ export default class Rikka {
     }
 
     private async rikkaStartup() {
-        this.styleManager.loadThemes();
+        this.styleManager.applyThemes();
     }
 
     /** Shut down Rikka entirely, don't call this or death will incur */
     private async shutdown() {
-        await this.APIManager._shutdown();
+        //await this.APIManager._shutdown();
         await this.PluginManager._shutdown();
     }
 }
