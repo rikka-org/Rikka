@@ -4,11 +4,14 @@
   "description": "Rikka is a fast, free as in freedom Discord client mod loader.",
   "main": "out/index.js",
   "scripts": {
-    "install": "node out/Installer/installer.js --no-exit-codes",
-    "uninstall": "node out/Installer/uninstall.js --no-exit-codes",
-    "build": "tsc -p tsconfig.json",
+    "installrikka": "node dist/Installer/installer.js",
+    "uninstallrikka": "node dist/Installer/uninstall.js",
+    "prepare": "ts-patch install -s",
+    "build": "tsc -p tsconfig.json && npm run copy-files",
     "watch": "tsc -w -p tsconfig.json",
-    "test": "node out/index.js"
+    "test": "jest",
+    "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/.exists src/**/*.json src/**/*.scss dist/",
+    "clean": "rimraf dist"
   },
   "keywords": [
     "discord",
@@ -16,12 +19,35 @@
     "discord-injector"
   ],
   "author": "V3L0C1T13S",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
-    "@types/node": "^17.0.8",
-    "typescript": "^4.5.4"
+    "@types/jest": "^27.4.1",
+    "@types/node": "^17.0.21",
+    "@types/prompt": "^1.1.2",
+    "cpy-cli": "^4.1.0",
+    "jest": "^27.5.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.1.4",
+    "ts-patch": "^2.0.1",
+    "tsc-progress": "^1.0.4",
+    "tslib": "^2.3.1",
+    "typescript-transform-paths": "^3.3.1"
   },
   "dependencies": {
-    "electron": "^16.0.6"
+    "callsite": "^1.0.0",
+    "codemirror": "^5.65.2",
+    "copyfiles": "^2.4.1",
+    "electron": "^17.1.1",
+    "less": "^4.1.2",
+    "node-watch": "^0.7.3",
+    "object-assign": "^4.1.1",
+    "redux": "^4.1.2",
+    "sass": "^1.49.9",
+    "stylus": "^0.57.0",
+    "sucrase": "^3.20.3",
+    "sudo-prompt": "^9.2.1",
+    "typescript": "^4.6.2",
+    "unzip-crx": "^0.2.0",
+    "vm2": "^3.9.9"
   }
 }

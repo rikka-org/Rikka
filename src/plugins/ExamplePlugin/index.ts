@@ -1,22 +1,32 @@
-import { RikkaPlugin } from '../../Common/Plugin';
+import { settingsManager } from '@rikka/API/settings/store';
+import RikkaPlugin from '@rikka/Common/Plugin';
 /** BS workaround for TS not including .json by default (Seriously, why is this not a default M$?) */
 import * as pkg from './package.json';
 
 export default class ExamplePlugin extends RikkaPlugin {
-    name = "Example Plugin";
-    description = "An example plugin for Rikka.";
-    author = "V3L0C1T13S";
+    Manifest = {
+        name: "Example Plugin",
+        description: "An example plugin for Rikka.",
+        author: "V3L0C1T13S",
+        license: "MIT",
+        version: pkg.version,
+        dependencies: []
+    }
+
+    private pluginSettings = settingsManager.getSettings("ExamplePlugin");
 
     inject() {
         console.log("Example Plugin is starting...");
+        // this.domInject();
+
+        settingsManager.setSetting("ExamplePlugin", "test", "testing woooo");
+        console.log(settingsManager.getSettings("ExamplePlugin"));
+        console.log("Done!");
     }
 
-    public override discordReady(): void {
-        console.log("Put your init code here!");
-    }
-
-    public override unload(): void {
-        super.unload();
-        console.log("Put your unloading code here!");
+    private domInject() {
+        const divNode = document.createElement("div");
+        divNode.innerHTML = "<style>* { transition: 300ms cubic-bezier(0.22, 0.6, 0.12, 1.05); }</style>";
+        document.head.appendChild(divNode);
     }
 }

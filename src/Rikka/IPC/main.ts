@@ -1,0 +1,74 @@
+import { ipcMain, BrowserWindow } from "electron";
+import { IPC_Consts } from "@rikka/API/Constants";
+import { FileHandle, readFile } from "fs/promises";
+import sass from "sass";
+import { existsSync, PathLike } from "fs";
+import { dirname, join } from "path";
+
+if (!ipcMain) throw new Error("Main process not found");
+
+/** for some reason, after millions of years of evolution,
+* countless updates, and many great minds coming together,
+* we still have to manually fucking define this bullshit
+*/
+function DevToolsOpen(e: Electron.IpcMainInvokeEvent, opts: Electron.OpenDevToolsOptions, window: BrowserWindow) {
+    e.sender.openDevTools(opts);
+    if (window) {
+        //@ts-ignore - Wrong wrong wrong
+        let devWindow = new BrowserWindow({ webContents: e.sender.devToolsWebContents });
+        devWindow.on('ready-to-show', () => devWindow.show());
+        devWindow.on('close', () => {
+            e.sender.closeDevTools();
+            devWindow.destroy();
+        });
+    }
+}
+
+function DevToolsClose(e: Electron.IpcMainInvokeEvent) {
+    e.sender.closeDevTools();
+}
+
+function clearCache(e: Electron.IpcMainInvokeEvent) {
+    return new Promise(resolve => {
+        e.sender.session.clearCache();
+        resolve(null);
+    });
+}
+
+function getChromiumFlags() {
+
+}
+
+function compileSass(_: any, file: PathLike | FileHandle) {
+    return new Promise((resolve, reject) => {
+        readFile(file, 'utf8').then(rawScss => {
+            sass.render({
+                data: rawScss,
+                importer: (url: any, prev: any) => {
+                    url = url.replace('file:///', '');
+                    if (existsSync(url)) {
+                        return { file: url };
+                    }
+
+                    const prevFile = prev === 'stdin' ? file : prev.replace(/https?:\/\/(?:[a-z]+\.)?discord(?:app)?\.com/i, '');
+                    return {
+                        file: join(dirname(decodeURI(prevFile)), url).replace(/\\/g, '/')
+                    };
+                }
+            }, (err, compiled) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(compiled?.css.toString());
+            });
+        });
+    });
+}
+
+ipcMain.on(IPC_Consts.GET_PRELOAD, e => e.returnValue = (e.sender as WebContents)._rikkaPreload);
+ipcMain.handle(IPC_Consts.OPEN_DEVTOOLS, DevToolsOpen);
+ipcMain.handle(IPC_Consts.CLOSE_DEVTOOLS, DevToolsClose);
+ipcMain.handle(IPC_Consts.CLEAR_CACHE, clearCache);
+ipcMain.handle(IPC_Consts.__COMPILE_SASS, compileSass)
+ipcMain.handle(IPC_Consts.GET_WINDOW_MAXIMIZED, e => BrowserWindow.fromWebContents(e.sender)?.isMaximized());
+ipcMain.on(IPC_Consts.GET_CHROMIUM_FLAGS, e => e.returnValue = getChromiumFlags());
