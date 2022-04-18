@@ -1,5 +1,3 @@
-import notification from '@rikka/API/Notifications/notification';
-import { settingsManager } from '@rikka/API/settings/store';
 import RikkaPlugin from '@rikka/Common/Plugin';
 /** BS workaround for TS not including .json by default (Seriously, why is this not a default M$?) */
 import * as pkg from './package.json';
@@ -14,17 +12,9 @@ export default class ExamplePlugin extends RikkaPlugin {
         dependencies: []
     }
 
-    private pluginSettings = settingsManager.getSettings("ExamplePlugin");
-
     inject() {
         console.log("Example Plugin is starting...");
-        // this.domInject();
-
-        settingsManager.setSetting("ExamplePlugin", "test", "testing woooo");
-        console.log(settingsManager.getSettings("ExamplePlugin"));
         console.log("Done!");
-        const noti = new notification("Example Plugin", "This is an example notification.");
-        noti.send();
     }
 
     private domInject() {
