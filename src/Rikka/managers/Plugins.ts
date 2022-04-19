@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from "fs";
 import { join, resolve, sep } from "path";
 import RikkaPlugin from "@rikka/Common/Plugin";
 import { NodeVM } from "vm2";
+import { err, log } from "@rikka/API/Utils/logger";
 
 export default class PluginsManager {
     readonly pluginDirectory = PluginsManager.getPluginDirectory();
@@ -9,7 +10,7 @@ export default class PluginsManager {
     private virtualMachines = new Map<string, NodeVM>();
 
     constructor() {
-        console.log(`Using plugins directory: ${this.pluginDirectory}`);
+        log(`Using plugins directory: ${this.pluginDirectory}`);
     }
 
     private preloadPlugin(pluginName: string) {
@@ -95,7 +96,7 @@ export default class PluginsManager {
 
             this.plugins.set(pluginName, new plugin.default());
         } catch (e) {
-            console.error(`Failed to mount plugin: ${pluginName}. ${e}`);
+            err(e);
         }
     }
 

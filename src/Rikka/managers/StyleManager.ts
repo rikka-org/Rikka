@@ -14,7 +14,6 @@ export default class StyleManager {
             try {
                 const theme = readFileSync(resolve(this.themeDirectory, file)).toString();
                 this.loadedThemes.set(file, theme);
-                console.log(`the theme is ${theme}`);
                 themes.push(file);
             } catch (e) {
                 console.error(`Theme loading error: ${e}`);

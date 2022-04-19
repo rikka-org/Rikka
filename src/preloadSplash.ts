@@ -1,5 +1,6 @@
 import { ipcRenderer } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
+import StyleManager from "@rikka/managers/StyleManager";
 
 // Original preload
 const preloader = ipcRenderer.sendSync(IPC_Consts.GET_PRELOAD);
@@ -13,6 +14,9 @@ window.__SPLASH__ = true;
 
 function init() {
     document.body.classList.add("rikka");
+    console.log("loading styles");
+    const styleman = new StyleManager();
+    styleman.applyThemes();
     console.log("Rikka loaded");
 }
 
