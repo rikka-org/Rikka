@@ -15,7 +15,6 @@ export default class ExamplePlugin extends RikkaPlugin {
 
     private store = settingsManager.getSettings("ExamplePlugin");
 
-
     inject() {
         console.log("Example Plugin is starting...");
 
