@@ -7,7 +7,7 @@ export default class ExamplePlugin extends RikkaPlugin {
         name: "Example Plugin",
         description: "An example plugin for Rikka.",
         author: "V3L0C1T13S",
-        license: "MIT",
+        license: "BSD 3-Clause",
         version: pkg.version,
         dependencies: []
     }
