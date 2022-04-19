@@ -10,7 +10,7 @@
     "build": "tsc -p tsconfig.json && npm run copy-files",
     "watch": "tsc -w -p tsconfig.json",
     "test": "jest",
-    "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/.exists src/**/*.json src/**/*.scss dist/",
+    "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/style.css src/**/.exists src/**/*.json src/**/*.scss dist/",
     "clean": "rimraf dist"
   },
   "keywords": [
