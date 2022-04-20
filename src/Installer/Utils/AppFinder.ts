@@ -23,8 +23,16 @@ export const LinuxPaths: DiscordPath[] = [
         path: "/usr/share/discord-canary",
         needsElevation: true
     },
+    {
+        path: "/usr/lib/discord-canary",
+        needsElevation: true
+    },
     { 
         path: "/opt/DiscordCanary",
+        needsElevation: true
+    },
+    {
+        path: "/opt/discord-canary",
         needsElevation: true
     },
     {
