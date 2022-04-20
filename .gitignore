@@ -2,3 +2,10 @@ dist
 out
 *.tsbuildinfo
 node_modules
+
+src/plugins/*
+!src/plugins/rk-*
+
+src/themes/*
+!src/themes/rk-*
+!src/themes/.exists
