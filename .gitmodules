@@ -1,24 +1,6 @@
-[submodule "src/plugins/powercord-compat/powercord-git"]
-	path = src/plugins/powercord-compat/powercord-git
+[submodule "src/plugins/rk-powercord-compat/powercord-git"]
+	path = src/plugins/rk-powercord-compat/powercord-git
 	url = https://github.com/powercord-org/powercord.git
-[submodule "src/plugins/powercord-compat/plugins/powercord-no-swearing"]
-	path = src/plugins/powercord-compat/plugins/powercord-no-swearing
-	url = https://github.com/Lisenaaaa/powercord-no-swearing.git
-[submodule "src/plugins/powercord-compat/plugins/powercord-greentext"]
-	path = src/plugins/powercord-compat/plugins/powercord-greentext
-	url = https://github.com/yuwui/powercord-greentext
-[submodule "src/plugins/powercord-compat/plugins/At-Someone"]
-	path = src/plugins/powercord-compat/plugins/At-Someone
-	url = https://github.com/SammCheese/At-Someone
-[submodule "src/plugins/powercord-compat/plugins/bdCompat"]
-	path = src/plugins/powercord-compat/plugins/bdCompat
+[submodule "src/plugins/rk-powercord-compat/plugins/pc-bdCompat"]
+	path = src/plugins/rk-powercord-compat/plugins/pc-bdCompat
 	url = https://github.com/Juby210/bdCompat.git
-[submodule "src/plugins/powercordulator/plugins/powercord"]
-	path = src/plugins/powercordulator/plugins/powercord
-	url = https://github.com/powercord-org/powercord.git
-[submodule "src/plugins/powercordulator/powercord"]
-	path = src/plugins/powercordulator/powercord
-	url = https://github.com/powercord-org/powercord.git
-[submodule "src/plugins/powercordulator/powercord-git"]
-	path = src/plugins/powercordulator/powercord-git
-	url = https://github.com/powercord-org/powercord.git

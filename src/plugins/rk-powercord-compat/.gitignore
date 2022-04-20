@@ -1,1 +1,2 @@
-powercord-data
+plugins/*
+!plugins/pc-*
