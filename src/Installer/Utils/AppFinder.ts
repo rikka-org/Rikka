@@ -28,6 +28,10 @@ export const LinuxPaths: DiscordPath[] = [
         needsElevation: true
     },
     {
+        path: "/opt/discord-canary",
+        needsElevation: true
+    },
+    {
         path: "/var/lib/flatpak/app/com.discordapp.DiscordCanary/x86_64/beta/active/files/discord-canary/",
         needsElevation: true
     },
