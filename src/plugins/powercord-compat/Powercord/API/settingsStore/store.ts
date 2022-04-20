@@ -70,10 +70,12 @@ function deleteSetting(category: string, setting: string) {
     delete settings[category][setting];
 }
 
+//@ts-ignore
 class SettingsStore extends Flux.Store {
     constructor(Dispatcher: any, handlers: any) {
         super(Dispatcher, handlers);
 
+        //@ts-ignore
         this._persist = global._.debounce(this._persist.bind(this), 1000);
         this.addChangeListener(this._persist);
     }

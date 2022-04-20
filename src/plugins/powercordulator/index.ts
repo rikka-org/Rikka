@@ -1,4 +1,4 @@
-import RikkaPlugin from "@rikka/Common/Plugin";
+import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import { join } from "path";
 
 /** Experimental!!! Probably gonna scrap... */

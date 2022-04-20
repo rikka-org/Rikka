@@ -1,4 +1,4 @@
-import RikkaPlugin from "@rikka/Common/Plugin";
+import RikkaPlugin from "@rikka/Common/entities/Plugin";
 
 export default class BaseAPI {
     ready = false;

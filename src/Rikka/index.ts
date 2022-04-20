@@ -1,6 +1,9 @@
-import APIManager from "./managers/APIManager";
 import PluginsManager from "./managers/Plugins";
 import StyleManager from "./managers/StyleManager";
+import { err } from "./API/Utils/logger";
+import { saveToFile } from "./API/Utils/logger";
+// @ts-ignore -- FluxDispatcher is added at runtime
+import { getAllModules, initialize as initWebpackModules, FluxDispatcher } from "./API/webpack";
 
 export default class Rikka {
     private styleManager = new StyleManager();
@@ -19,19 +22,52 @@ export default class Rikka {
             this.init();
     }
 
+    private async handleConnectionOpen() {
+        return new Promise<void>(resolve => {
+            console.log(getAllModules()?.length);
+            if (getAllModules()?.length > 7000) {
+                return resolve();
+            }
+            FluxDispatcher.subscribe('CONNECTION_OPEN', () => resolve());
+            //resolve();
+        });
+    }
+
+    private async ensureWebpackModules() {
+        try {
+            /**
+             * Initialize the webpack modules.
+             */
+            await initWebpackModules();
+
+            await this.handleConnectionOpen();
+        } catch (errmsg) {
+            err(`Something went wrong while initializing webpack modules: ${errmsg}`);
+        }
+    }
+
     private async init() {
+        try {
+            await this.ensureWebpackModules();
+        } catch (e) {
+            err(`Something went critically wrong with Rikka's startup function!\n${e}`);
+        }
+
         await this.start();
 
         this.ready = true;
     }
 
     private async start() {
-        this.rikkaStartup();
-        this.PluginManager.loadPlugins();
-    }
+        // Make the logs save to file every 5 seconds
+        setInterval(() => {
+            const logsDir = `${__dirname}`;
+            saveToFile(`${logsDir}/logs.txt`);
+            console.log("saved to file called");
+        }, 5000);
 
-    private async rikkaStartup() {
         this.styleManager.applyThemes();
+        this.PluginManager.loadPlugins();
     }
 
     /** Shut down Rikka entirely, don't call this or death will incur */

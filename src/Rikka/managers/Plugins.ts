@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "fs";
 import { join, resolve, sep } from "path";
-import RikkaPlugin from "@rikka/Common/Plugin";
+import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import { NodeVM } from "vm2";
 import { err, log } from "@rikka/API/Utils/logger";
 
