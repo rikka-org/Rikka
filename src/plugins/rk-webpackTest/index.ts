@@ -7,6 +7,7 @@ import RikkaPlugin from '@rikka/Common/entities/Plugin';
 import * as pkg from './package.json';
 import { patch } from '@rikka/API/patcher';
 import menu from './components/menu';
+import { Postfix, Prefix } from '@rikka/API/Injector';
 
 export default class ExamplePlugin extends RikkaPlugin {
     Manifest = {
@@ -37,10 +38,8 @@ export default class ExamplePlugin extends RikkaPlugin {
         Logger.log("got context menu");
 
         patch(this.contextMenu, "default", (args: any[], res: any) => {
-            res.props.children.push(
-                menu
-            );
-        })
+            console.log("yoooo im injected wooooo");
+        });
 
         return;
     }

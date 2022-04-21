@@ -132,7 +132,6 @@ export function patch(...args: any[]) {
             get errorsOccurred() { return this._errorsOccurred; },
             set errorsOccurred(count) {
                 if (count >= errorLimit && failSave) {
-                    this.unpatch();
                     Logger.warn(`Patch ID "${id}" has failed ${count} times and has been removed.`);
                 }
                 this._errorsOccurred = count;
