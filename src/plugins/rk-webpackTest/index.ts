@@ -15,7 +15,6 @@ export default class ExamplePlugin extends RikkaPlugin {
         dependencies: []
     }
 
-
     inject() {
         this.patchContextMenu();
     }
@@ -25,12 +24,12 @@ export default class ExamplePlugin extends RikkaPlugin {
             (m: { default: { displayName: string; }; }) => m.default?.displayName === "MessageContextMenu"
         );
 
-        console.log("getting menu");
+        log("getting menu");
 
         if (!contextMenuMod)
             return setTimeout(() => this.patchContextMenu(), 1000);
         
-        console.log("got context menu");
+        log("got context menu");
 
         return;
     }

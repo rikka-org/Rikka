@@ -20,11 +20,11 @@ export default abstract class RikkaPlugin {
     preInject(): void {}
 
     /** Called when this plugin is being injected into the Discord client. */
-    abstract inject(): void;
+    protected abstract inject(): void;
 
     async _unload() {
         this.uninject();
     }
 
-    uninject(): void {}
+    protected uninject(): void {}
 }
