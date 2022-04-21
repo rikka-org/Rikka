@@ -1,7 +1,7 @@
-import { DiscordPath } from "Installer/typings/discordPath";
+import { DiscordPath } from "../typings/discordPath";
 import basePlatform from "./basePlatform";
 
-export default class Linux extends basePlatform {
+export default class linux extends basePlatform {
     private readonly shareDir = "/usr/share";
     private readonly optDir = "/opt";
     private readonly flatpakDir = "/var/lib/flatpak/app/com.discordapp";
@@ -63,4 +63,10 @@ export default class Linux extends basePlatform {
             path: `${this.homeFlatpakDir}.Discord/current/active/files/discord/`,
         }
     ];
+
+    readonly paths = {
+        canary: this.canaryPaths,
+        ptb: this.ptbPaths,
+        stable: this.stablePaths
+    };
 }

@@ -22,4 +22,10 @@ export default class darwin extends basePlatform {
             needsElevation: true
         },
     ]
+
+    readonly paths = {
+        canary: this.canaryPaths,
+        ptb: this.ptbPaths,
+        stable: this.stablePaths
+    }
 }

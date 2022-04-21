@@ -1,4 +1,4 @@
-import { DiscordPath } from "Installer/typings/discordPath";
+import { DiscordPath } from "../typings/discordPath";
 import { existsSync } from "node:fs";
 
 export default abstract class basePlatform {
@@ -6,9 +6,14 @@ export default abstract class basePlatform {
     readonly abstract ptbPaths: DiscordPath[];
     readonly abstract stablePaths: DiscordPath[];
 
+    readonly abstract paths: { [key: string]: DiscordPath[] };
+
     /** Finds the Discord installation path based on platform. */
-    GetDiscordInstallPath() {
-        return this.getPath(this.canaryPaths);
+    GetDiscordInstallPath(pathType: string) {
+        const path = this.paths[pathType];
+        if (!path) throw new Error(`Invalid path type: ${pathType}`);
+
+        return this.getPath(path);
     }
 
     protected getPath(discordPaths: DiscordPath[]) {

@@ -1,4 +1,4 @@
-import { DiscordPath } from "Installer/typings/discordPath";
+import { DiscordPath } from "../typings/discordPath";
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import basePlatform from "./basePlatform";
@@ -22,7 +22,13 @@ export default class win32 extends basePlatform {
         }
     ];
 
-    GetDiscordInstallPath() {
+    readonly paths = {
+        canary: this.canaryPaths,
+        ptb: this.ptbPaths,
+        stable: this.stablePaths
+    };
+
+    GetDiscordInstallPath(pathType: string) {
         let discordInstall: DiscordPath;
 
         discordInstall = this.getPath(this.canaryPaths);

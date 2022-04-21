@@ -10,7 +10,7 @@ export async function switchToRoot() {
             name: "Rikka",
         };
 
-        await sudo.exec(`node ${process.argv[1]}`, options, function (error, stdout, stderr) {
+        await sudo.exec(`node ${process.argv[1]} ${process.argv[2]}`, options, function (error, stdout, stderr) {
             if (error) throw error;
             console.log('stdout: ' + stdout);
         });

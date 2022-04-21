@@ -1,3 +1,7 @@
 import { InjectRikka } from "./Injectors/injector";
 
-InjectRikka();
+const branch = process.argv[2];
+
+if (!branch) throw new Error("No branch specified");
+
+InjectRikka(branch);
