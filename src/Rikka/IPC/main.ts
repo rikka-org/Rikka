@@ -2,6 +2,7 @@ import { ipcMain, BrowserWindow } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
 import { FileHandle, readFile } from "fs/promises";
 import sass from "sass";
+import electron from "electron";
 import { existsSync, PathLike } from "fs";
 import { dirname, join } from "path";
 
@@ -65,6 +66,10 @@ function compileSass(_: any, file: PathLike | FileHandle) {
     });
 }
 
+function createHeadersHook(e: Electron.IpcMainInvokeEvent, name: string, code: string) {
+    electron.session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders }, done) => eval(code)({ responseHeaders }, done));
+}
+
 ipcMain.on(IPC_Consts.GET_PRELOAD, e => e.returnValue = (e.sender as WebContents)._rikkaPreload);
 ipcMain.handle(IPC_Consts.OPEN_DEVTOOLS, DevToolsOpen);
 ipcMain.handle(IPC_Consts.CLOSE_DEVTOOLS, DevToolsClose);
@@ -72,3 +77,4 @@ ipcMain.handle(IPC_Consts.CLEAR_CACHE, clearCache);
 ipcMain.handle(IPC_Consts.__COMPILE_SASS, compileSass)
 ipcMain.handle(IPC_Consts.GET_WINDOW_MAXIMIZED, e => BrowserWindow.fromWebContents(e.sender)?.isMaximized());
 ipcMain.on(IPC_Consts.GET_CHROMIUM_FLAGS, e => e.returnValue = getChromiumFlags());
+ipcMain.handle(IPC_Consts.ADD_HEADER_HOOK, createHeadersHook);

@@ -1,3 +1,4 @@
+import createHeadersHook from "@rikka/API/electron/headersHook";
 import { readdirSync, readFileSync } from "fs";
 import { resolve } from "path";
 
@@ -28,6 +29,12 @@ export default class StyleManager {
         this.availableThemes = themes;
 
         this.loadedThemes.forEach((theme, name) => {
+            // We need to make an exception in the Content Security Policy for the theme
+            /*createHeadersHook(`${name}-theme`, ({ responseHeaders }, done) => {
+                responseHeaders['Content-Security-Policy'] = responseHeaders['Content-Security-Policy']?.replace(/script-src\s*(?:'unsafe-inline'|'unsafe-eval'|'self'|'blob:')/i, 'script-src \'self\'');
+                done({ responseHeaders });
+            }); */
+
             console.log(`Applying theme ${name}`);
             this.applyTheme(theme);
         });

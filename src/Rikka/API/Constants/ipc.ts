@@ -9,4 +9,5 @@ export namespace IPC_Consts {
     export const __COMPILE_SASS = "RIKKA_COMPILE_SASS";
     export const GET_CHROMIUM_FLAGS = "RIKKA_GET_CHROMIUM_FLAGS";
     export const GET_WINDOW_MAXIMIZED = "RIKKA_GET_WINDOW_MAXIMIZED";
+    export const ADD_HEADER_HOOK = "RIKKA_ADD_HEADER_HOOK";
 }
