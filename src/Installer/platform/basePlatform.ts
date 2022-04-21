@@ -5,6 +5,7 @@ export default abstract class basePlatform {
     readonly abstract canaryPaths: DiscordPath[];
     readonly abstract ptbPaths: DiscordPath[];
     readonly abstract stablePaths: DiscordPath[];
+    readonly abstract devPaths: DiscordPath[];
 
     readonly abstract paths: { [key: string]: DiscordPath[] };
 

@@ -71,10 +71,27 @@ export default class linux extends basePlatform {
             path: `${this.homeFlatpakDir}.Discord/current/active/files/discord/`,
         }
     ];
+    
+    readonly devPaths = [
+        {
+            path: `${this.shareDir}/discord-development`,
+            needsElevation: true
+        },
+        {
+            path: `${this.optDir}/discord-development`,
+            needsElevation: true
+        },
+        {
+            path: `${this.optDir}/DiscordDevelopment`,
+            needsElevation: true
+        }
+    ];
 
     readonly paths = {
         canary: this.canaryPaths,
         ptb: this.ptbPaths,
-        stable: this.stablePaths
+        stable: this.stablePaths,
+        dev: this.devPaths,
+        development: this.devPaths
     };
 }
