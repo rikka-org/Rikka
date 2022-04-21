@@ -63,14 +63,10 @@ export default class Rikka {
         setInterval(() => {
             const logsDir = `${__dirname}`;
             saveToFile(`${logsDir}/logs.txt`);
-            console.log("saved to file called");
         }, 5000);
 
         // Setup compilers
         require("./modules/compilers");
-
-        // Just a test
-        require("./API/components/AsyncComponent.jsx");
 
         this.styleManager.applyThemes();
         this.PluginManager.loadPlugins();

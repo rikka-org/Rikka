@@ -1,5 +1,5 @@
 import { getModule, getModuleByDisplayName } from '@rikka/API/webpack';
-import React, { memo, PureComponent } from 'react';
+import React, { memo, PureComponent } from '@rikka/API/pkg/React';
 
 export default class AsyncComponent extends PureComponent {
   constructor(props) {

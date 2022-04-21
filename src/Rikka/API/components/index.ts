@@ -3,8 +3,6 @@ import AsyncComponent from "./AsyncComponent";
 
 export const ContextMenu = AsyncComponent.fetchFromProps('MenuGroup', 'default');
 
-export { default as AsyncComponent } from "./AsyncComponent";
-
 // @ts-ignore
 getModule('MenuGroup', true, true).then((ContextMenu: any) => {
     // @ts-ignore shut
@@ -22,3 +20,5 @@ getModule('MenuGroup', true, true).then((ContextMenu: any) => {
     t.ContextMenu.Item.Colors = MenuItemColor;
     t.ContextMenu.Menu = ContextMenu.default;
 });
+
+export default this;

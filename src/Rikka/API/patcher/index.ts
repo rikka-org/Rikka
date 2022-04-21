@@ -85,7 +85,7 @@ export function createPatch(id: any, moduleToPatch: moddedModule, functionName: 
     // @ts-ignore
     moduleToPatch[functionName].toString = () => patchData.originalFunction.toString();
     // @ts-ignore
-    moduleToPatch[functionName]['__vz-originalFunction'] = patchData.originalFunction;
+    moduleToPatch[functionName]['__rk-originalFunction'] = patchData.originalFunction;
 
     patches.push(patchData);
 

@@ -1,15 +1,13 @@
 import { Logger } from '@rikka/API/Utils/logger';
-import React from '@rikka/API/pkg/React';
-import { ContextMenu } from '@rikka/API/components';
+//@ts-ignore
 import { getModule } from "@rikka/API/webpack";
 import RikkaPlugin from '@rikka/Common/entities/Plugin';
 /** BS workaround for TS not including .json by default (Seriously, why is this not a default M$?) */
 import * as pkg from './package.json';
 import { patch } from '@rikka/API/patcher';
-import menu from './components/menu';
-import { Postfix, Prefix } from '@rikka/API/Injector';
+import { menu } from './components/menu';
 
-export default class ExamplePlugin extends RikkaPlugin {
+export default class webpackTest extends RikkaPlugin {
     Manifest = {
         name: "Webpack Test Plugin",
         description: "Test for Rikka's webpack modification system",
@@ -30,15 +28,11 @@ export default class ExamplePlugin extends RikkaPlugin {
             (m: any) => m.default?.displayName === "MessageContextMenu"
         ) as any;
 
-        Logger.log("getting menu");
-
         if (!this.contextMenu)
             return setTimeout(() => this.patchContextMenu(), 1000);
-        
-        Logger.log("got context menu");
 
         patch(this.contextMenu, "default", (args: any[], res: any) => {
-            console.log("yoooo im injected wooooo");
+            Logger.log("yoooo im injected wooooo");
         });
 
         return;

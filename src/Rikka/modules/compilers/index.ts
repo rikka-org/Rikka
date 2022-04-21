@@ -11,6 +11,8 @@ export = readdirSync(__dirname)
             require.extensions[ext] = (module: any, filename: string) => {
                 const compilerModule = new compiler(filename) as Compiler;
                 const compiled = compilerModule.doCompilation(filename);
+
+                return compiled;
             }
         });
     });
