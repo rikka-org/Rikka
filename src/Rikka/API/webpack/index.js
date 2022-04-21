@@ -4,7 +4,7 @@
  * @module Webpack
  */
 
-import { log as _log, warn as _warn, err as _err } from "../Utils/logger";
+import { Logger } from "../Utils/logger";
 import moduleFilters from "./modules.json";
 import { sleep } from "../Utils/time";
 
@@ -64,7 +64,7 @@ const _getModules = (filter, all = false) => {
  * @private
  */
 const _getModule = (filter, retry = false, forever = false) => {
-  _log(`getting ${filter}`);
+  Logger.log(`getting ${filter}`);
   if (Array.isArray(filter)) {
     const keys = filter;
     filter = (m) =>
@@ -116,7 +116,7 @@ export const initialize = async () => {
 
 export const findComponent = (keyword, exact = false) => {
   if (!keyword) {
-    return _warn("First argument provided must be a string.");
+    return Logger.warn("First argument provided must be a string.");
   }
 
   let byDisplayName, byDefault, byType;
@@ -172,7 +172,7 @@ export const findComponent = (keyword, exact = false) => {
   }
 
   if (!results || !Object.keys(results).length) {
-    return _warn(
+    return Logger.warn(
       `No results found for components ${
         exact ? "matching" : "containing"
       } '${keyword}'`
@@ -184,7 +184,7 @@ export const findComponent = (keyword, exact = false) => {
 
   Object.keys(results).forEach((key) => (count += results[key].matches.length));
 
-  _log(
+  Logger.log(
     `${count} ${resultsText} found for components ${
       exact ? "matching" : "containing"
     } '${keyword}':\n`
@@ -261,7 +261,7 @@ export const getModuleById = (id, retry = false, forever = false) => {
 
 /*
  * @todo: Make this work like getModule, where it accepts the argument as strings... i.e.
- * getModuleByPrototypes('_log') instead of getModuleByPrototypes([ '_log' ])
+ * getModuleByPrototypes('Logger.log') instead of getModuleByPrototypes([ 'Logger.log' ])
  */
 
 /**
