@@ -1,6 +1,0 @@
-[submodule "src/plugins/rk-powercord-compat/powercord-git"]
-	path = src/plugins/rk-powercord-compat/powercord-git
-	url = https://github.com/powercord-org/powercord.git
-[submodule "src/plugins/rk-powercord-compat/plugins/pc-bdCompat"]
-	path = src/plugins/rk-powercord-compat/plugins/pc-bdCompat
-	url = https://github.com/Juby210/bdCompat.git
