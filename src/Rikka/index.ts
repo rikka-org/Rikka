@@ -1,9 +1,9 @@
 import PluginsManager from "./managers/Plugins";
 import StyleManager from "./managers/StyleManager";
-import { err } from "./API/Utils/logger";
 import { saveToFile } from "./API/Utils/logger";
 // @ts-ignore -- FluxDispatcher is added at runtime
 import { getAllModules, initialize as initWebpackModules, FluxDispatcher } from "./API/webpack";
+import { Logger } from "./API/Utils/logger";
 
 export default class Rikka {
     private styleManager = new StyleManager();
@@ -42,7 +42,7 @@ export default class Rikka {
 
             await this.handleConnectionOpen();
         } catch (errmsg) {
-            err(`Something went wrong while initializing webpack modules: ${errmsg}`);
+            Logger.error(`Something went wrong while initializing webpack modules: ${errmsg}`);
         }
     }
 
@@ -50,7 +50,7 @@ export default class Rikka {
         try {
             await this.ensureWebpackModules();
         } catch (e) {
-            err(`Something went critically wrong with Rikka's startup function!\n${e}`);
+            Logger.error(`Something went critically wrong with Rikka's startup function!\n${e}`);
         }
 
         await this.start();

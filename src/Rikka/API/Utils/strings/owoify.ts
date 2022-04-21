@@ -1,4 +1,4 @@
-import { err } from "../logger";
+import { Logger } from "../logger";
 
 /**
  * OwO'ify text input.
@@ -117,7 +117,7 @@ export const owoifyText = (text: string) => {
     }
     return text;
   } catch (e) {
-    err(e);
+    Logger.error(e);
     return "owo";
   }
 };

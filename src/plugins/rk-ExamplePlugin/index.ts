@@ -1,4 +1,4 @@
-import { settingsManager, SettingsStore } from '@rikka/API/settings';
+import { settingsManager } from '@rikka/API/settings';
 import RikkaPlugin from '@rikka/Common/entities/Plugin';
 /** BS workaround for TS not including .json by default (Seriously, why is this not a default M$?) */
 import * as pkg from './package.json';

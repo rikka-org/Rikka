@@ -1,4 +1,4 @@
-import { log, err } from '@rikka/API/Utils/logger';
+import { Logger } from '@rikka/API/Utils/logger';
 import RikkaPlugin from '@rikka/Common/entities/Plugin';
 /** BS workaround for TS not including .json by default (Seriously, why is this not a default M$?) */
 import * as pkg from './package.json';
@@ -29,13 +29,13 @@ export default class ExamplePlugin extends RikkaPlugin {
             return res.text();
         })
         .then(data => {
-            log(`Backend response: ${data}`);
+            Logger.log(`Backend response: ${data}`);
             return new Promise((resolve, reject) => {
                 resolve(data ? JSON.parse(data) : {})
             })
         })
         .catch(errmsg => {
-            err(`Failed to fetch badges: ${errmsg}`);
+            Logger.error(`Failed to fetch badges: ${errmsg}`);
         });
     }
 }

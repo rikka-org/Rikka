@@ -1,4 +1,4 @@
-import { log, err } from '@rikka/API/Utils/logger';
+import { Logger } from '@rikka/API/Utils/logger';
 import React from '@rikka/API/pkg/React';
 import { getModule } from "@rikka/API/webpack";
 import RikkaPlugin from '@rikka/Common/entities/Plugin';
@@ -24,12 +24,12 @@ export default class ExamplePlugin extends RikkaPlugin {
             (m: { default: { displayName: string; }; }) => m.default?.displayName === "MessageContextMenu"
         );
 
-        log("getting menu");
+        Logger.log("getting menu");
 
         if (!contextMenuMod)
             return setTimeout(() => this.patchContextMenu(), 1000);
         
-        log("got context menu");
+        Logger.log("got context menu");
 
         return;
     }

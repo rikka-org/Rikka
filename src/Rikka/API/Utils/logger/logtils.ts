@@ -1,30 +1,49 @@
 import { getCaller } from "@rikka/API/Utils/callerutils";
 import { addMessage } from "./dmesg";
 
-const rk_msg = `[Rikka]`;
+export class Logger {
+    static rk_msg = `[Rikka]`;
+
+    static log(...args: any[]) {
+        const caller = getCaller(new Error().stack ?? "unknown");
+        const msg = `[LOG] ${Logger.rk_msg}::${caller} ${args}`;
+
+        console.log(msg);
+        addMessage("LOG", msg);
+    }
+
+    static warn(...args: any[]) {
+        const caller = getCaller(new Error().stack ?? "unknown");
+        const msg = `[WARN] ${Logger.rk_msg}::${caller} ${args}`;
+
+        console.warn(msg);
+        addMessage("WARN", msg);
+    }
+
+    static error(...args: any[]) {
+        const caller = getCaller(new Error().stack ?? "unknown");
+        const msg = `[ERR] ${Logger.rk_msg}::${caller}, ${args}`
+
+        console.error(msg);
+        addMessage("ERR", msg);
+    }
+
+    static trace(...args: any[]) {
+        const caller = getCaller(new Error().stack ?? "unknown");
+        console.log(`[${this.rk_msg}]::[${caller}]`, ...args);
+    }
+}
 
 export function log(...args: any[]) {
-    const caller = getCaller();
-    const msg = `[LOG] ${rk_msg}::${caller} ${args}`;
-
-    console.log(msg);
-    addMessage("LOG", msg);
+    Logger.log(...args);
 }
 
 export function warn(...args: any[]) {
-    const caller = getCaller();
-    const msg = `[WARN] ${rk_msg}::${caller} ${args}`;
-
-    console.warn(msg);
-    addMessage("WARN", msg);
+    Logger.warn(...args);
 }
 
 export function err(...args: any[]) {
-    const caller = getCaller();
-    const msg = `[ERR] ${rk_msg}::${caller}, ${args}`
-
-    console.error(msg);
-    addMessage("ERR", msg);
+    Logger.error(...args);
 }
 
 export function stacktrace(error: Error): string {
