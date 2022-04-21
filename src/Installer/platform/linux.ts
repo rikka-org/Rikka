@@ -31,15 +31,19 @@ export default class linux extends basePlatform {
     readonly ptbPaths = [
         {
             path: `${this.shareDir}/discord-ptb`,
+            needsElevation: true
         },
         {
             path: `${this.optDir}/DiscordPTB`,
+            needsElevation: true
         },
         {
             path: `${this.optDir}/discord-ptb`,
+            needsElevation: true
         },
         {
             path: `${this.flatpakDir}.DiscordPTB/x86_64/beta/active/files/discord-ptb/`,
+            needsElevation: true
         },
         {
             path: `${this.homeFlatpakDir}.DiscordPTB/current/active/files/discord-ptb/`,
@@ -49,15 +53,19 @@ export default class linux extends basePlatform {
     readonly stablePaths = [
         {
             path: `${this.shareDir}/discord`,
+            needsElevation: true
         },
         {
             path: `${this.optDir}/Discord`,
+            needsElevation: true
         },
         {
             path: `${this.optDir}/discord`,
+            needsElevation: true
         },
         {
             path: `${this.flatpakDir}.Discord/x86_64/stable/active/files/discord/`,
+            needsElevation: true
         },
         {
             path: `${this.homeFlatpakDir}.Discord/current/active/files/discord/`,
