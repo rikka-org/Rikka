@@ -1,4 +1,5 @@
 import createHeadersHook from "@rikka/API/electron/headersHook";
+import { Logger } from "@rikka/API/Utils";
 import { readdirSync, readFileSync } from "fs";
 import { resolve } from "path";
 
@@ -17,7 +18,7 @@ export default class StyleManager {
                 this.loadedThemes.set(file, theme);
                 themes.push(file);
             } catch (e) {
-                console.error(`Theme loading error: ${e}`);
+                Logger.error(`Theme loading error: ${e}`);
             }
         });
 
@@ -34,8 +35,6 @@ export default class StyleManager {
                 responseHeaders['Content-Security-Policy'] = responseHeaders['Content-Security-Policy']?.replace(/script-src\s*(?:'unsafe-inline'|'unsafe-eval'|'self'|'blob:')/i, 'script-src \'self\'');
                 done({ responseHeaders });
             }); */
-
-            console.log(`Applying theme ${name}`);
             this.applyTheme(theme);
         });
     }
@@ -44,7 +43,5 @@ export default class StyleManager {
         const element = document.createElement('style');
         element.innerHTML = theme;
         document.head.appendChild(element);
-
-        console.log(`Theme applied`);
     }
 }

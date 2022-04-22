@@ -1,3 +1,5 @@
+import { readFileSync } from "fs";
+
 /** A base class for all plugins. */
 export default abstract class RikkaPlugin {
     /** The name of this plugin, shows up in the plugin list, etc. */
@@ -27,4 +29,12 @@ export default abstract class RikkaPlugin {
     }
 
     protected uninject(): void {}
+
+    protected loadStyleSheet(file: string) {
+        const styleCode = readFileSync(file);
+
+        const style = document.createElement("style");
+        style.innerHTML = styleCode.toString();
+        document.head.appendChild(style);
+    }
 }
