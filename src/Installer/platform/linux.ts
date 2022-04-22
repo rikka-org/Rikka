@@ -1,4 +1,3 @@
-import { DiscordPath } from "../typings/discordPath";
 import basePlatform from "./basePlatform";
 
 export default class linux extends basePlatform {
@@ -20,7 +19,7 @@ export default class linux extends basePlatform {
             needsElevation: true
         },
         {
-            path: `${this.flatpakDir}.DiscordCanary/x86_64/beta/active/files/discord-canary/`,
+            path: `${this.flatpakDir}.DiscordCanary/current/active/files/discord-canary/`,
             needsElevation: true
         },
         {
@@ -42,7 +41,7 @@ export default class linux extends basePlatform {
             needsElevation: true
         },
         {
-            path: `${this.flatpakDir}.DiscordPTB/x86_64/beta/active/files/discord-ptb/`,
+            path: `${this.flatpakDir}.DiscordPTB/current/active/files/discord-ptb/`,
             needsElevation: true
         },
         {
@@ -64,7 +63,7 @@ export default class linux extends basePlatform {
             needsElevation: true
         },
         {
-            path: `${this.flatpakDir}.Discord/x86_64/stable/active/files/discord/`,
+            path: `${this.flatpakDir}.Discord/current/active/files/discord/`,
             needsElevation: true
         },
         {
