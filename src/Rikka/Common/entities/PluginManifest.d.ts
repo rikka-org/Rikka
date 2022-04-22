@@ -6,5 +6,5 @@ type PluginManifest = {
     license: string;
     version: string;
 
-    dependencies: string[];
+    dependencies: string[] | { [key: string]: string };
 }

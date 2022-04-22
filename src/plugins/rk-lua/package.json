@@ -1,0 +1,20 @@
+{
+  "name": "rk-lua",
+  "version": "1.0.0",
+  "description": "Allows you to use Lua to develop plugins",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lua",
+    "rikka",
+    "discord",
+    "mod"
+  ],
+  "author": "V3L0C1T13S",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "demoon": "^0.0.8"
+  }
+}

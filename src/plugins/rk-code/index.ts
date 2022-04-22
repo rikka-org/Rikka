@@ -6,6 +6,7 @@ import * as pkg from './package.json';
 import { patch } from '@rikka/API/patcher';
 import React from '@rikka/API/pkg/React';
 import { join } from 'path';
+import { getReactInstance } from '@rikka/API/Utils/React';
 
 export default class rkCode extends RikkaPlugin {
     Manifest = {
@@ -19,38 +20,50 @@ export default class rkCode extends RikkaPlugin {
 
     inject() {
         this.loadStyleSheet(join(__dirname, 'style.css'));
+        this.patchCodeblocks();
     }
 
-    async codePatch() {
+    async patchCodeblocks(): Promise<any> {
         const parser = await getModule(['parse', 'parseTopic']) as any;
-        patch(parser.defaultRules.codeBlock, "default", (args: any[], res: any) => {
-            const { render } = res.props;
+        if (!parser)
+            return setTimeout(() => this.patchCodeblocks(), 1000);
 
-            res.props.render = (props: any) => {
-                const codeblock = render(props);
-                const codeElement = codeblock.props.children;
+        patch(parser.defaultRules.codeBlock, 'react', (args: any[], res: any) => {
+            this.injectCodeblock(args, res);
 
-                const classes = codeElement.props.className.split(' ');
-
-                const lang = args ? args[0].lang : classes[classes.indexOf('hljs') + 1];
-                const lines = codeElement.props.dangerouslySetInnerHTML
-                    ? codeElement.props.dangerouslySetInnerHTML.__html
-                        // Ensure this no span on multiple lines
-                        .replace(
-                            /<span class="(hljs-[a-z]+)">([^<]*)<\/span>/g,
-                            (_: any, className: any, code: string) => code.split('\n').map(l => `<span class="${className}">${l}</span>`).join('\n')
-                        )
-                        .split('\n')
-                    : codeElement.props.children.split('\n');
-
-                const isSanitized = Boolean(codeElement.props.dangerouslySetInnerHTML);
-                delete codeElement.props.dangerouslySetInnerHTML;
-
-                codeElement.props.children = this.renderCodeBlock(lang, lines, isSanitized);
-
-                return codeblock;
-            }
+            return res;
         });
+
+        this._forceUpdate();
+    }
+
+    async injectCodeblock(args: any[], res: any) {
+        const { render } = res.props;
+
+        res.props.render = (props: any) => {
+            const codeblock = render(props);
+            const codeElement = codeblock.props.children;
+
+            const classes = codeElement.props.className.split(' ');
+
+            const lang = args ? args[0].lang : classes[classes.indexOf('hljs') + 1];
+            const lines = codeElement.props.dangerouslySetInnerHTML
+                ? codeElement.props.dangerouslySetInnerHTML.__html
+                    // Ensure this no span on multiple lines
+                    .replace(
+                        /<span class="(hljs-[a-z]+)">([^<]*)<\/span>/g,
+                        (_: any, className: any, code: string) => code.split('\n').map(l => `<span class="${className}">${l}</span>`).join('\n')
+                    )
+                    .split('\n')
+                : codeElement.props.children.split('\n');
+
+            const isSanitized = Boolean(codeElement.props.dangerouslySetInnerHTML);
+            delete codeElement.props.dangerouslySetInnerHTML;
+
+            codeElement.props.children = this.renderCodeBlock(lang, lines, isSanitized);
+
+            return codeblock;
+        }
     }
 
     async renderCodeBlock(lang: string, lines: string[], isSanitized: boolean) {
@@ -60,14 +73,14 @@ export default class rkCode extends RikkaPlugin {
 
         return React.createElement(React.Fragment, null,
             lang && React.createElement('div', { className: 'rikka-codeblock-lang' }, "en"),
-            React.createElement('table', { className: 'powercord-codeblock-table' },
+            React.createElement('table', { className: 'rikka-codeblock-table' },
                 ...lines.map((line, i) => React.createElement('tr', null,
                     React.createElement('td', null, i + 1),
                     React.createElement('td', lang && isSanitized ? { dangerouslySetInnerHTML: { __html: line } } : { children: line })
                 ))
             ),
             React.createElement('button', {
-                className: 'powercord-codeblock-copy-btn',
+                className: 'rikka-codeblock-copy-btn',
                 onClick: this._onClickHandler
             }, "COPIED!")
         );
@@ -89,5 +102,9 @@ export default class rkCode extends RikkaPlugin {
 
         const code = [...target.parentElement.querySelectorAll('td:last-child')].map(t => t.textContent).join('\n');
         clipboard.writeText(code);
+    }
+
+    _forceUpdate() {
+        document.querySelectorAll('[id^="chat-messages-"] > div').forEach(e => getReactInstance(e).memoizedProps.onMouseMove());
     }
 }
