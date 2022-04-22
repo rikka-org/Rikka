@@ -1,5 +1,5 @@
 import manager from "./manager";
-import { ChildProcess, spawn } from "child_process";
+import { spawn } from "child_process";
 import { demoonBin } from "../constants";
 import { luaPluginInfo } from "../typings/luaPluginInfo";
 
