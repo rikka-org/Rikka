@@ -19,7 +19,7 @@
     "discord-injector"
   ],
   "author": "V3L0C1T13S",
-  "license": "Apache-2.0",
+  "license": "None",
   "devDependencies": {
     "@types/blessed": "^0.1.19",
     "@types/jest": "^27.4.1",
