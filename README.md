@@ -9,3 +9,6 @@ While both BD and Powercord are open source, they are not licensed in such a way
 You can either:
 - Open an [issue](https://github.com/V3L0C1T13S/Rikka/issues/new/choose)
 - Join the [Discord support server](https://discord.gg/gQ4uDbZg2u) and go to one of the 2 support channels
+
+## License
+At the moment, we are currently deciding on the license of Rikka. We will update this page as soon as we have decided.
