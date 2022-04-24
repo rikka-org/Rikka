@@ -7,6 +7,7 @@ import { patch } from '@rikka/API/patcher';
 import React from '@rikka/API/pkg/React';
 import { join } from 'path';
 import { getReactInstance } from '@rikka/API/Utils/React';
+import { Logger } from '@rikka/API/Utils';
 
 export default class rkCode extends RikkaPlugin {
     Manifest = {
@@ -24,11 +25,11 @@ export default class rkCode extends RikkaPlugin {
     }
 
     async patchCodeblocks(): Promise<any> {
-        const parser = await getModule(['parse', 'parseTopic']) as any;
+        const parser = await getModule(['highlight', 'initHighlighting']) as any;
         if (!parser)
             return setTimeout(() => this.patchCodeblocks(), 1000);
 
-        patch(parser.defaultRules.codeBlock, 'react', (args: any[], res: any) => {
+        patch(parser.defaultRules.codeBlock, 'default', (args: any[], res: any) => {
             this.injectCodeblock(args, res);
 
             return res;

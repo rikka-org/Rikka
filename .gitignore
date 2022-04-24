@@ -8,4 +8,5 @@ src/plugins/*
 
 src/themes/*
 !src/themes/rk-*
-!src/themes/.exists
+
+!*.exists
