@@ -10,3 +10,5 @@ src/themes/*
 !src/themes/rk-*
 
 !*.exists
+
+settings
