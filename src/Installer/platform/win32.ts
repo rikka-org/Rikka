@@ -28,7 +28,7 @@ export default class win32 extends basePlatform {
         }
     ];
 
-    readonly paths = {
+    readonly paths: { [key: string]: DiscordPath[] } = {
         canary: this.canaryPaths,
         ptb: this.ptbPaths,
         stable: this.stablePaths,
@@ -36,14 +36,18 @@ export default class win32 extends basePlatform {
         development: this.devPaths
     };
 
-    protected getPath(discordPaths: DiscordPath[]): DiscordPath {
+    /** Finds the Discord installation path based on platform. */
+    GetDiscordInstallPath(pathType: string) {
+        const path = this.paths[pathType];
+        if (!path) throw new Error(`Invalid path type: ${pathType}`);
+
         let discordInstall: DiscordPath;
 
-        discordInstall = this.getPath(discordPaths);
+        discordInstall = this.getPath(path);
 
         /** Windows DiscordCanary installs need to be found using a regexp, 
          * since the app directory has a version number. For example, it could be app-1.0.45.  
-         * */
+        */
         const dirs = discordInstall ? readdirSync(discordInstall.path) : [];
         // filter out the directories that don't match the regexp.
         const latestVersion = dirs.filter(p => p.startsWith('app-')).reverse()[0];
