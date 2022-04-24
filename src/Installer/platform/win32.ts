@@ -36,10 +36,10 @@ export default class win32 extends basePlatform {
         development: this.devPaths
     };
 
-    GetDiscordInstallPath(pathType: string) {
+    protected getPath(discordPaths: DiscordPath[]): DiscordPath {
         let discordInstall: DiscordPath;
 
-        discordInstall = this.getPath(this.canaryPaths);
+        discordInstall = this.getPath(discordPaths);
 
         /** Windows DiscordCanary installs need to be found using a regexp, 
          * since the app directory has a version number. For example, it could be app-1.0.45.  
