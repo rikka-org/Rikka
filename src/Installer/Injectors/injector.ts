@@ -43,5 +43,5 @@ export async function UninjectRikka(branch: string) {
     await rm(discordInstall.path, { recursive: true })
         .catch(e => { throw new Error(`Failed to delete Rikka.js! ${e}`) });
 
-    console.log("Rikka uninjected successfully!");
+    console.log("Rikka uninjected successfully! Bye!");
 }
