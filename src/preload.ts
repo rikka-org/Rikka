@@ -48,9 +48,9 @@ fixDocument();
 
 // Initializing Rikka loader
 import Rikka from "@rikka/index";
-const rikka = new Rikka();
-// @ts-ignore
-window.rikka = rikka;
+const rikkaInstance = new Rikka();
+//@ts-ignore
+window.rikka = rikkaInstance;
 
 setGlobal('rikka', true);
 setGlobal('discord', true);

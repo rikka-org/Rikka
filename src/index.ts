@@ -7,7 +7,7 @@ import { preloadPlugins } from "@rikka/Preload";
 if (!require.main) throw new Error("Rikka is not running as a module!");
 
 const electronPath = require.resolve('electron');
-const discordAsar = join(dirname(require.main!.filename), "..", "app.asar");
+const discordAsar = join(dirname(require.main.filename), "..", "app.asar");
 require.main.filename = join(discordAsar, 'app_bootstrap/index.js');
 
 require("@rikka/IPC/main");
@@ -27,7 +27,7 @@ function setAppUserModelId(...args: any[]) {
 electron.app.setAppUserModelId = setAppUserModelId;
 
 if (!electron.safeStorage) {
-  // @ts-ignore you know torvalds was right - private properties are fucking stupid
+  //@ts-ignore
   electron.safeStorage = {
     isEncryptionAvailable: () => false,
     encryptString: () => {
@@ -44,7 +44,7 @@ const electronExports: any = new Proxy(electron, {
     switch (prop) {
       case 'BrowserWindow': return PatchedWindow;
 
-      // I don't know why, but for some reason if this isn't here everything fucking breaks
+      // Discords new way of accessing the main process
       case 'default': return electronExports;
       case '__esModule': return true
       //@ts-ignore
@@ -57,7 +57,7 @@ delete require.cache[electronPath]?.exports;
 require.cache[electronPath]!.exports = electronExports;
 
 electron.app.once('ready', () => {
-  // Buggy as hell, and introduces security issues
+  // Likely to be deprecated soon in favor of the createHeaders hook
   electron.session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders }, done) => {
     Object.keys(responseHeaders!)
       .filter(k => (/^content-security-policy/i).test(k))
@@ -68,7 +68,7 @@ electron.app.once('ready', () => {
 });
 
 const discPackage = require(join(discordAsar, "package.json"));
-//@ts-ignore - Completely and utterly wrong
+//@ts-ignore - Hidden property
 electron.app.setAppPath(discPackage.name, discordAsar);
 electron.app.name = discPackage.name;
 

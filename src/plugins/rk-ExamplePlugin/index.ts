@@ -13,8 +13,6 @@ export default class ExamplePlugin extends RikkaPlugin {
         dependencies: []
     }
 
-    private store = settingsManager.getSettings("ExamplePlugin");
-
     inject() {
         console.log("Example Plugin is starting...");
 
