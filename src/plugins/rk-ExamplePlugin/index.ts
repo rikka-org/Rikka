@@ -19,8 +19,15 @@ export default class ExamplePlugin extends RikkaPlugin {
     inject() {
         console.log("Example Plugin is starting...");
 
-        const dataTest = this.store.set("test", "yo im a test");
+        this.store.loadFromFile("test.json");
+        console.log(`Rand test: ${this.store.get("randomTest")}`);
+
+        this.store.set("test", "yo im a test");
         const d = this.store.get("test");
+
+        this.store.set("randomTest", Math.random());
+        const randtest = this.store.get("randomTest");
+        console.log(`Random test: ${randtest}`);
 
         Logger.log(`Data: ${d}`);
 
