@@ -12,3 +12,4 @@ src/themes/*
 !*.exists
 
 settings
+storage

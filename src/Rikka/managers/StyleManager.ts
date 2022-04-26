@@ -1,9 +1,7 @@
-import { IPC_Consts } from "@rikka/API/Constants";
-import createHeadersHook from "@rikka/API/electron/headersHook";
+import { Store } from "@rikka/API/storage";
 import { Logger } from "@rikka/API/Utils";
-import { ipcRenderer } from "electron";
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
-import { dirname, join, resolve } from "path";
+import { join, resolve } from "path";
 import sass from "sass";
 
 type powercordManifest = {
@@ -20,12 +18,26 @@ type vizalityManifest = powercordManifest & {
     icon: string;
 }
 
+type rikkaManifest = vizalityManifest & {
+
+}
+
+type themeCache = {
+    lastModified: number,
+}
+
 export default class StyleManager {
     private themeDirectory = resolve(__dirname, '..', '..', 'themes');
     private loadedThemes: Map<string, string> = new Map();
     private availableThemes: string[] = [];
 
-    private async loadThemes() {
+    private cacheStore = new Store("StyleManager");
+
+    constructor() {
+        this.cacheStore.loadFromFile("cache.json");
+    }
+
+    private loadThemes() {
         // TODO: Load themes
 
         const themes: string[] = [];
@@ -57,9 +69,31 @@ export default class StyleManager {
                 let theme: string;
 
                 if (file.endsWith('.scss')) {
-                    theme = sass.compile(file).css;
+                    // Invert \ to /, then find file name
+                    const fileName = file.replace(/\\/g, '/').split('/').pop() ?? "";
+                    Logger.log(`Loading theme ${fileName}`);
+
+                    const cache = this.cacheStore.get(fileName);
+                    if (!cache) this.cacheStore.set(fileName, { lastModified: 0 });
+
+                    const cacheModified = this.cacheStore.get(fileName).lastModified;
+                    const sourceModified = statSync(file).mtime.getTime();
+
+                    const cached = this.cacheStore.readRaw(fileName);
+                    if (cached && cacheModified === sourceModified) theme = cached;
+                    else {
+                        Logger.log(`Compiling theme ${fileName}`);
+                        theme = sass.compile(file, {
+                            style: 'compressed',
+                        }).css;
+                        this.cacheStore.set(fileName, {
+                            lastModified: sourceModified,
+                        });
+
+                        this.cacheStore.writeRaw(fileName, theme);
+                    }
                 }
-                
+
                 else theme = readFileSync(file).toString(); 
                 
                 this.loadedThemes.set(file, theme);
@@ -73,7 +107,7 @@ export default class StyleManager {
     }
 
     async applyThemes() {
-        const themes = await this.loadThemes();
+        const themes = this.loadThemes();
         this.availableThemes = themes;
 
         this.loadedThemes.forEach((theme, name) => {
@@ -84,6 +118,8 @@ export default class StyleManager {
             }); */
             this.applyTheme(theme);
         });
+
+        this.cacheStore.saveToFile("cache.json");
     }
 
     private applyTheme(theme: string) {

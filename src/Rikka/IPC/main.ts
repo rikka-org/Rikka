@@ -5,6 +5,7 @@ import sass from "sass";
 import electron from "electron";
 import { existsSync, PathLike } from "fs";
 import { dirname, join } from "path";
+import { Logger } from "@rikka/API/Utils";
 
 if (!ipcMain) throw new Error("Main process not found");
 
@@ -41,29 +42,14 @@ function getChromiumFlags() {
 }
 
 function compileSass(_: any, file: PathLike | FileHandle) {
-    return new Promise((resolve, reject) => {
-        readFile(file, 'utf8').then(rawScss => {
-            sass.render({
-                data: rawScss,
-                importer: (url: any, prev: any) => {
-                    url = url.replace('file:///', '');
-                    if (existsSync(url)) {
-                        return { file: url };
-                    }
+    try {
+        const res = sass.compile(file.toString());
 
-                    const prevFile = prev === 'stdin' ? file : prev.replace(/https?:\/\/(?:[a-z]+\.)?discord(?:app)?\.com/i, '');
-                    return {
-                        file: join(dirname(decodeURI(prevFile)), url).replace(/\\/g, '/')
-                    };
-                }
-            }, (err, compiled) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(compiled?.css.toString());
-            });
-        });
-    });
+        return res.css.toString();
+    } catch (e) {
+        Logger.error(`Failed to compile ${file}`, e);
+        return "{}";
+    }
 }
 
 function createHeadersHook(e: Electron.IpcMainInvokeEvent, name: string, code: string) {

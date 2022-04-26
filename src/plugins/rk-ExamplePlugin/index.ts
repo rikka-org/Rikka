@@ -1,4 +1,4 @@
-import { SettingsStore } from '@rikka/API/settings';
+import { Store } from '@rikka/API/storage';
 import { Logger } from '@rikka/API/Utils/logger';
 import RikkaPlugin from '@rikka/Common/entities/Plugin';
 /** BS workaround for TS not including .json by default (Seriously, why is this not a default M$?) */
@@ -14,13 +14,10 @@ export default class ExamplePlugin extends RikkaPlugin {
         dependencies: []
     }
 
-    private store = new SettingsStore("ExamplePlugin");
+    private store = new Store("ExamplePlugin");
 
     inject() {
         console.log("Example Plugin is starting...");
-
-        this.store.loadFromFile("test.json");
-        console.log(`Rand test: ${this.store.get("randomTest")}`);
 
         this.store.set("test", "yo im a test");
         const d = this.store.get("test");

@@ -1,3 +1,3 @@
 import { join } from "path";
 
-export const storeLocation = join(__dirname, "../../../../settings");
+export const storeLocation = join(__dirname, "../../../../storage");
