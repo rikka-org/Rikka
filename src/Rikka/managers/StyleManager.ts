@@ -1,7 +1,24 @@
+import { IPC_Consts } from "@rikka/API/Constants";
 import createHeadersHook from "@rikka/API/electron/headersHook";
 import { Logger } from "@rikka/API/Utils";
-import { readdirSync, readFileSync } from "fs";
-import { resolve } from "path";
+import { ipcRenderer } from "electron";
+import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { dirname, join, resolve } from "path";
+import sass from "sass";
+
+type powercordManifest = {
+    name: string;
+    version: string;
+    description: string;
+    theme: string,
+    author: string,
+    consent: string,
+    license: string,    
+}
+
+type vizalityManifest = powercordManifest & {
+    icon: string;
+}
 
 export default class StyleManager {
     private themeDirectory = resolve(__dirname, '..', '..', 'themes');
@@ -12,9 +29,39 @@ export default class StyleManager {
         // TODO: Load themes
 
         const themes: string[] = [];
+        const files: string[] = []
+
         readdirSync(this.themeDirectory).forEach(file => {
+            const filePath = resolve(this.themeDirectory, file);
+
+            if (file.endsWith('.css')) {
+                files.push(filePath);
+            } else if (statSync(filePath).isDirectory()) {
+                let manifest: string;
+
+                if (existsSync(join(filePath, 'manifest.json')))
+                    manifest = readFileSync(join(filePath, 'manifest.json'), 'utf8');
+                else if (existsSync(join(filePath, 'powercord_manifest.json')))
+                    manifest = readFileSync(join(filePath, 'powercord_manifest.json'), 'utf8');
+                else return;
+
+                const manifestData = JSON.parse(manifest) as vizalityManifest;
+                files.push(resolve(filePath, manifestData.theme));
+            }
+
+            return;
+        });
+
+        files.forEach((file) => {
             try {
-                const theme = readFileSync(resolve(this.themeDirectory, file)).toString();
+                let theme: string;
+
+                if (file.endsWith('.scss')) {
+                    theme = sass.compile(file).css;
+                }
+                
+                else theme = readFileSync(file).toString(); 
+                
                 this.loadedThemes.set(file, theme);
                 themes.push(file);
             } catch (e) {

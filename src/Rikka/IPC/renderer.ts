@@ -22,6 +22,6 @@ global.RikkaNative = {
     },
 
     __compileSass(file: any) {
-        return ipcRenderer.invoke(IPC_Consts.__COMPILE_SASS, file);
+        return ipcRenderer.invoke(IPC_Consts.__COMPILE_SASS, undefined, file);
     }
 }

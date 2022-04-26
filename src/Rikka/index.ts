@@ -68,7 +68,7 @@ export default class Rikka {
         // Setup compilers
         require("./modules/compilers");
 
-        this.styleManager.applyThemes();
+        await this.styleManager.applyThemes();
         this.PluginManager.loadPlugins();
     }
 
