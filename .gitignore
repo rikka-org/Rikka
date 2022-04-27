@@ -1,15 +1,14 @@
-dist
-out
+/dist
+/out
 *.tsbuildinfo
 node_modules
 
-src/plugins/*
-!src/plugins/rk-*
+/src/plugins/*
+!/src/plugins/rk-*
 
-src/themes/*
-!src/themes/rk-*
+/src/themes/*
+!/src/themes/rk-*
 
 !*.exists
-
-settings
-storage
+/settings
+/storage
