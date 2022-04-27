@@ -24,8 +24,12 @@ export class Logger {
         const caller = getCaller(new Error().stack ?? "unknown");
         const msg = `[ERR] ${Logger.rk_msg}::${caller}, ${args}`
 
-        console.error(msg);
-        addMessage("ERR", msg);
+        try {
+            console.error(msg);
+            addMessage("ERR", msg);
+        } catch (e) {
+            addMessage("ERR", "Something went horribly wrong");
+        }
     }
 
     static trace(...args: any[]) {

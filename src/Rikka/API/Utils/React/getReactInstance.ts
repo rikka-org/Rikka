@@ -1,1 +1,0 @@
-export = (node: any) => node.__reactFiber$;

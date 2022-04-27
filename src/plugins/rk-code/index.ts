@@ -20,6 +20,7 @@ export default class rkCode extends RikkaPlugin {
     }
 
     inject() {
+        return;
         this.loadStyleSheet(join(__dirname, 'style.css'));
         this.patchCodeblocks();
     }

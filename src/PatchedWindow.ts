@@ -44,7 +44,7 @@ export default class PatchedWindow extends BrowserWindow {
 
     static loadURL(ogLoadUrl: any, url: string, opts: LoadURLOptions) {
         if ((/^https:\/\/discord(app)?\.com\/rikka/).test(url)) {
-            (this as any).webContents.vizalityOriginalUrl = url;
+            (this as any).webContents.rikkaOriginalUrl = url;
             return ogLoadUrl('https://discordapp.com/app', opts);
         }
         return ogLoadUrl(url, opts);

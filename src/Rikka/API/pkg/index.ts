@@ -1,6 +1,1 @@
-import React from "./React";
-
-export default {
-    react: React,
-
-}
+export { default as react } from "./React";
