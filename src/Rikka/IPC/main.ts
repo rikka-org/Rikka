@@ -48,7 +48,7 @@ function compileSass(_: any, file: PathLike | FileHandle) {
         return res.css.toString();
     } catch (e) {
         Logger.error(`Failed to compile ${file}`, e);
-        return "{}";
+        return new String();
     }
 }
 

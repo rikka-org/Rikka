@@ -64,7 +64,6 @@ const _getModules = (filter, all = false) => {
  * @private
  */
 const _getModule = (filter, retry = false, forever = false) => {
-  Logger.log(`getting ${filter}`);
   if (Array.isArray(filter)) {
     const keys = filter;
     filter = (m) =>
