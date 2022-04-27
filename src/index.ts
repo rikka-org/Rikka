@@ -3,6 +3,7 @@ import { dirname, join } from "path";
 import electron from "electron";
 import PatchedWindow from "./PatchedWindow";
 import { preloadPlugins } from "@rikka/Preload";
+import electronDevtoolsInstaller, { REACT_DEVELOPER_TOOLS} from "electron-devtools-installer";
 
 if (!require.main) throw new Error("Rikka is not running as a module!");
 
@@ -53,10 +54,29 @@ const electronExports: any = new Proxy(electron, {
   }
 });
 
+let fakeAppSettings: any;
+Object.defineProperty(global, 'appSettings', {
+  get () {
+    return fakeAppSettings;
+  },
+  set (value) {
+    if (!value.hasOwnProperty('settings')) {
+      value.settings = {};
+    }
+    /** Enable Devtools on Stable builds */
+    value.settings.DANGEROUS_ENABLE_DEVTOOLS_ONLY_ENABLE_IF_YOU_KNOW_WHAT_YOURE_DOING = true;
+    fakeAppSettings = value;
+  }
+});
+
 delete require.cache[electronPath]?.exports;
 require.cache[electronPath]!.exports = electronExports;
 
 electron.app.once('ready', () => {
+  electronDevtoolsInstaller(REACT_DEVELOPER_TOOLS)
+      .then(name => console.log(`Added Extension: ${name}`))
+      .catch(err => console.error(`An error occurred: ${err}`));
+
   // Likely to be deprecated soon in favor of the createHeaders hook
   electron.session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders }, done) => {
     Object.keys(responseHeaders!)

@@ -23,6 +23,7 @@
   "license": "None",
   "devDependencies": {
     "@types/blessed": "^0.1.19",
+    "@types/electron-devtools-installer": "^2.2.2",
     "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.182",
     "@types/node": "^17.0.21",
@@ -43,6 +44,7 @@
     "codemirror": "^5.65.2",
     "copyfiles": "^2.4.1",
     "electron": "^17.1.1",
+    "electron-devtools-installer": "^3.2.0",
     "less": "^4.1.2",
     "lodash": "^4.17.21",
     "node-watch": "^0.7.3",

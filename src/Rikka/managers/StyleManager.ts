@@ -23,7 +23,7 @@ type rikkaManifest = vizalityManifest & {
 }
 
 type themeCache = {
-    lastModified: number,
+    lastModified?: number,
 }
 
 export default class StyleManager {
@@ -73,8 +73,7 @@ export default class StyleManager {
                     const fileName = file.replace(/\\/g, '/').split('/').pop() ?? "";
                     Logger.log(`Loading theme ${fileName}`);
 
-                    const cache = this.cacheStore.get(fileName);
-                    if (!cache) this.cacheStore.set(fileName, { lastModified: 0 });
+                    if (!this.cacheStore.get(fileName)) this.cacheStore.set(fileName, { lastModified: 0 });
 
                     const cacheModified = this.cacheStore.get(fileName).lastModified;
                     const sourceModified = statSync(file).mtime.getTime();

@@ -11,8 +11,10 @@ export default class PatchedWindow extends BrowserWindow {
         if (options.webContents) {
             // no idea what the hell this is for
         } else if (options.webPreferences && options.webPreferences.nodeIntegration) {
+            // Preload splash screen
             options.webPreferences.preload = join(__dirname, "preloadSplash.js");
         } else if (options.webPreferences && options.webPreferences.offscreen) {
+            // Ingame overlay
             originalPL = options.webPreferences.preload;
         } else if (options.webPreferences && options.webPreferences.preload) {
             originalPL = options.webPreferences.preload;
@@ -20,6 +22,7 @@ export default class PatchedWindow extends BrowserWindow {
                 // Stupid workaround
                 options.webPreferences.contextIsolation = false;
                 options.webPreferences.preload = join(__dirname, "preload.js");
+            // MacOS splash screen
             } else
                 options.webPreferences.preload = join(__dirname, "preloadSplash.js");
         }
@@ -36,16 +39,14 @@ export default class PatchedWindow extends BrowserWindow {
 
         (BWindow.webContents as WebContents)._rikkaPreload = originalPL;
 
-        Object.defineProperty(BWindow, "localStorage", {
-            get: () => BWindow.webContents.session.cookies,
-            //@ts-ignore shut up
-            set: (val: any) => BWindow.webContents.session.cookies = val,
-        });
-
         return BWindow;
     }
 
     static loadURL(ogLoadUrl: any, url: string, opts: LoadURLOptions) {
+        if ((/^https:\/\/discord(app)?\.com\/rikka/).test(url)) {
+            (this as any).webContents.vizalityOriginalUrl = url;
+            return ogLoadUrl('https://discordapp.com/app', opts);
+        }
         return ogLoadUrl(url, opts);
     }
 }
