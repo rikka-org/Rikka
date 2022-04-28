@@ -1,6 +1,8 @@
 import { storeLocation } from "@rikka/API/Constants";
+import { Logger } from "@rikka/API/Utils";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import { copy } from "fs-extra";
 
 export class Store {
     private data: { [key: string]: any } = {};
@@ -9,11 +11,14 @@ export class Store {
 
     private storeName: string;
 
+    readonly workingDirectory: string;
+
     constructor(storeName: string) {
         this.storeName = storeName;
+        this.workingDirectory = join(storeLocation, this.storeName);
 
-        if (!existsSync(storeLocation))
-            mkdirSync(storeLocation);
+        if (!existsSync(this.workingDirectory))
+            mkdirSync(this.workingDirectory, { recursive: true });
     }
 
     get(key: string) {
@@ -56,12 +61,10 @@ export class Store {
     }
 
     saveToFile(file: string) {
-        const storeDirectory = join(storeLocation, this.storeName);
-
-        if (!existsSync(storeDirectory))
-            mkdirSync(storeDirectory, { recursive: true });
+        if (!existsSync(this.workingDirectory))
+            mkdirSync(this.workingDirectory, { recursive: true });
         
-        const storeFile = join(storeDirectory, file);
+        const storeFile = join(this.workingDirectory, file);
 
         writeFileSync(storeFile, JSON.stringify(this.data, null, 4), "utf8");
     }
@@ -74,12 +77,7 @@ export class Store {
     }
 
     writeRaw(file: string, data: string) {
-        const storeDirectory = join(storeLocation, this.storeName);
-
-        if (!existsSync(storeDirectory))
-            mkdirSync(storeDirectory, { recursive: true });
-        
-        const storeFile = join(storeDirectory, file);
+        const storeFile = join(this.workingDirectory, file);
 
         writeFileSync(storeFile, data, "utf8");
     }
@@ -89,5 +87,22 @@ export class Store {
         if(!existsSync(storeFile)) return;
 
         return readFileSync(storeFile, "utf8");
+    }
+
+    deleteRaw(file: string) {
+        const storeFile = join(storeLocation, this.storeName, file);
+        if(!existsSync(storeFile)) return;
+
+        writeFileSync(storeFile, JSON.stringify(this.data, null, 4), "utf8");
+    }
+
+    copyDirectory(from: string, to: string) {
+        const directory = join(this.workingDirectory, to);
+
+        return copy(from, directory);
+    }
+
+    deleteDirectory(from: string) {
+        Logger.warn("Not implemented");
     }
 }

@@ -6,6 +6,7 @@ import electron from "electron";
 import { existsSync, PathLike } from "fs";
 import { dirname, join } from "path";
 import { Logger } from "@rikka/API/Utils";
+import { compileSass } from "@rikka/modules/util";
 
 if (!ipcMain) throw new Error("Main process not found");
 
@@ -39,17 +40,6 @@ function clearCache(e: Electron.IpcMainInvokeEvent) {
 
 function getChromiumFlags() {
 
-}
-
-function compileSass(_: any, file: PathLike | FileHandle) {
-    try {
-        const res = sass.compile(file.toString());
-
-        return res.css.toString();
-    } catch (e) {
-        Logger.error(`Failed to compile ${file}`, e);
-        return new String();
-    }
 }
 
 function createHeadersHook(e: Electron.IpcMainInvokeEvent, name: string, code: string) {
