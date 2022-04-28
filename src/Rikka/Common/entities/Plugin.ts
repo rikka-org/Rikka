@@ -8,17 +8,24 @@ export default abstract class RikkaPlugin {
     enabled: boolean = false;
     ready: boolean = false;
 
-    async _preload() {
+    /** Internal preload function */
+    _preload() {
         this.preInject();
     }
 
+    /** Internal loading function.
+     * Overwriting this runs the risk of your plugin locking up.
+     */
     async _load() {
         this.inject();
 
         this.ready = true;
     }
 
-    /** Called in the main thread, DOM is inaccessable in the main thread. */
+    /** Called in the main thread, DOM is inaccessable in the main thread.
+     * NOTE: It is YOUR responsibility to make sure that you don't block the main thread.
+     * There are no protections against buggy code.
+     */
     preInject(): void {}
 
     /** Called when this plugin is being injected into the Discord client. */
@@ -28,8 +35,12 @@ export default abstract class RikkaPlugin {
         this.uninject();
     }
 
+    /** Called when this plugin is about to be uninjected.
+     * You should delete temporary files and uninject your own code here.
+     */
     protected uninject(): void {}
 
+    /** Convenience function that loads a stylesheet, and keeps track of it for you. */
     protected loadStyleSheet(file: string) {
         const styleCode = readFileSync(file);
 

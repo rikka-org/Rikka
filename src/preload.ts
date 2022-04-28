@@ -1,5 +1,6 @@
 import { ipcRenderer, webFrame } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
+import { docFixCallbacks, registerCallback } from "@rikka/modules/util/preloadTils/registerDocFix";
 
 function setGlobal(key: string, main: boolean = false) {
   Object.defineProperty(main ? (webFrame as any).top?.context : window, key, {
@@ -10,7 +11,6 @@ function setGlobal(key: string, main: boolean = false) {
 
 
 function fixDocument() {
-  const realDoc = (webFrame as any).top?.context.document;
   let getI = 0;
   let setI = 0;
 
@@ -19,22 +19,39 @@ function fixDocument() {
    */
   Object.defineProperty(HTMLElement.prototype, '_reactRootContainer', {
     get() {
-      getI++;
-      this.setAttribute('rk-react-root-get', getI);
-      const elem = realDoc.querySelector(`[rk-react-root-get='${getI}']`);
-      elem?.removeAttribute('rk-react-root-get');
-      return elem?._reactRootContainer;
+      docFixCallbacks.forEach(cb => cb.getDoc(this, getI++, setI));
+
+      return this._reactRootContainer;
     },
     // @ts-ignore this is inherintly unsafe
     set(prop: string | number, value: any) {
-      setI++;
-      this.setAttribute('rk-react-root-set', setI);
-      const elem = realDoc.querySelector(`[rk-react-root-set='${setI}']`);
-      elem?.removeAttribute('rk-react-root-set');
-      return elem && (elem[prop] = value);
+      docFixCallbacks.forEach(cb => cb.setDoc(this, prop, value, getI++, setI++));
+
+      return this && (this[prop] = value);
     }
   });
 }
+
+registerCallback({
+  getDoc: (element, getI) => {
+    const realDoc = (webFrame as any).top?.context.document;
+
+    getI++;
+    element.setAttribute('rk-react-root-get', getI);
+    const elem = realDoc.querySelector(`[rk-react-root-get='${getI}']`);
+    elem?.removeAttribute('rk-react-root-get');
+    return elem?._reactRootContainer;
+  },
+  setDoc: (element, prop, value, getI, setI) => {
+    const realDoc = (webFrame as any).top?.context.document;
+
+    setI++;
+    element.setAttribute('rk-react-root-set', setI);
+    const elem = realDoc.querySelector(`[rk-react-root-set='${setI}']`);
+    elem?.removeAttribute('rk-react-root-set');
+    elem[prop] = value;
+  },
+});
 
 setGlobal('DiscordSentry');
 setGlobal('__SENTRY__');
@@ -65,6 +82,8 @@ if (process.platform === 'darwin' && !process.env.PATH?.includes('/usr/local/bin
 
 const discordPreload = ipcRenderer.sendSync(IPC_Consts.GET_PRELOAD);
 if (discordPreload) {
+  //@ts-ignore
+  process._linkedBinding('electron_common_command_line').appendSwitch('preload', discordPreload);
   require(discordPreload);
 }
 

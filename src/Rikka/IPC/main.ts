@@ -1,11 +1,6 @@
 import { ipcMain, BrowserWindow } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
-import { FileHandle, readFile } from "fs/promises";
-import sass from "sass";
 import electron from "electron";
-import { existsSync, PathLike } from "fs";
-import { dirname, join } from "path";
-import { Logger } from "@rikka/API/Utils";
 import { compileSass } from "@rikka/modules/util";
 
 if (!ipcMain) throw new Error("Main process not found");

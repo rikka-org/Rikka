@@ -1,6 +1,7 @@
 import { join } from "path";
 import { BrowserWindow, BrowserWindowConstructorOptions, LoadURLOptions } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
+import { urls } from "@rikka/modules/browserWindowtils";
 
 export default class PatchedWindow extends BrowserWindow {
     //@ts-ignore
@@ -42,11 +43,11 @@ export default class PatchedWindow extends BrowserWindow {
         return BWindow;
     }
 
-    static loadURL(ogLoadUrl: any, url: string, opts: LoadURLOptions) {
-        if ((/^https:\/\/discord(app)?\.com\/rikka/).test(url)) {
-            (this as any).webContents.rikkaOriginalUrl = url;
-            return ogLoadUrl('https://discordapp.com/app', opts);
-        }
+    static loadURL(ogLoadUrl: (url: string, opts: LoadURLOptions) => void, url: string, opts: LoadURLOptions) {
+        urls.forEach(urlRegister => {
+            urlRegister.callback(url, opts, this as any, ogLoadUrl);
+        });
+
         return ogLoadUrl(url, opts);
     }
 }
