@@ -1,37 +1,9 @@
 import { ipcMain, BrowserWindow } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
 import electron from "electron";
-import { compileSass } from "@rikka/modules/util";
+import { clearCache, compileSass, DevToolsClose, DevToolsOpen } from "@rikka/modules/util";
 
 if (!ipcMain) throw new Error("Main process not found");
-
-/** for some reason, after millions of years of evolution,
-* countless updates, and many great minds coming together,
-* we still have to manually fucking define this bullshit
-*/
-function DevToolsOpen(e: Electron.IpcMainInvokeEvent, opts: Electron.OpenDevToolsOptions, window: BrowserWindow) {
-    e.sender.openDevTools(opts);
-    if (window) {
-        //@ts-ignore - Wrong wrong wrong
-        let devWindow = new BrowserWindow({ webContents: e.sender.devToolsWebContents });
-        devWindow.on('ready-to-show', () => devWindow.show());
-        devWindow.on('close', () => {
-            e.sender.closeDevTools();
-            devWindow.destroy();
-        });
-    }
-}
-
-function DevToolsClose(e: Electron.IpcMainInvokeEvent) {
-    e.sender.closeDevTools();
-}
-
-function clearCache(e: Electron.IpcMainInvokeEvent) {
-    return new Promise(resolve => {
-        e.sender.session.clearCache();
-        resolve(null);
-    });
-}
 
 function getChromiumFlags() {
 
