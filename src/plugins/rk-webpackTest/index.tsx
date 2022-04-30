@@ -5,7 +5,8 @@ import RikkaPlugin from '@rikka/Common/entities/Plugin';
 /** BS workaround for TS not including .json by default (Seriously, why is this not a default M$?) */
 import * as pkg from './package.json';
 import { patch } from '@rikka/API/patcher';
-import { menu } from './components/menu';
+import { ContextMenu } from "@rikka/API/components";
+import React from "@rikka/API/pkg/React";
 
 export default class webpackTest extends RikkaPlugin {
     Manifest = {
@@ -33,6 +34,16 @@ export default class webpackTest extends RikkaPlugin {
 
         patch(this.contextMenu, "default", (args: any[], res: any) => {
             Logger.log("yoooo im injected wooooo");
+            res.props.children.push(
+            <><ContextMenu.Separator /><ContextMenu.Group>
+                    <ContextMenu.Item
+                        label={"sus among us"}
+                        id="test-menu"
+                        action={async () => {
+                            console.log("hiihihihihihi");
+                        } } />
+                </ContextMenu.Group></>
+            );
         });
 
         return;

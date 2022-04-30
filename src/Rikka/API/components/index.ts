@@ -1,7 +1,7 @@
 import { getModule } from "../webpack";
 import AsyncComponent from "./AsyncComponent";
 
-export const ContextMenu = AsyncComponent.fetchFromProps('MenuGroup', 'default');
+export const ContextMenu = AsyncComponent.fetchFromProps('MenuGroup', 'default') as any;
 
 // @ts-ignore
 getModule('MenuGroup', true, true).then((ContextMenu: any) => {
