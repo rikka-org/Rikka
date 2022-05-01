@@ -10,7 +10,7 @@ While most client mods are open source, some are not licensed in such a way that
 - Next, download Git from https://git-scm.org/. If you're on a Mac, you can use Homebrew, and if you're on Linux, you can use the package manager.
 - Then, you open up your terminal and run `git clone https://github.com/V3L0C1T13S/Rikka --recursive`.
 - Then, you run `cd Rikka`, and then run `npm i`. This will install the dependencies for Rikka to work.
-- Then you run `npm run rikka:install (branch)`. This will compile and inject Rikka onto your Discord client. Also make sure to type one of the branches, which is the version of the Discord client you're using. e.g. If you're using Discord stable, use stable. Full command: `npm run rikka:install stable`. Oh yeah, if you're on Linux and you're using the Snap version of Discord, please don't we use it because it cannot be modified.
+- Then you run `npm run rikka:install (branch)`. This will compile and inject Rikka onto your Discord client. Also make sure to type one of the branches, which is the version of the Discord client you're using. e.g. If you're using Discord stable, use stable. Full command: `npm run rikka:install stable`. Oh yeah, if you're on Linux and you're using the Snap version of Discord, please don't use it because it cannot be modified.
 
 ## Help
 You can either:
