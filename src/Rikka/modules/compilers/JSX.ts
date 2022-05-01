@@ -7,9 +7,9 @@ export default class JSX extends Compiler {
 
     compile() {
         const jsx = readFileSync(this.file, 'utf-8');
-        return transform(jsx, {
-            transforms: ["jsx", "imports"],
-            filePath: this.file
-        }).code;
+        const transformed = transform(jsx, {
+            transforms: ["jsx"]
+        });
+        return transformed.code;
     }
 }

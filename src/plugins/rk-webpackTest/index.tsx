@@ -6,7 +6,7 @@ import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import * as pkg from "./package.json";
 import { patch } from "@rikka/API/patcher";
 import { ContextMenu } from "@rikka/API/components";
-import React from "@rikka/API/pkg/React";
+const React = require("react");
 
 export default class webpackTest extends RikkaPlugin {
   Manifest = {

@@ -27,6 +27,6 @@ export default abstract class Compiler extends Events {
     }
 
     doCompilation(key: string) {
-        this.compile();
+        return this.compile();
     }
 }

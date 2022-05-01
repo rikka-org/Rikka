@@ -11,9 +11,9 @@ export = readdirSync(__dirname)
         compiler.extensions.forEach((ext: string) => {
             console.log("registered compiler for extension: " + ext);
             require.extensions[ext] = (module: any, filename: string) => {
+                Logger.log("Module: " + module);
                 const compilerModule = new compiler(filename) as Compiler;
                 const compiled = compilerModule.doCompilation(filename);
-                Logger.log("compiled code: " + compiled);
 
                 module._compile(compiled, filename);
             }
