@@ -62,7 +62,7 @@ export default class Rikka {
         // Make the logs save to file every 5 seconds
         setInterval(() => {
             const logsDir = `${__dirname}`;
-            saveToFile(`${logsDir}/logs.txt`);
+            saveToFile(`${logsDir}/logs.json`);
         }, 5000);
 
         // Setup compilers
@@ -70,11 +70,18 @@ export default class Rikka {
 
         await this.styleManager.applyThemes();
         this.PluginManager.loadPlugins();
+
+        process.on('exit', () => this.shutdown());
     }
 
     /** Shut down Rikka entirely, don't call this or death will incur */
-    private async shutdown() {
+    private shutdown() {
+        Logger.log("Rikka is shutting down...");
         //await this.APIManager._shutdown();
-        await this.PluginManager._shutdown();
+        this.PluginManager._shutdown();
+
+        Logger.log("Goodbye!");
+        const logsDir = `${__dirname}`;
+        saveToFile(`${logsDir}/logs.json`);
     }
 }

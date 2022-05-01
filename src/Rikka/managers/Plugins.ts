@@ -1,119 +1,130 @@
 import { readdirSync, readFileSync } from "fs";
 import { join, resolve, sep } from "path";
-import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import { NodeVM } from "vm2";
-import { err, log } from "@rikka/API/Utils/logger";
+import { Logger } from "@rikka/API/Utils/logger";
+import { Store } from "@rikka/API/storage";
+
+type pluginStatus = {
+    enabled: boolean;
+    dateAdded: Date;
+}
 
 export default class PluginsManager {
     readonly pluginDirectory = PluginsManager.getPluginDirectory();
-    protected plugins = new Map<string, RikkaPlugin>();
+    private newPlugins: string[] = [];
+
     private virtualMachines = new Map<string, NodeVM>();
 
+    private preferencesStore = new Store("pluginmanager");
+    private pluginRegistry: { [key: string]: pluginStatus };
+
     constructor() {
-        log(`Using plugins directory: ${this.pluginDirectory}`);
+        Logger.log(`Using plugins directory: ${this.pluginDirectory}`);
+        this.preferencesStore.loadFromFile("pluginmanager.json");
+
+        const pluginRegistry = this.preferencesStore.get("pluginRegistry");
+        if (!pluginRegistry) {
+            this.preferencesStore.set("pluginRegistry", {});
+        }
+        this.pluginRegistry = this.preferencesStore.get("pluginRegistry");
     }
 
     private preloadPlugin(pluginName: string) {
-        const plugin = this.plugins.get(pluginName);
-        if (!plugin) throw new Error(`Failed to preload plugin: ${pluginName}`);
-        if (plugin.enabled) return;
+        try {
+            const currentDir = join(this.pluginDirectory, pluginName);
+            const plugin = require(currentDir).default;
+            const pluginInstance = new plugin();
 
-        plugin._preload();
+            if (!this.pluginRegistry[pluginName]?.enabled) return;
+
+            if (pluginInstance.enabled) return;
+
+            pluginInstance._preload();
+        } catch (e) {
+            Logger.error(`Failed to preload plugin ${pluginName}`);
+        }
     }
 
     private loadPlugin(pluginName: string) {
-        const plugin = this.plugins.get(pluginName);
-        if (!plugin) throw new Error(`Failed to load plugin: ${pluginName}`);
-        if (plugin.enabled) return;
+        try {
+            const currentDir = join(this.pluginDirectory, pluginName);
+            const plugin = require(currentDir).default;
+            const pluginInstance = new plugin();
 
-        plugin._load();
+            if (!this.pluginRegistry[pluginName]?.enabled) return;
+
+            if (pluginInstance.enabled) return;
+
+            pluginInstance._load();
+        } catch (e) {
+            Logger.error(`Failed to load plugin ${pluginName}.\n${e}`);
+        }
     }
 
     private unloadPlugin(pluginName: string) {
-        const plugin = this.plugins.get(pluginName);
-        if (!plugin) throw new Error(`Failed to unload plugin: ${pluginName}`);
-        if (!plugin.enabled) return;
+        try {
+            const currentDir = join(this.pluginDirectory, pluginName);
+            const plugin = require(currentDir).default;
+            const pluginInstance = new plugin();
 
-        plugin._unload();
+            if (!pluginInstance) throw new Error(`Failed to unload plugin: ${pluginName}`);
+            if (!pluginInstance.enabled) return;
+
+            pluginInstance._unload();
+        } catch (e) {
+            Logger.error(e);
+        }
     }
 
     enablePlugin(pluginName: string) {
-        const plugin = this.plugins.get(pluginName);
-        if (!plugin) throw new Error(`Failed to enable plugin: ${pluginName}`);
+        if (!this.pluginRegistry[pluginName]) throw new Error(`Plugin ${pluginName} is not registered`);
+
+        this.pluginRegistry[pluginName]!.enabled = true;
 
         this.loadPlugin(pluginName);
     }
 
     disablePlugin(pluginName: string) {
-        const plugin = this.plugins.get(pluginName);
-        if (!plugin) throw new Error(`Failed to disable plugin: ${pluginName}`);
+        if (!this.pluginRegistry[pluginName]) throw new Error(`Plugin ${pluginName} is not registered`);
+
+        this.pluginRegistry[pluginName]!.enabled = false;
 
         this.unloadPlugin(pluginName);
     }
 
+    private registerPlugin(pluginName: string) {
+        this.pluginRegistry[pluginName] = {
+            enabled: true,
+            dateAdded: new Date()
+        };
+    }
+
     private mountPlugin(pluginName: string, preload: boolean = false) {
-        try {
-            const currentDir = join(this.pluginDirectory, pluginName);
-            const pluginManifest = (() => {
-                try {
-                    const manifest = require(resolve(currentDir, 'manifest.json'));
-                    if (manifest) return manifest;
-                } catch (e) {
-                    console.log("No manifest");
-                }
-            })();
-
-            if (pluginManifest && pluginManifest.sandboxed && !preload) {
-                const permsNeeded = (() => {
-                    const permsNeeded = pluginManifest.permissions;
-                    if (permsNeeded) return permsNeeded;
-                })();
-
-                const vm = new NodeVM({
-                    console: 'off',
-                    sandbox: {},
-                    require: {
-                        external: (() => {
-                            // Push tslib into the sandbox.
-                            const tslib = require.resolve('tslib');
-
-                            // Allow rikka APIs to be used.
-                            const rikka = join(__dirname, "..", "API");
-
-                            // Allow the plugin to use the sandbox.
-                            return [tslib, rikka];
-                        })(),
-                        root: currentDir,
-                    },
-                });
-                this.virtualMachines.set(pluginName, vm);
-                return;
-            }
-
-            const plugin = require(currentDir);
-
-            if (!plugin) throw new Error(`Failed to mount plugin: ${pluginName}`);
-
-            this.plugins.set(pluginName, new plugin.default());
-        } catch (e) {
-            err(e);
+        if (!this.pluginRegistry[pluginName]) {
+            this.registerPlugin(pluginName);
         }
+        else if (!this.pluginRegistry[pluginName]?.enabled) {
+            return;
+        }
+        this.newPlugins.push(pluginName);
     }
 
     loadPlugins(preload: boolean = false) {
         readdirSync(this.pluginDirectory).forEach(file => this.mountPlugin(file, preload));
-        this.plugins.forEach((plugin, name) => {
+        this.newPlugins.forEach((plugin) => {
             try {
                 if (preload) {
-                    this.preloadPlugin(name);
+                    this.preloadPlugin(plugin);
                     return;
                 }
 
-                this.loadPlugin(name);
+                this.enablePlugin(plugin);
             } catch (e) {
-                console.error(e);
+                Logger.error(e);
             }
         });
+
+        this.preferencesStore.saveToFile("pluginmanager.json");
 
         // Sandboxed plugins should NEVER be preloaded, as the main thread has higher permissions.
         if (preload) return;
@@ -124,19 +135,20 @@ export default class PluginsManager {
                 const code = readFileSync(join(dir, "index.js"), 'utf8');
                 vm.run(code);
             } catch (e) {
-                console.error(e);
+                Logger.error(e);
             }
         });
     }
 
-    async _shutdown() {
-        await this.unloadPlugins();
-        await this.shutdownVMs();
+    _shutdown() {
+        this.unloadPlugins();
+        this.shutdownVMs();
+        this.preferencesStore.saveToFile("pluginmanager.json");
     }
 
     private unloadPlugins() {
-        this.plugins.forEach((plugin, name) => {
-            this.unloadPlugin(name);
+        this.newPlugins.forEach((plugin) => {
+            this.unloadPlugin(plugin);
         });
     }
 
