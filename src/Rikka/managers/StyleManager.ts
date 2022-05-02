@@ -26,6 +26,11 @@ type themeCache = {
     lastModified?: number,
 }
 
+type themeData = {
+    file: string,
+    manifest: rikkaManifest,
+}
+
 export default class StyleManager {
     private themeDirectory = resolve(__dirname, '..', '..', 'themes');
     private loadedThemes: Map<string, string> = new Map();
@@ -41,13 +46,25 @@ export default class StyleManager {
         // TODO: Load themes
 
         const themes: string[] = [];
-        const files: string[] = []
+        const files: themeData[] = []
 
         readdirSync(this.themeDirectory).forEach(file => {
             const filePath = resolve(this.themeDirectory, file);
 
             if (file.endsWith('.css')) {
-                files.push(filePath);
+                files.push({
+                    file: filePath,
+                    manifest: {
+                        name: file,
+                        version: '1.0.0',
+                        description: '',
+                        theme: '',
+                        author: "unknown",
+                        consent: "unknown",
+                        license: "unknown",
+                        icon: "unknown",
+                    }
+                });
             } else if (statSync(filePath).isDirectory()) {
                 let manifest: string;
 
@@ -58,7 +75,10 @@ export default class StyleManager {
                 else return;
 
                 const manifestData = JSON.parse(manifest) as vizalityManifest;
-                files.push(resolve(filePath, manifestData.theme));
+                files.push({
+                    file: resolve(filePath, manifestData.theme),
+                    manifest: manifestData
+                });
             }
 
             return;
@@ -68,21 +88,24 @@ export default class StyleManager {
             try {
                 let theme: string;
 
-                if (file.endsWith('.scss')) {
+                if (file.file.endsWith('.scss')) {
                     // Invert \ to /, then find file name
-                    const fileName = file.replace(/\\/g, '/').split('/').pop() ?? "";
+                    const fileName = `${file.manifest.name}.cache.css`;
                     Logger.log(`Loading theme ${fileName}`);
 
                     if (!this.cacheStore.get(fileName)) this.cacheStore.set(fileName, { lastModified: 0 });
 
                     const cacheModified = this.cacheStore.get(fileName).lastModified;
-                    const sourceModified = statSync(file).mtime.getTime();
+                    const sourceModified = statSync(file.file).mtime.getTime();
 
                     const cached = this.cacheStore.readRaw(fileName);
-                    if (cached && cacheModified === sourceModified) theme = cached;
+                    if (cached && cacheModified === sourceModified) {
+                        Logger.log(`Using cached theme ${fileName}`);
+                        theme = cached;
+                    }
                     else {
                         Logger.log(`Compiling theme ${fileName}`);
-                        theme = sass.compile(file, {
+                        theme = sass.compile(file.file, {
                             style: 'compressed',
                         }).css;
                         this.cacheStore.set(fileName, {
@@ -93,10 +116,10 @@ export default class StyleManager {
                     }
                 }
 
-                else theme = readFileSync(file).toString(); 
+                else theme = readFileSync(file.file).toString(); 
                 
-                this.loadedThemes.set(file, theme);
-                themes.push(file);
+                this.loadedThemes.set(file.file, theme);
+                themes.push(file.file);
             } catch (e) {
                 Logger.error(`Theme loading error: ${e}`);
             }
