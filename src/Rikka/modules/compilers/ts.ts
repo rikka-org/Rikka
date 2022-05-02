@@ -7,9 +7,8 @@ export default class TS extends Compiler {
 
     compile() {
         const ts = readFileSync(this.file, 'utf-8');
-        const transformed = transform(ts, {
+        return transform(ts, {
             transforms: ["typescript"]
-        });
-        return transformed.code;
+        }).code;
     }
 }

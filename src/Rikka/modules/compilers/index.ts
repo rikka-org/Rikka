@@ -13,7 +13,7 @@ export = readdirSync(__dirname)
             require.extensions[ext] = (module: any, filename: string) => {
                 Logger.log("Module: " + module);
                 const compilerModule = new compiler(filename) as Compiler;
-                const compiled = compilerModule.doCompilation(filename);
+                const compiled = compilerModule.doCompilation();
 
                 module._compile(compiled, filename);
             }
