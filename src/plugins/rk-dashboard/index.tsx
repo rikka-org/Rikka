@@ -40,11 +40,14 @@ export default class rkDashboard extends RikkaPlugin {
             return;
           }
 
-          Logger.log("hello from the dashboard");
           res.props.children.props.children.push(
             <>
               <LinkButton
-                icon={() => <></>}
+                icon={() => (
+                  <>
+                    <div>"mogus"</div>
+                  </>
+                )}
                 route="/rikka"
                 text="Dashboard"
                 selected={"/rikka"}
