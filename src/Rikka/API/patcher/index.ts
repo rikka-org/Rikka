@@ -4,7 +4,7 @@ import { Logger } from "../Utils/logger";
 export const patches: any[] = [];
 export const errorLimit = 5;
 
-export type patch = {
+export type rikkapatch = {
     id?: any;
     caller?: any;
     moduleToPatch?: any;
@@ -35,7 +35,7 @@ export function runPatches(patches: any[], type: string, returnValue: undefined,
     return returnValue;
 }
 
-export function makeOverride(patch: patch) {
+export function makeOverride(patch: rikkapatch) {
     return {
         [patch.originalFunction.name](...args: any[]) {
             let returnValue;
