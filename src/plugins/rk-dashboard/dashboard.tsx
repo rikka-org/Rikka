@@ -8,11 +8,7 @@ const { openContextMenu } = contextMenu;
 export function Dashboard() {
   return (
     <LinkButton
-      icon={() => (
-        <>
-          <div>"mogus"</div>
-        </>
-      )}
+      icon={() => <></>}
       route="/rikka"
       text="Dashboard"
       selected={"/rikka"}
