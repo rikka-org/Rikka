@@ -1,5 +1,5 @@
 import PluginsManager from "./managers/Plugins";
-import StyleManager from "./managers/StyleManagerv2";
+import StyleManager from "./managers/StyleManager";
 import { saveToFile } from "./API/Utils/logger";
 // @ts-ignore -- FluxDispatcher is added at runtime
 import { getAllModules, initialize as initWebpackModules, FluxDispatcher } from "./API/webpack";

@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
-import StyleManager from "@rikka/managers/StyleManagerv2";
+import StyleManager from "@rikka/managers/StyleManager";
 require("./Rikka/IPC/renderer");
 
 // Original preload

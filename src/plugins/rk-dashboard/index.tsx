@@ -4,9 +4,8 @@ import { forceUpdateElement } from "@rikka/API/Utils/React";
 //@ts-ignore
 import { getModule, contextMenu } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
+import { Dashboard } from "./dashboard";
 const React = require("react");
-
-const { openContextMenu } = contextMenu;
 
 export default class rkDashboard extends RikkaPlugin {
   Manifest = {
@@ -28,7 +27,6 @@ export default class rkDashboard extends RikkaPlugin {
       (m: any) => m.default?.displayName === "ConnectedPrivateChannelsList"
     );
     const { channel } = getModule("channel", "closeIcon") as any;
-    const { LinkButton } = getModule("LinkButton") as any;
 
     patch(
       "rk-dashboard-private-channels-list-item",
@@ -40,21 +38,23 @@ export default class rkDashboard extends RikkaPlugin {
             return;
           }
 
-          res.props.children.props.children.push(
-            <>
-              <LinkButton
-                icon={() => (
-                  <>
-                    <div>"mogus"</div>
-                  </>
-                )}
-                route="/rikka"
-                text="Dashboard"
-                selected={"/rikka"}
-                onContextMenu={(evt: any) => openContextMenu(evt, () => <></>)}
-              />
-            </>
-          );
+          if (res.props.children.props.children instanceof Array) {
+            res.props.children.props.children.push(
+              <>
+                <Dashboard />
+              </>
+            );
+          } else {
+            Logger.warn(
+              "Using workaround for dashboard. Please tell CanadaHonk to stop converting Arrays to Objects!"
+            );
+            res.props.children.props.children = [
+              <>
+                <Dashboard />
+              </>,
+              res.props.children.props.children,
+            ];
+          }
         } catch (e) {
           Logger.error(`Failed to patch ConnectedPrivateChannelsList: ${e}`);
         }
