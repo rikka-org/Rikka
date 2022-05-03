@@ -1,11 +1,12 @@
 import PluginsManager from "./managers/Plugins";
-import StyleManager from "./managers/StyleManager";
+import StyleManager from "./managers/StyleManagerv2";
 import { saveToFile } from "./API/Utils/logger";
 // @ts-ignore -- FluxDispatcher is added at runtime
 import { getAllModules, initialize as initWebpackModules, FluxDispatcher } from "./API/webpack";
 import { Logger } from "./API/Utils/logger";
+import Updatable from "./Common/entities/Updatable";
 
-export default class Rikka {
+export default class Rikka extends Updatable {
     private styleManager = new StyleManager();
     private PluginManager = new PluginsManager();
 
@@ -16,6 +17,8 @@ export default class Rikka {
     private ready: boolean = false;
 
     constructor() {
+        super();
+
         if (document.readyState === 'loading')
             document.addEventListener('DOMContentLoaded', () => this.init());
         else
@@ -68,7 +71,8 @@ export default class Rikka {
         // Setup compilers
         require("./modules/compilers");
 
-        await this.styleManager.applyThemes();
+        this.styleManager.loadThemes();
+        this.styleManager.applyThemes();
         this.PluginManager.loadPlugins();
 
         process.on('exit', () => this.shutdown());

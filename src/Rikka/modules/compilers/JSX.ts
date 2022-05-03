@@ -3,6 +3,8 @@ import { readFileSync } from "fs";
 import { transform } from "sucrase";
 
 export default class JSX extends Compiler {
+    compilerInfo = `sucrase`;
+
     static readonly extensions = [".jsx"];
 
     compile() {
