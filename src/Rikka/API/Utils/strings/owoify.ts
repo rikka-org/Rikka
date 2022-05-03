@@ -117,7 +117,7 @@ export const owoifyText = (text: string) => {
     }
     return text;
   } catch (e) {
-    Logger.error(e);
+    Logger.error(`s-something went w-wrong!! *nuzzles* x3 *notices your error* ${e}`);
     return "owo";
   }
 };
