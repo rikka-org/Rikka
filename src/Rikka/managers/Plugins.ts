@@ -42,7 +42,7 @@ export default class PluginsManager {
             if (preload && (!manifest.preload || manifest.sandboxed)) return;
 
             const plugin = require(currentDir).default;
-            const pluginInstance = new plugin() as RikkaPlugin;
+            const pluginInstance = new plugin() as RikkaPlugin | undefined;
             if (!pluginInstance) throw new Error(`Failed to load plugin ${pluginName}: plugin is missing`);
 
             if (pluginInstance.enabled) return;
@@ -61,7 +61,7 @@ export default class PluginsManager {
         try {
             const currentDir = join(this.pluginDirectory, pluginName);
             const plugin = require(currentDir).default;
-            const pluginInstance = new plugin();
+            const pluginInstance = new plugin() as RikkaPlugin | undefined;
 
             if (!pluginInstance) throw new Error(`Failed to unload plugin: ${pluginName}`);
             if (!pluginInstance.enabled) return;
