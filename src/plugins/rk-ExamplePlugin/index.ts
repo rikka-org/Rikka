@@ -1,19 +1,10 @@
 import { Store } from '@rikka/API/storage';
 import { Logger } from '@rikka/API/Utils/logger';
 import RikkaPlugin from '@rikka/Common/entities/Plugin';
-/** BS workaround for TS not including .json by default (Seriously, why is this not a default M$?) */
-import * as pkg from './package.json';
+/** You have to do this or the compiler refuses to include JSON */
+import manifest from "./manifest.json";
 
 export default class ExamplePlugin extends RikkaPlugin {
-    Manifest = {
-        name: "Example Plugin",
-        description: "An example plugin for Rikka.",
-        author: "V3L0C1T13S",
-        license: "BSD 3-Clause",
-        version: pkg.version,
-        dependencies: []
-    }
-
     private store = new Store("ExamplePlugin");
 
     inject() {

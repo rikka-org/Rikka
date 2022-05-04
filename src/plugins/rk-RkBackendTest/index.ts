@@ -1,19 +1,8 @@
 import { Logger } from '@rikka/API/Utils/logger';
 import RikkaPlugin from '@rikka/Common/entities/Plugin';
-/** BS workaround for TS not including .json by default (Seriously, why is this not a default M$?) */
-import * as pkg from './package.json';
+import manifest from "./manifest.json";
 
 export default class ExamplePlugin extends RikkaPlugin {
-    Manifest = {
-        name: "Example Plugin",
-        description: "Test for Rikka's web backend",
-        author: "V3L0C1T13S",
-        license: "BSD 3-Clause",
-        version: pkg.version,
-        dependencies: []
-    }
-
-
     inject() {
         console.log("Injected!");
 

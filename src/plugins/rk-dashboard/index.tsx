@@ -6,17 +6,9 @@ import { getModule, contextMenu } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import { Dashboard } from "./dashboard";
 const React = require("react");
+import manifest from "./manifest.json";
 
 export default class rkDashboard extends RikkaPlugin {
-  Manifest = {
-    name: "Rikka Dashboard",
-    description: "The main menu for managing Rikka.",
-    author: "V3L0C1T13S",
-    version: "1.0.0",
-    dependencies: [],
-    license: "GPL-3.0",
-  };
-
   inject() {
     this.addDashboard();
   }

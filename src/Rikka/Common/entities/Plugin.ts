@@ -3,8 +3,10 @@ import Updatable from "./Updatable";
 
 /** A base class for all plugins. */
 export default abstract class RikkaPlugin extends Updatable {
-    /** The name of this plugin, shows up in the plugin list, etc. */
-    readonly abstract Manifest: PluginManifest;
+    /** The name of this plugin, shows up in the plugin list, etc. 
+     * NOTE: This is set at runtime, so it is not recommended to change this.
+    */
+    Manifest?: PluginManifest;
 
     enabled: boolean = false;
     ready: boolean = false;

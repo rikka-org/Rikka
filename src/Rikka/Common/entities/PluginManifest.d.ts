@@ -1,10 +1,13 @@
+type author = {
+    name: string;
+    uid: string;
+}
+
 type PluginManifest = {
     name: string;
     description: string;
-    author: string;
+    author: author;
 
     license: string;
     version: string;
-
-    dependencies: string[] | { [key: string]: string };
 }

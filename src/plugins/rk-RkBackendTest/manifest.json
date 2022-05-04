@@ -1,0 +1,10 @@
+{
+    "name": "Example Plugin",
+    "description": "Test for Rikka's web backend",
+    "author": {
+        "name": "V3L0C1T13S",
+        "uid": "236571091315720193"
+    },
+    "license": "BSD 3-Clause",
+    "version": "1.0.0"
+}

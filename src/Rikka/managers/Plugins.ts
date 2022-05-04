@@ -3,6 +3,7 @@ import { join, resolve, sep } from "path";
 import { NodeVM } from "vm2";
 import { Logger } from "@rikka/API/Utils/logger";
 import { Store } from "@rikka/API/storage";
+import RikkaPlugin from "@rikka/Common/entities/Plugin";
 
 type pluginStatus = {
     enabled: boolean;
@@ -29,33 +30,27 @@ export default class PluginsManager {
         this.pluginRegistry = this.preferencesStore.get("pluginRegistry");
     }
 
-    private preloadPlugin(pluginName: string) {
+    private loadPlugin(pluginName: string, preload: boolean = false) {
         try {
-            const currentDir = join(this.pluginDirectory, pluginName);
-            const plugin = require(currentDir).default;
-            const pluginInstance = new plugin();
-
             if (!this.pluginRegistry[pluginName]?.enabled) return;
+
+            const currentDir = join(this.pluginDirectory, pluginName);
+
+            // Safely read the plugin's manifest directly from the filesystem.
+            const manifest = JSON.parse(readFileSync(join(currentDir, "manifest.json"), 'utf8'));
+            if (!manifest) throw new Error(`Failed to load plugin ${pluginName}: manifest.json is missing`);
+            if (preload && (!manifest.preload || manifest.sandboxed)) return;
+
+            const plugin = require(currentDir).default;
+            const pluginInstance = new plugin() as RikkaPlugin;
 
             if (pluginInstance.enabled) return;
 
-            pluginInstance._preload();
-        } catch (e) {
-            Logger.error(`Failed to preload plugin ${pluginName}`);
-        }
-    }
-
-    private loadPlugin(pluginName: string) {
-        try {
-            const currentDir = join(this.pluginDirectory, pluginName);
-            const plugin = require(currentDir).default;
-            const pluginInstance = new plugin();
-
-            if (!this.pluginRegistry[pluginName]?.enabled) return;
-
-            if (pluginInstance.enabled) return;
-
-            pluginInstance._load();
+            pluginInstance.Manifest = manifest;
+            if (preload)
+                pluginInstance._preload();
+            else
+                pluginInstance._load();
         } catch (e) {
             Logger.error(`Failed to load plugin ${pluginName}.\n${e}`);
         }
@@ -113,12 +108,7 @@ export default class PluginsManager {
         readdirSync(this.pluginDirectory).forEach(file => this.mountPlugin(file, preload));
         this.newPlugins.forEach((plugin) => {
             try {
-                if (preload) {
-                    this.preloadPlugin(plugin);
-                    return;
-                }
-
-                this.enablePlugin(plugin);
+                this.loadPlugin(plugin, preload);
             } catch (e) {
                 Logger.error(e);
             }

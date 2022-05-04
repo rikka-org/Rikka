@@ -7,18 +7,9 @@ import { patch } from '@rikka/API/patcher';
 import React from '@rikka/API/pkg/React';
 import { join } from 'path';
 import { getReactInstance } from '@rikka/API/Utils/React';
-import { Logger } from '@rikka/API/Utils';
+import manifest from "./manifest.json";
 
 export default class rkCode extends RikkaPlugin {
-    Manifest = {
-        name: "rk-code",
-        description: "Injects cool code styles to spice up your code",
-        author: "V3L0C1T13S",
-        license: "BSD 3-Clause",
-        version: pkg.version,
-        dependencies: []
-    }
-
     inject() {
         return;
         this.loadStyleSheet(join(__dirname, 'style.css'));
