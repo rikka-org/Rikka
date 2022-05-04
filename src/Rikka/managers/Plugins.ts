@@ -43,6 +43,7 @@ export default class PluginsManager {
 
             const plugin = require(currentDir).default;
             const pluginInstance = new plugin() as RikkaPlugin;
+            if (!pluginInstance) throw new Error(`Failed to load plugin ${pluginName}: plugin is missing`);
 
             if (pluginInstance.enabled) return;
 
