@@ -5,10 +5,12 @@ import { saveToFile } from "./API/Utils/logger";
 import { getAllModules, initialize as initWebpackModules, FluxDispatcher } from "./API/webpack";
 import { Logger } from "./API/Utils/logger";
 import Updatable from "./Common/entities/Updatable";
+import SettingsManager from "./managers/settingsManager";
 
 export default class Rikka extends Updatable {
     private styleManager = new StyleManager();
     private PluginManager = new PluginsManager();
+    settingsManager = new SettingsManager();
 
     /** Deprecated way of accessing plugin APIs */
     //private APIManager = new APIManager();

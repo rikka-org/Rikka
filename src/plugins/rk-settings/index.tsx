@@ -1,17 +1,25 @@
+import Rikka from "@rikka/index";
 import { patch } from "@rikka/API/patcher";
+import { SettingsCategory } from "@rikka/API/settings";
+import { Store } from "@rikka/API/storage";
 import { Logger } from "@rikka/API/Utils";
 import { getModule, getModuleByDisplayName } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import { Test } from "./components/Test";
 import manifest from "./manifest.json";
 
+declare var rikka: Rikka;
+
 export default class rkSettings extends RikkaPlugin {
+  private settingsStore = new Store("rk-settings");
+  private settingsCategory = new SettingsCategory("General", "rk-general", this.settingsStore);
+
   inject() {
     this.enableExperiments();
     this.patchSettingsMenu();
   }
 
-  async enableExperiments() {
+  private async enableExperiments() {
     try {
       const experiments = (await getModule(
         (r: any) => r.isDeveloper !== void 0
@@ -28,7 +36,8 @@ export default class rkSettings extends RikkaPlugin {
     }
   }
 
-  async patchSettingsMenu() {
+  private async patchSettingsMenu() {
+    rikka.settingsManager.registerSetting("rk-general", this.settingsCategory);
     const SettingsView = (await getModuleByDisplayName("SettingsView")) as any;
     patch(
       "rk-settings-view-mod",
@@ -47,6 +56,12 @@ export default class rkSettings extends RikkaPlugin {
               section: "HEADER",
               label: "Rikka",
             },
+            ...Array.from(rikka.settingsManager.settings.values()).map((s: any) => {
+              return {
+                section: "rk-general",
+                label: s.name,
+              };
+            }),
             {
               section: "DIVIDER",
             }
