@@ -8,7 +8,6 @@
 
  import ReactIs from 'react-is';
  import { webFrame } from 'electron';
- import { toHex, toInt } from './Color';
  import Logger from '../logger';
  
  const RealHTMLElement = webFrame.top.context.HTMLElement;

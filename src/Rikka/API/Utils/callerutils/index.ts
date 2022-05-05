@@ -1,4 +1,3 @@
-import { escapeRegExp } from "lodash";
 import { Logger } from "../logger";
 
 export function getCaller(stack: string) {

@@ -1,4 +1,4 @@
-import { err } from "../logger";
+import { Logger } from "../logger";
 
 export async function sleep(ms: number) {
     try {
@@ -6,6 +6,6 @@ export async function sleep(ms: number) {
             setTimeout(resolve, ms)
         );
     } catch (errmsg) {
-        err("Failed to sleep: " + errmsg);
+        Logger.error("Failed to sleep: " + errmsg);
     }
 }
