@@ -5,7 +5,7 @@ import { saveToFile } from "./API/Utils/logger";
 import { getAllModules, initialize as initWebpackModules, FluxDispatcher } from "./API/webpack";
 import { Logger } from "./API/Utils/logger";
 import Updatable from "./Common/entities/Updatable";
-import SettingsManager from "./managers/settingsManager";
+import SettingsManager from "./managers/SettingsManager";
 
 export default class Rikka extends Updatable {
     private styleManager = new StyleManager();

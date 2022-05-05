@@ -5,7 +5,6 @@ import { Store } from "@rikka/API/storage";
 import { Logger } from "@rikka/API/Utils";
 import { getModule, getModuleByDisplayName } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
-import { Test } from "./components/Test";
 import manifest from "./manifest.json";
 
 declare var rikka: Rikka;

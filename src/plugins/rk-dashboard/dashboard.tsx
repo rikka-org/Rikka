@@ -5,7 +5,7 @@ const React = require("react");
 const { LinkButton } = getModule("LinkButton") as any;
 const { openContextMenu } = contextMenu;
 
-export function Dashboard() {
+export default function Dashboard() {
   return (
     <LinkButton
       icon={() => <></>}

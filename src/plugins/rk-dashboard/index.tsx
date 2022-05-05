@@ -4,7 +4,7 @@ import { forceUpdateElement } from "@rikka/API/Utils/React";
 //@ts-ignore
 import { getModule, contextMenu } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
-import { Dashboard } from "./dashboard";
+import Dashboard from "./dashboard";
 const React = require("react");
 import manifest from "./manifest.json";
 
@@ -14,11 +14,11 @@ export default class rkDashboard extends RikkaPlugin {
   }
 
   /** Adds the Rikka dashboard to your home screen */
-  private addDashboard() {
+  private async addDashboard() {
     const ConnectedPrivateChannelsList = getModule(
       (m: any) => m.default?.displayName === "ConnectedPrivateChannelsList"
     );
-    const { channel } = getModule("channel", "closeIcon") as any;
+    const { channel } = await getModule("channel", "closeIcon") as any;
 
     patch(
       "rk-dashboard-private-channels-list-item",
