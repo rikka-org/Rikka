@@ -69,4 +69,8 @@ export default class rkSettings extends RikkaPlugin {
       }
     );
   }
+
+  uninject() {
+      
+  }
 }

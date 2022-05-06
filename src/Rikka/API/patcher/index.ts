@@ -1,19 +1,21 @@
-import { getCaller, getCallerFile } from "../Utils";
+import { getCaller } from "../Utils";
 import { Logger } from "../Utils/logger";
 
-export const patches: any[] = [];
+export const patches: rikkapatch[] = [];
 export const errorLimit = 5;
 
+export type rkUnpatchFunction = () => void;
+
 export type rikkapatch = {
-    id?: any;
-    caller?: any;
-    moduleToPatch?: any;
-    functionName?: any;
+    id: any;
+    caller: any;
+    moduleToPatch: any;
+    functionName: any;
     originalFunction: any;
-    unpatch?: () => any;
+    unpatch: rkUnpatchFunction;
     childs: any;
-    count?: number;
-    index?: number;
+    count: number;
+    index: number;
 };
 
 export type moddedModule = {
@@ -76,6 +78,7 @@ export function createPatch(id: any, moduleToPatch: moddedModule, functionName: 
         },
         childs: [],
         get count() { return this.childs.length; },
+        // @ts-ignore
         get index() { return patches.indexOf(this); }
     };
 
@@ -92,6 +95,9 @@ export function createPatch(id: any, moduleToPatch: moddedModule, functionName: 
     return patchData;
 }
 
+/** Patch a webpack module with your custom code
+ * @returns A function that unpatches the patch
+ */
 export function patch(...args: any[]) {
     if (typeof args[0] !== 'string') {
         const stack = new Error().stack;

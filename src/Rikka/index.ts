@@ -73,8 +73,8 @@ export default class Rikka extends Updatable {
         // Setup compilers
         require("./modules/compilers");
 
-        this.styleManager.loadThemes();
-        this.styleManager.applyThemes();
+        this.styleManager._loadThemes();
+        this.styleManager._applyThemes();
         this.PluginManager.loadPlugins();
 
         process.on('exit', () => this.shutdown());

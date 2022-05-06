@@ -4,22 +4,30 @@ import { resolve } from "path";
 
 export default class StyleManager {
     themes: Map<string, Theme> = new Map();
-    private themesDirectory = resolve(__dirname, "..", "..", "themes");
+    private static readonly themesDirectory = resolve(__dirname, "..", "..", "themes");
 
-    removeTheme(theme: Theme) {
+    _applyTheme(name: string) {
+        const theme = this.themes.get(name);
+        theme?._load();
+    }
+
+    _removeTheme(theme: Theme) {
         theme._unload();
     }
 
-    loadThemes() {
-        readdirSync(this.themesDirectory).filter(file => !file.endsWith(".exists")).forEach(file => {
-            const filePath = resolve(this.themesDirectory, file);
+    _loadTheme(filename: string, themeDirectory: string) {
+        const theme = new Theme(themeDirectory);
+        this.themes.set(theme.themeManifest?.name ?? filename, theme);
+    }
 
-            const theme = new Theme(filePath);
-            this.themes.set(file, theme);
+    _loadThemes() {
+        readdirSync(StyleManager.themesDirectory).filter(file => !file.endsWith(".exists")).forEach(file => {
+            const filePath = resolve(StyleManager.themesDirectory, file);
+            this._loadTheme(file, filePath);
         });
     }
 
-    applyThemes() {
+    _applyThemes() {
         this.themes.forEach(theme => {
             theme._load();
         });

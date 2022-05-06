@@ -16,8 +16,8 @@ function init() {
     document.body.classList.add("rikka");
     console.log("loading styles");
     const styleman = new StyleManager();
-    styleman.loadThemes();
-    styleman.applyThemes();
+    styleman._loadThemes();
+    styleman._applyThemes();
     console.log("Rikka loaded");
 }
 
