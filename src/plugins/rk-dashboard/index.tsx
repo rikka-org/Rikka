@@ -1,6 +1,6 @@
 import { patch } from "@rikka/API/patcher";
 import { Logger } from "@rikka/API/Utils";
-import { forceUpdateElement } from "@rikka/API/Utils/React";
+import { findInReactTree, forceUpdateElement } from "@rikka/API/Utils/React";
 //@ts-ignore
 import { getModule, contextMenu } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
@@ -18,7 +18,7 @@ export default class rkDashboard extends RikkaPlugin {
     const ConnectedPrivateChannelsList = getModule(
       (m: any) => m.default?.displayName === "ConnectedPrivateChannelsList"
     );
-    const { channel } = await getModule("channel", "closeIcon") as any;
+    const { channel } = (await getModule("channel", "closeIcon")) as any;
 
     patch(
       "rk-dashboard-private-channels-list-item",
@@ -30,23 +30,16 @@ export default class rkDashboard extends RikkaPlugin {
             return;
           }
 
-          if (res.props.children.props.children instanceof Array) {
-            res.props.children.props.children.push(
-              <>
-                <Dashboard />
-              </>
-            );
-          } else {
-            Logger.warn(
-              "Using workaround for dashboard. Please tell CanadaHonk to stop converting Arrays to Objects!"
-            );
-            res.props.children.props.children = [
-              <>
-                <Dashboard />
-              </>,
-              res.props.children.props.children,
-            ];
-          }
+          const { children: listChildren } = findInReactTree(
+            res,
+            (c: any) => c.channels
+          ) as any;
+
+          listChildren.push(
+            <>
+              <Dashboard />
+            </>
+          );
         } catch (e) {
           Logger.error(`Failed to patch ConnectedPrivateChannelsList: ${e}`);
         }

@@ -11,7 +11,7 @@ declare var rikka: Rikka;
 
 export default class rkSettings extends RikkaPlugin {
   private settingsStore = new Store("rk-settings");
-  private settingsCategory = new SettingsCategory("General", "rk-general", this.settingsStore);
+  private settingsCategory = new SettingsCategory("General", "General settings for Rikka", this.settingsStore);
 
   inject() {
     this.enableExperiments();

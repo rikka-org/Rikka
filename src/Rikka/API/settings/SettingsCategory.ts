@@ -1,6 +1,10 @@
 import { Store } from "../storage";
 import Setting from "./Setting";
 
+type settingsEvents = "change" | "add" | "remove";
+
+type settingsListener = (eventType: settingsEvents, setting: Setting, value: any) => void;
+
 export default class SettingsCategory {
     /** Rendered by the Settings visualizer as the name of the plugin. */
     name: string;
@@ -9,6 +13,8 @@ export default class SettingsCategory {
 
     settings: Map<string, Setting> = new Map();
     settingsStore: Store;
+
+    private listeners: Map<settingsEvents, settingsListener> = new Map();
 
     constructor(name: string, description: string, settingsStore: Store) {
         this.name = name;
@@ -26,12 +32,35 @@ export default class SettingsCategory {
 
     addSetting(setting: Setting) {
         this.settings.set(setting.name, setting);
+
+        this.listeners.forEach((listener, eventType) => {
+            if (eventType !== "add") return;
+            listener(eventType, setting, setting.value);
+        });
     }
 
     // 
-    updateSetting(setting: Setting) {
-        this.settings.set(setting.name, setting);
+    updateSetting(name: string, value: any) {
+        const setting = this.settings.get(name);
+        if (!setting) return;
+
+        setting.value = value;
+        
+        this.listeners.forEach((listener, eventType) => {
+            if (eventType !== "change") return;
+            listener(eventType, setting, value);
+        });
     }
 
+    removeSetting(name: string) {
+        this.settings.delete(name);
+    }
 
+    getSetting(name: string) {
+        return this.settings.get(name);
+    }
+
+    listen(eventType: settingsEvents, listener: settingsListener) {
+        this.listeners.set(eventType, listener);
+    }
 }
