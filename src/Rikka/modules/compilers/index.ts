@@ -25,7 +25,7 @@ readdirSync(__dirname)
 
 export function getCompiler(file: string) {
     try {
-        const extension = file.split(".").pop() ?? "";
+        const extension = file.split(".").pop()?.toLowerCase() ?? "";
         const compiler = require(join(__dirname, extension)).default;
 
         if (!compiler) {
