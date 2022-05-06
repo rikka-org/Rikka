@@ -1,5 +1,5 @@
 # Rikka
-![](https://img.shields.io/discord/950548233418076180?color=%23E026ab&label=support&logo=discord&logoColor=%23fff&style=for-the-badge)
+![](https://img.shields.io/discord/950548233418076180?color=%23E02a6b&label=support&logo=discord&logoColor=%23fff&style=for-the-badge)
 
 Rikka is a fast, powerful, and extendable Discord modification. It can load plugins, manage plugins, and features a rich API.
 
