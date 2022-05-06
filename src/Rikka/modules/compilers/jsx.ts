@@ -1,9 +1,11 @@
 import Compiler from "./compiler";
 import { readFileSync } from "fs";
-import { transform } from "sucrase";
+import { transform, getVersion } from "sucrase";
 
 export default class JSX extends Compiler {
-    compilerInfo = `sucrase`;
+    get compilerInfo() {
+        return `sucrase@${getVersion()}`;
+    }
 
     static readonly extensions = [".jsx"];
 

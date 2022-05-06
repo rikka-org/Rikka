@@ -1,8 +1,11 @@
 import Compiler from "./compiler";
-import { compile } from "sass";
+import sass, { compile } from "sass";
 
 export default class scss extends Compiler {
-    compilerInfo = "sass";
+    get compilerInfo() {
+        return `sass@${sass.info}`;
+    }
+    
     static readonly extensions = [".scss"];
 
     compile() {

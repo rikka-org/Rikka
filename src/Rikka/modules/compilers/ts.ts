@@ -1,9 +1,12 @@
 import { readFileSync } from "fs";
-import sucrase, { transform } from "sucrase";
+import { transform, getVersion } from "sucrase";
 import Compiler from "./compiler";
 
 export default class TS extends Compiler {
-    compilerInfo = `sucrase`;
+    get compilerInfo() {
+        return `sucrase@${getVersion()}`;
+    }
+    
     static readonly extensions = [".ts"];
 
     compile() {

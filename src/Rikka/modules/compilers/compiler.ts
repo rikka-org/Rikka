@@ -5,7 +5,10 @@ import Events from "events";
 import { readFileSync } from "fs";
 
 export default abstract class Compiler extends Events {
-    protected readonly abstract compilerInfo: string;
+    protected get compilerInfo() {
+        return "";
+    }
+
     static readonly extensions: string[];
 
     protected abstract compile(): any;
@@ -52,6 +55,7 @@ export default abstract class Compiler extends Events {
     private computeFileHash() {
         const fileBuffer = readFileSync(this.file);
         return createHash('sha1')
+            .update(this.compilerInfo)
             .update(fileBuffer)
             .digest('hex');
     }

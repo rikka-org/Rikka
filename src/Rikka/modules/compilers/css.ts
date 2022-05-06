@@ -2,7 +2,10 @@ import { readFileSync } from "fs";
 import Compiler from "./compiler";
 
 export default class css extends Compiler {
-    compilerInfo = "CSS";
+    get compilerInfo() {
+        return "css";
+    }
+
     static readonly extensions = [".css"];
 
     compile() {
