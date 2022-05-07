@@ -10,7 +10,7 @@
     "build": "tsc -p tsconfig.json && npm run copy-files",
     "watch": "tsc -w -p tsconfig.json",
     "test": "jest",
-    "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/style.css src/**/.exists src/**/*.json src/**/*.scss dist/",
+    "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/style.css src/**/.exists src/**/*.json src/**/*.scss src/**/*.coffee dist/",
     "clean": "rimraf dist",
     "compile-sass": "sassc --watch src/"
   },
@@ -23,12 +23,14 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "@types/blessed": "^0.1.19",
+    "@types/coffeescript": "^2.5.1",
     "@types/electron-devtools-installer": "^2.2.2",
     "@types/fs-extra": "^9.0.13",
     "@types/lodash": "^4.14.182",
     "@types/node": "^17.0.21",
     "@types/prompt": "^1.1.2",
     "@types/react": "^18.0.6",
+    "coffeescript": "^2.7.0",
     "cpy-cli": "^4.1.0",
     "rimraf": "^3.0.2",
     "ts-patch": "^2.0.1",
