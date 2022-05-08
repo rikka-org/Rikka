@@ -1,5 +1,5 @@
-import { Logger } from '@rikka/API/Utils/logger';
-import RikkaPlugin from '@rikka/Common/entities/Plugin';
+import { Logger } from "@rikka/API/Utils/logger";
+import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import manifest from "./manifest.json";
 
 type badge = {
@@ -10,16 +10,17 @@ type badge = {
 };
 
 export default class ExamplePlugin extends RikkaPlugin {
+  private badges: badge[] = [];
 
-    private badges: badge[] = [];
+  inject() {
+    this.fetchBadges();
+  }
 
-    inject() {
-        this.fetchBadges();
-    }
-
-    private async fetchBadges() {
-        const badges = await fetch("http://127.0.0.1:8000/badges/@latest").catch(err => {
-            Logger.error(`Failed to fetch badges: ${err}`);
-        });
-    }
+  private async fetchBadges() {
+    fetch("http://127.0.0.1:8000/badges/@latest").catch(
+      (err) => {
+        Logger.error(`Failed to fetch badges: ${err}`);
+      },
+    );
+  }
 }

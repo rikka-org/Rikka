@@ -8,6 +8,7 @@ declare global {
     const RikkaNative: any;
     const rikka: Rikka;
     const $rk: Rikka;
+    const DiscordNative: any;
     interface Window {
         __SPLASH__: boolean;
         $rk: Rikka;

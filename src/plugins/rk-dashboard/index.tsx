@@ -36,7 +36,7 @@ export default class rkDashboard extends RikkaPlugin {
 
           if (
             !PrivateChannelsList.some(
-              (channel: any) => channel?.props?.text === "Rikka"
+              (channel: any) => channel?.props?.text === "Rikka",
             )
           ) {
             PrivateChannelsList.unshift(

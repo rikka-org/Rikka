@@ -1,52 +1,55 @@
-import { getModule } from "@rikka/API/webpack";
-import RikkaPlugin from "@rikka/Common/entities/Plugin";
-import { patch, rkUnpatchFunction } from "@rikka/API/patcher";
+import { getModule } from '@rikka/API/webpack';
+import RikkaPlugin from '@rikka/Common/entities/Plugin';
+import { patch, rkUnpatchFunction } from '@rikka/API/patcher';
+import { ContextMenu } from '@rikka/API/components';
+import { SettingsCategory } from '@rikka/API/settings';
+import { Store } from '@rikka/API/storage';
+import manifest from './manifest.json';
+
 const React = require("react");
-import manifest from "./manifest.json";
-import { ContextMenu } from "@rikka/API/components";
-import { SettingsCategory } from "@rikka/API/settings";
-import { Store } from "@rikka/API/storage";
 
 export default class rkCopyRaw extends RikkaPlugin {
   private contextMenu: any;
+
   private unpatchMenu?: rkUnpatchFunction;
-  private storage = new Store("rkCopyRaw");
-  private settingsCategory = new SettingsCategory("Copy Raw", "rk-copyRaw", this.storage);
+
+  private storage = new Store('rkCopyRaw');
+
+  private settingsCategory = new SettingsCategory('Copy Raw', 'rk-copyRaw', this.storage);
 
   inject() {
-    $rk.settingsManager.registerSetting("rk-copyRaw", this.settingsCategory);
+    $rk.settingsManager.registerSetting('rk-copyRaw', this.settingsCategory);
     this.patchContextMenu();
   }
 
   private async patchContextMenu(): Promise<any> {
     this.contextMenu = (await getModule(
-      (m: any) => m.default?.displayName === "MessageContextMenu"
+      (m: any) => m.default?.displayName === 'MessageContextMenu',
     )) as any;
 
-    if (!this.contextMenu)
-      return setTimeout(() => this.patchContextMenu(), 1000);
+    if (!this.contextMenu) { return setTimeout(() => this.patchContextMenu(), 1000); }
 
     this.unpatchMenu = patch(
       this.contextMenu,
-      "default",
+      'default',
       (args: any[], res: any) => {
         res.props.children.push(
           <>
             <ContextMenu.Separator />
             <ContextMenu.Group>
               <ContextMenu.Item
-                label={"Copy Raw data"}
+                label={'Copy Raw data'}
                 id="copy-raw-data"
                 action={async () => {
-                  (DiscordNative as any).clipboard.copy(
-                    JSON.stringify(args[0].message)
+                  DiscordNative.clipboard.copy(
+                    JSON.stringify(args[0].message),
                   );
                 }}
               />
             </ContextMenu.Group>
-          </>
+          </>,
         );
-      }
+      },
     );
   }
 
