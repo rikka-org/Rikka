@@ -68,6 +68,7 @@ import Rikka from "@rikka/index";
 const rikkaInstance = new Rikka();
 //@ts-ignore
 window.rikka = rikkaInstance;
+window.$rk = rikkaInstance;
 
 setGlobal('rikka', true);
 setGlobal('discord', true);

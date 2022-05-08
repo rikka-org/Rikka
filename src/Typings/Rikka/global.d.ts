@@ -4,4 +4,13 @@ import StyleManager from "../../Rikka/managers/StyleManager";
 declare var RikkaNative: any;
 var styleManager: StyleManager;
 
-declare var rikka: Rikka;
+declare global {
+    const RikkaNative: any;
+    const rikka: Rikka;
+    const $rk: Rikka;
+    interface Window {
+        __SPLASH__: boolean;
+        $rk: Rikka;
+        rikka: Rikka;
+    }
+}

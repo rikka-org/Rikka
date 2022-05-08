@@ -4,12 +4,17 @@ import { patch, rkUnpatchFunction } from "@rikka/API/patcher";
 const React = require("react");
 import manifest from "./manifest.json";
 import { ContextMenu } from "@rikka/API/components";
+import { SettingsCategory } from "@rikka/API/settings";
+import { Store } from "@rikka/API/storage";
 
 export default class rkCopyRaw extends RikkaPlugin {
   private contextMenu: any;
   private unpatchMenu?: rkUnpatchFunction;
+  private storage = new Store("rkCopyRaw");
+  private settingsCategory = new SettingsCategory("Copy Raw", "rk-copyRaw", this.storage);
 
   inject() {
+    $rk.settingsManager.registerSetting("rk-copyRaw", this.settingsCategory);
     this.patchContextMenu();
   }
 

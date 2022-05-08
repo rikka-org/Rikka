@@ -1,12 +1,12 @@
 import { getModule } from "../webpack";
 import AsyncComponent from "./AsyncComponent";
 
-export const ContextMenu = AsyncComponent.fetchFromProps('MenuGroup', 'default') as any;
+export const ContextMenu = AsyncComponent.fetchFromProps("MenuGroup", "default") as any;
+export const Text = AsyncComponent.fromDisplayName("LegacyText") as any;
 
 // @ts-ignore
 getModule('MenuGroup', true, true).then((ContextMenu: any) => {
-    // @ts-ignore shut
-    const { MenuItemColor } = getModule('MenuItemColor');
+    const { MenuItemColor } = getModule("MenuItemColor") as any;
     // dumbass workaround
     const t = this as any;
 

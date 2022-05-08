@@ -1,4 +1,3 @@
-import Rikka from "@rikka/index";
 import { patch } from "@rikka/API/patcher";
 import { SettingsCategory } from "@rikka/API/settings";
 import { Store } from "@rikka/API/storage";
@@ -6,8 +5,6 @@ import { Logger } from "@rikka/API/Utils";
 import { getModule, getModuleByDisplayName } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import manifest from "./manifest.json";
-
-declare var rikka: Rikka;
 
 export default class rkSettings extends RikkaPlugin {
   private settingsStore = new Store("rk-settings");
@@ -36,7 +33,7 @@ export default class rkSettings extends RikkaPlugin {
   }
 
   private async patchSettingsMenu() {
-    rikka.settingsManager.registerSetting("rk-general", this.settingsCategory);
+    $rk.settingsManager.registerSetting("rk-general", this.settingsCategory);
     const SettingsView = (await getModuleByDisplayName("SettingsView")) as any;
     patch(
       "rk-settings-view-mod",
@@ -55,7 +52,7 @@ export default class rkSettings extends RikkaPlugin {
               section: "HEADER",
               label: "Rikka",
             },
-            ...Array.from(rikka.settingsManager.settings.values()).map((s: any) => {
+            ...Array.from($rk.settingsManager.settings.values()).map((s: any) => {
               return {
                 section: "rk-general",
                 label: s.name,

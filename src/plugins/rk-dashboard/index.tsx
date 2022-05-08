@@ -4,7 +4,6 @@ import { findInReactTree, forceUpdateElement } from "@rikka/API/Utils/React";
 //@ts-ignore
 import { getModule, contextMenu } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
-import Dashboard from "./dashboard";
 const React = require("react");
 import manifest from "./manifest.json";
 
@@ -19,6 +18,8 @@ export default class rkDashboard extends RikkaPlugin {
       (m: any) => m.default?.displayName === "ConnectedPrivateChannelsList"
     );
     const { channel } = (await getModule("channel", "closeIcon")) as any;
+    const { LinkButton } = getModule("LinkButton") as any;
+    const { openContextMenu } = contextMenu;
 
     patch(
       "rk-dashboard-private-channels-list-item",
@@ -26,20 +27,28 @@ export default class rkDashboard extends RikkaPlugin {
       "default",
       (_: any, res: any) => {
         try {
-          if (!res.props?.children?.props?.children) {
-            return;
-          }
-
-          const { children: listChildren } = findInReactTree(
+          const { children: PrivateChannelsList } = findInReactTree(
             res,
-            (c: any) => c.channels
+            (props: any) => props.channels
           ) as any;
 
-          listChildren.push(
-            <>
-              <Dashboard />
-            </>
-          );
+          if (!PrivateChannelsList) return;
+
+          if (
+            !PrivateChannelsList.some(
+              (channel: any) => channel?.props?.text === "Rikka"
+            )
+          ) {
+            PrivateChannelsList.unshift(
+              <LinkButton
+                icon={() => <></>}
+                route="/rikka"
+                text="Rikka"
+                selected={"/rikka"}
+                onContextMenu={(evt: any) => openContextMenu(evt, () => <></>)}
+              />
+            );
+          }
         } catch (e) {
           Logger.error(`Failed to patch ConnectedPrivateChannelsList: ${e}`);
         }
