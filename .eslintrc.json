@@ -17,7 +17,13 @@
     "@typescript-eslint"
   ],
   "rules": {
-    "quotes": 0,
+    "quotes": [
+      "warn",
+      "double",
+      {
+        "allowTemplateLiterals": true
+      }
+    ],
     "import/no-extraneous-dependencies": "off",
     "class-methods-use-this": "off",
     "import/no-unresolved": "off",

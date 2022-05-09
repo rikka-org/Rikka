@@ -1,3 +1,11 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-proto */
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-promise-executor-return */
 /* eslint-disable no-unused-vars */
 /**
  *
@@ -74,9 +82,10 @@ const _getModule = (filter, retry = false, forever = false) => {
 
   if (!retry) return _getModules(filter);
 
+  // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (res) => {
     let mdl;
-    for (let i = 0; i < (forever ? 666 : 21); i++) {
+    for (let i = 0; i < (forever ? 666 : 21); i += 1) {
       mdl = _getModules(filter);
       if (mdl) return res(mdl);
       await sleep(1);

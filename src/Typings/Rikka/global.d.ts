@@ -1,4 +1,5 @@
 import Rikka from "@rikka/index";
+import { discordWindow } from "Typings/Discord/discordWindow";
 import StyleManager from "../../Rikka/managers/StyleManager";
 
 declare global {
@@ -6,7 +7,7 @@ declare global {
     const rikka: Rikka;
     const $rk: Rikka;
     const DiscordNative: any;
-    interface Window {
+    interface Window extends discordWindow {
         __SPLASH__: boolean;
         $rk: Rikka;
         rikka: Rikka;
