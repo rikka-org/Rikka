@@ -10,7 +10,7 @@ export default class JSX extends Compiler {
   static readonly extensions = [".jsx"];
 
   compile() {
-    const jsx = readFileSync(this.file, 'utf-8');
+    const jsx = readFileSync(this.file, "utf-8");
     return transform(jsx, {
       transforms: ["jsx"],
       filePath: this.file,

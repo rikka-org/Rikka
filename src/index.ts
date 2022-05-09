@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Module from "module";
 import { dirname, join } from "path";
 import electron from "electron";

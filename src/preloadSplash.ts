@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { ipcRenderer } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
 import StyleManager from "@rikka/managers/StyleManager";

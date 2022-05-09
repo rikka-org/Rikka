@@ -6,14 +6,14 @@ import Compiler from "./compiler";
 const compilers: Map<string, any> = new Map();
 
 readdirSync(__dirname)
-  .filter((file) => file !== 'index.js' && file !== 'compiler.js')
+  .filter((file) => file !== "index.js" && file !== "compiler.js")
   // eslint-disable-next-line array-callback-return
   .map((filename) => {
     const Compiler = require(join(__dirname, filename)).default;
     compilers.set(Compiler.extensions[0], Compiler);
 
     Compiler.extensions.forEach((ext: string) => {
-      console.log(`registered compiler for extension: ${ext}`);
+      Logger.log(`registered compiler for extension: ${ext}`);
       require.extensions[ext] = (module: any, filename: string) => {
         Logger.log(`Module: ${module}`);
         const compilerModule = new Compiler(filename) as Compiler;

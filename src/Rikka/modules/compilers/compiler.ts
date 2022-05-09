@@ -56,9 +56,9 @@ export default abstract class Compiler extends Events {
 
     private computeFileHash() {
       const fileBuffer = readFileSync(this.file);
-      return createHash('sha1')
+      return createHash("sha1")
         .update(this.compilerInfo)
         .update(fileBuffer)
-        .digest('hex');
+        .digest("hex");
     }
 }

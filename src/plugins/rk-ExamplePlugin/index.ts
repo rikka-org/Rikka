@@ -1,6 +1,6 @@
-import { Store } from '@rikka/API/storage';
-import { Logger } from '@rikka/API/Utils/logger';
-import RikkaPlugin from '@rikka/Common/entities/Plugin';
+import { Store } from "@rikka/API/storage";
+import { Logger } from "@rikka/API/Utils/logger";
+import RikkaPlugin from "@rikka/Common/entities/Plugin";
 /** You have to do this or the compiler refuses to include JSON */
 import manifest from "./manifest.json";
 

@@ -29,6 +29,7 @@ export default class Rikka extends Updatable {
 
   private async handleConnectionOpen() {
     return new Promise<void>((resolve) => {
+      // eslint-disable-next-line no-console
       console.log(getAllModules()?.length);
       if (getAllModules()?.length > 7000) {
         // eslint-disable-next-line no-promise-executor-return

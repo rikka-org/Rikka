@@ -1,3 +1,3 @@
 import { getModule } from "../webpack";
 
-export = getModule('BrowserRouter', 'Router');
+export = getModule("BrowserRouter", "Router");

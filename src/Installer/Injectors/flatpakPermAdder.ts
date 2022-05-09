@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { spawn } from "node:child_process";
 
 export async function addFlatpakPerms(packageName: string) {

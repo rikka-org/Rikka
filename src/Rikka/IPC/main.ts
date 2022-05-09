@@ -11,7 +11,7 @@ function getChromiumFlags() {
 }
 
 function createHeadersHook(e: Electron.IpcMainInvokeEvent, name: string, code: string) {
-  electron.session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders }, done) => eval(code)({ responseHeaders }, done));
+  // electron.session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders }, done) => eval(code)({ responseHeaders }, done));
 }
 
 // eslint-disable-next-line no-return-assign

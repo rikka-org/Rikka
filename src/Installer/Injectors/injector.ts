@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { existsSync } from "node:fs";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { join, sep } from "node:path";

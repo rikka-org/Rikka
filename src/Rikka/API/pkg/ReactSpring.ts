@@ -1,1 +1,1 @@
-export = require('../webpack').getModule('Spring');
+export = require("../webpack").getModule("Spring");

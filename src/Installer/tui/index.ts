@@ -31,7 +31,7 @@ export function createInstall() {
       },
     });
 
-    box.on('click', (data) => {
+    box.on("click", (data) => {
       InjectRikka(branch);
       tui.destroy();
     });
@@ -45,7 +45,7 @@ export function createInstall() {
   tui.append(stableBox);
 
   // Quit on Escape, q, or Control-C.
-  tui.key(['escape', 'q', 'C-c'], (ch, key) => process.exit(0));
+  tui.key(["escape", "q", "C-c"], (ch, key) => process.exit(0));
 
   // Focus our element.
   stableBox.focus();

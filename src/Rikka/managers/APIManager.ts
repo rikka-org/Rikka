@@ -5,7 +5,7 @@ import BaseAPI from "../API/BaseAPI";
 
 /** Deprecated way of accessing APIs */
 export default class APIManager {
-  apiDirectory = join(__dirname, '..', '..', 'API');
+  apiDirectory = join(__dirname, "..", "..", "API");
 
   private loadedApis = new Map<string, BaseAPI>();
 

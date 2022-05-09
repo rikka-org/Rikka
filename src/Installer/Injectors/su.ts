@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import sudo from "sudo-prompt";
 
 /** Restarts the process with elevated permissions.
