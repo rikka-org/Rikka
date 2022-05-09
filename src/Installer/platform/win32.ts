@@ -48,7 +48,7 @@ export default class win32 extends basePlatform {
         */
     const dirs = discordInstall ? readdirSync(discordInstall.path) : [];
     // filter out the directories that don't match the regexp.
-    const latestVersion = dirs.filter((p) => p.startsWith('app-')).reverse()[0];
+    const latestVersion = dirs.filter((p) => p.startsWith("app-")).reverse()[0];
     if (latestVersion) discordInstall.path = join(discordInstall.path, latestVersion);
 
     return discordInstall;

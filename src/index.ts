@@ -7,9 +7,9 @@ import PatchedWindow from "./PatchedWindow";
 
 if (!require.main) throw new Error("Rikka is not running as a module!");
 
-const electronPath = require.resolve('electron');
+const electronPath = require.resolve("electron");
 const discordAsar = join(dirname(require.main.filename), "..", "app.asar");
-require.main.filename = join(discordAsar, 'app_bootstrap/index.js');
+require.main.filename = join(discordAsar, "app_bootstrap/index.js");
 
 require("@rikka/IPC/main");
 
@@ -32,10 +32,10 @@ if (!electron.safeStorage) {
   electron.safeStorage = {
     isEncryptionAvailable: () => false,
     encryptString: () => {
-      throw new Error('Unavailable');
+      throw new Error("Unavailable");
     },
     decryptString: () => {
-      throw new Error('Unavailable');
+      throw new Error("Unavailable");
     },
   };
 }
@@ -43,11 +43,11 @@ if (!electron.safeStorage) {
 const electronExports: any = new Proxy(electron, {
   get(target, prop) {
     switch (prop) {
-      case 'BrowserWindow': return PatchedWindow;
+      case "BrowserWindow": return PatchedWindow;
 
       // Discords new way of accessing the main process
-      case 'default': return electronExports;
-      case '__esModule': return true;
+      case "default": return electronExports;
+      case "__esModule": return true;
       // @ts-ignore
       default: return target[prop];
     }
@@ -55,13 +55,13 @@ const electronExports: any = new Proxy(electron, {
 });
 
 let fakeAppSettings: any;
-Object.defineProperty(global, 'appSettings', {
+Object.defineProperty(global, "appSettings", {
   get() {
     return fakeAppSettings;
   },
   set(value) {
     // eslint-disable-next-line no-prototype-builtins
-    if (!value.hasOwnProperty('settings')) {
+    if (!value.hasOwnProperty("settings")) {
       value.settings = {};
     }
     /** Enable Devtools on Stable builds */
@@ -73,7 +73,7 @@ Object.defineProperty(global, 'appSettings', {
 delete require.cache[electronPath]?.exports;
 require.cache[electronPath]!.exports = electronExports;
 
-electron.app.once('ready', () => {
+electron.app.once("ready", () => {
   electronDevtoolsInstaller(REACT_DEVELOPER_TOOLS)
     .then((name) => console.log(`Added Extension: ${name}`))
     .catch((err) => console.error(`An error occurred: ${err}`));

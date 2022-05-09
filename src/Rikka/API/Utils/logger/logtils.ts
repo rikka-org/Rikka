@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { getCaller } from "@rikka/API/Utils/callerutils";
 import { addMessage } from "./dmesg";
 

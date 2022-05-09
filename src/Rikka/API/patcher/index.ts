@@ -28,7 +28,7 @@ export function runPatches(patches: any[], type: string, returnValue: undefined,
     try {
       const tempReturn = patch.callback.bind(_this)(args, returnValue, _this);
 
-      if (typeof tempReturn !== 'undefined') returnValue = tempReturn;
+      if (typeof tempReturn !== "undefined") returnValue = tempReturn;
     } catch (err) {
       Logger.error(`Error while running patch ${patch.name}:\n${err}`);
       // eslint-disable-next-line no-plusplus
@@ -46,7 +46,7 @@ export function makeOverride(patch: rikkapatch) {
       if (!patch.childs.length) return patch.originalFunction.apply(this, args);
 
       try {
-        let tempReturn = runPatches(patch.childs, 'before', returnValue, this, args);
+        let tempReturn = runPatches(patch.childs, "before", returnValue, this, args);
 
         if (Array.isArray(tempReturn)) args = tempReturn;
 
@@ -54,9 +54,9 @@ export function makeOverride(patch: rikkapatch) {
         tempReturn = void 0;
         returnValue = patch.originalFunction.apply(this, args);
 
-        tempReturn = runPatches(patch.childs, 'after', returnValue, this, args);
+        tempReturn = runPatches(patch.childs, "after", returnValue, this, args);
 
-        if (typeof tempReturn !== 'undefined') returnValue = tempReturn;
+        if (typeof tempReturn !== "undefined") returnValue = tempReturn;
       } catch (err) {
         Logger.error(`Error in ${patch.originalFunction.name} patch:\n${err}`);
       }
@@ -91,7 +91,7 @@ export function createPatch(id: any, moduleToPatch: moddedModule, functionName: 
   // @ts-ignore
   moduleToPatch[functionName].toString = () => patchData.originalFunction.toString();
   // @ts-ignore
-  moduleToPatch[functionName]['__rk-originalFunction'] = patchData.originalFunction;
+  moduleToPatch[functionName]["__rk-originalFunction"] = patchData.originalFunction;
 
   patches.push(patchData);
 
@@ -102,18 +102,18 @@ export function createPatch(id: any, moduleToPatch: moddedModule, functionName: 
  * @returns A function that unpatches the patch
  */
 export function patch(...args: any[]) {
-  if (typeof args[0] !== 'string') {
+  if (typeof args[0] !== "string") {
     const { stack } = new Error();
     const caller = getCaller(stack ?? "");
 
     args.unshift(caller);
   }
   // eslint-disable-next-line prefer-const
-  let [id, moduleToPatch, func, patchFunction, type = 'after', { failSave = true } = {}] = args;
+  let [id, moduleToPatch, func, patchFunction, type = "after", { failSave = true } = {}] = args;
 
-  if (typeof type === 'boolean') {
-    if (type) type = 'before';
-    else type = 'after';
+  if (typeof type === "boolean") {
+    if (type) type = "before";
+    else type = "after";
   }
   try {
     if (!moduleToPatch) {
@@ -122,7 +122,7 @@ export function patch(...args: any[]) {
     if (!moduleToPatch[func]) {
       throw new Error(`Patch ID "${id}" tried to patch a function, but it was undefined!`);
     }
-    if (typeof moduleToPatch[func] !== 'function') {
+    if (typeof moduleToPatch[func] !== "function") {
       throw new Error(`Patch ID "${id}" tried to patch a function, but found instead of a function!`);
     }
 

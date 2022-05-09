@@ -5,7 +5,7 @@ export const ContextMenu = AsyncComponent.fetchFromProps("MenuGroup", "default")
 export const Text = AsyncComponent.fromDisplayName("LegacyText") as any;
 
 // @ts-ignore
-getModule('MenuGroup', true, true).then((ContextMenu: any) => {
+getModule("MenuGroup", true, true).then((ContextMenu: any) => {
   const { MenuItemColor } = getModule("MenuItemColor") as any;
   // dumbass workaround
   const t = this as any;

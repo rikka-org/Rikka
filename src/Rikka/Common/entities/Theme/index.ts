@@ -28,24 +28,24 @@ export default class Theme extends Updatable {
 
     if (statSync(file).isDirectory()) {
       // We can assume this has at least one manifest type
-      const manifestFile = resolve(file, 'manifest.json');
+      const manifestFile = resolve(file, "manifest.json");
       if (existsSync(manifestFile)) {
-        this.themeManifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
+        this.themeManifest = JSON.parse(readFileSync(manifestFile, "utf8"));
         this.file = resolve(file, this.themeManifest!.theme);
       } else this.file = "";
     } else this.file = file;
 
-    const compiler = getCompiler(this.file);
-    this.compiler = new compiler(this.file);
+    const Compiler = getCompiler(this.file);
+    this.compiler = new Compiler(this.file);
   }
 
   async _load() {
     if (this.applied) return;
 
     this.cssCode = this.compiler.doCompilation();
-    const style = createElement('style', {
+    const style = createElement("style", {
       id: `${this.type}-${this.id}`,
-      'rk-style': true,
+      "rk-style": true,
       [`rk-${this.type}`]: true,
     }) as HTMLStyleElement;
     style.innerHTML = this.cssCode;
