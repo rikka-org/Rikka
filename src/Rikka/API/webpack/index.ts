@@ -23,10 +23,10 @@ type thisType = any & {
     instance: instanceType;
 }
 
-function _getModules(this: thisType, filter: filterType, all: boolean = false) {
-  if (!this.instance?.c) return;
+const _getModules = (filter: filterType, all: boolean = false) => {
+  if (!(this as any).instance?.c) return;
 
-  const instances = (Object.values(this.instance.c) as wpModule[]).filter(
+  const instances = (Object.values((this as any).instance.c) as wpModule[]).filter(
     (module) => module.exports,
   );
 
@@ -53,9 +53,9 @@ function _getModules(this: thisType, filter: filterType, all: boolean = false) {
   const exportDefault = instances.find((m) => m.exports.default && filter(m.exports.default));
 
   if (exportDefault) return exportDefault.exports.default;
-}
+};
 
-function _getModule(this: thisType, filter: filter, retry: boolean = false, forever: boolean = false) {
+const _getModule = (filter: filter, retry: boolean = false, forever: boolean = false) => {
   if (Array.isArray(filter)) {
     const keys = filter;
     filter = (m) => keys.every(
@@ -77,9 +77,9 @@ function _getModule(this: thisType, filter: filter, retry: boolean = false, fore
     }
     resolve(module);
   });
-}
+};
 
-export async function init(this: any) {
+export const init = async () => {
   while (!window.webpackChunkdiscord_app) {
     // eslint-disable-next-line no-await-in-loop
     await sleep(100);
@@ -93,23 +93,21 @@ export async function init(this: any) {
     (exports: any) => (instance = exports),
   ]);
 
-  this.instance = instance;
+  (this as any).instance = instance;
 
   for (const mdl in moduleFilters) {
     // @ts-ignore
     this[mdl] = await _getModule(moduleFilters[mdl], true);
   }
-}
+};
 
-export function getModuleByDisplayName(name: string, retry: boolean = false, forever: boolean = false) {
-  return _getModule(
-    (m) => m?.displayName
+export const getModuleByDisplayName = (name: string, retry: boolean = false, forever: boolean = false) => _getModule(
+  (m) => m?.displayName
           && m?.displayName?.toLowerCase() === name.toLowerCase(),
-    retry,
-  );
-}
+  retry,
+);
 
-export function getModule(...filter: [keyof typeof moduleFilters] | extraModules[] | filterType[]) {
+export const getModule = (...filter: [keyof typeof moduleFilters] | extraModules[] | filterType[]) => {
   let retry = false;
   let forever = false;
 
@@ -132,13 +130,11 @@ export function getModule(...filter: [keyof typeof moduleFilters] | extraModules
 
   // @ts-ignore your mom has a dick
   return _getModule(filter, retry, forever);
-}
+};
 
-export function getModuleById(id: string, retry: boolean = false, forever: boolean = false) {
-  return _getModule((m) => m?._dispatchToken === `ID_${id}`, retry, forever);
-}
+export const getModuleById = (id: string, retry: boolean = false, forever: boolean = false) => _getModule((m) => m?._dispatchToken === `ID_${id}`, retry, forever);
 
-export function getModules(filter: any) {
+export const getModules = (filter: any) => {
   if (Array.isArray(filter)) {
     const keys = filter;
     filter = (m: any) => keys.every(
@@ -148,9 +144,9 @@ export function getModules(filter: any) {
   }
 
   return _getModules(filter, true);
-}
+};
 
-export function findComponent(keyword: string, precise: boolean = false) {
+export const findComponent = (keyword: string, precise: boolean = false) => {
   let byDisplayName;
   let byDefault;
   let byType;
@@ -158,22 +154,22 @@ export function findComponent(keyword: string, precise: boolean = false) {
   const results = {};
 
   if (precise) {
-    byDisplayName = getModuleByDisplayName(keyword);
-    byDefault = getModules((m: any) => m.default && m.default.displayName === keyword);
-    byType = getModules((m: any) => m.type && m.type.displayName === keyword);
+    byDisplayName = (this as any).getModuleByDisplayName(keyword);
+    byDefault = (this as any).getModules((m: any) => m.default && m.default.displayName === keyword);
+    byType = (this as any).getModules((m: any) => m.type && m.type.displayName === keyword);
   } else {
     keyword = keyword.toLowerCase();
-    byDisplayName = getModules(
+    byDisplayName = (this as any).getModules(
       (m: any) => m.default
             && m.default.displayName
             && m.default.displayName.toLowerCase().indexOf(keyword) > -1,
     );
-    byDefault = getModules(
+    byDefault = (this as any).getModules(
       (m: any) => m.default
             && m.default.displayName
             && m.default.displayName.toLowerCase().indefOf(keyword) > -1,
     );
-    byType = getModules(
+    byType = (this as any).getModules(
       (m: any) => m.type
             && m.type.displayName
             && m.type.displayName.toLowerCase().indexOf(keyword) > -1,
@@ -207,4 +203,8 @@ export function findComponent(keyword: string, precise: boolean = false) {
       return Logger.warn(`Unable to find component ${precise ? "matching" : "with"} "${keyword}"`);
     }
   }
-}
+};
+
+export const getAllModules = () => (this as any).getModules((m: any) => m);
+
+export default this;

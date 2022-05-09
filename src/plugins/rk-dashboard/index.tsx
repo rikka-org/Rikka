@@ -2,7 +2,7 @@ import { patch } from "@rikka/API/patcher";
 import { Logger } from "@rikka/API/Utils";
 import { findInReactTree, forceUpdateElement } from "@rikka/API/Utils/React";
 // @ts-ignore
-import { getModule, contextMenu } from "@rikka/API/webpack/wp_new";
+import { getModule, contextMenu } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import manifest from "./manifest.json";
 

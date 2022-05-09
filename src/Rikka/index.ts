@@ -3,7 +3,7 @@ import StyleManager from "./managers/StyleManager";
 import { saveToFile, Logger } from "./API/Utils/logger";
 // @ts-ignore -- FluxDispatcher is added at runtime
 // eslint-disable-next-line import/named
-import { getAllModules, initialize as initWebpackModules, FluxDispatcher } from "./API/webpack";
+import { getAllModules, init as initWebpackModules, FluxDispatcher } from "./API/webpack";
 import Updatable from "./Common/entities/Updatable";
 import SettingsManager from "./managers/SettingsManager";
 
@@ -23,7 +23,7 @@ export default class Rikka extends Updatable {
   constructor() {
     super();
 
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', () => this.init()); } else { this.init(); }
+    if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", () => this.init()); } else { this.init(); }
   }
 
   private async handleConnectionOpen() {
@@ -33,7 +33,7 @@ export default class Rikka extends Updatable {
         // eslint-disable-next-line no-promise-executor-return
         return resolve();
       }
-      FluxDispatcher.subscribe('CONNECTION_OPEN', () => resolve());
+      FluxDispatcher.subscribe("CONNECTION_OPEN", () => resolve());
       // resolve();
     });
   }
@@ -77,7 +77,7 @@ export default class Rikka extends Updatable {
     this.styleManager._applyThemes();
     this.PluginManager.loadPlugins();
 
-    process.on('exit', () => this.shutdown());
+    process.on("exit", () => this.shutdown());
   }
 
   /** Shut down Rikka entirely, don't call this or death will incur */
