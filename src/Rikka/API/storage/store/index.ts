@@ -1,108 +1,108 @@
 import { storeLocation } from "@rikka/API/Constants";
 import { Logger } from "@rikka/API/Utils";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import {
+  existsSync, mkdirSync, readFileSync, writeFileSync,
+} from "fs";
 import { join } from "path";
 import { copy } from "fs-extra";
 
 export class Store {
-    private data: { [key: string]: any } = {};
+  private data: { [key: string]: any } = {};
 
-    private hooks: { [key: string]: any } = {};
+  private hooks: { [key: string]: any } = {};
 
-    private storeName: string;
+  private storeName: string;
 
-    readonly workingDirectory: string;
+  readonly workingDirectory: string;
 
-    constructor(storeName: string) {
-        this.storeName = storeName;
-        this.workingDirectory = join(storeLocation, this.storeName);
+  constructor(storeName: string) {
+    this.storeName = storeName;
+    this.workingDirectory = join(storeLocation, this.storeName);
 
-        if (!existsSync(this.workingDirectory))
-            mkdirSync(this.workingDirectory, { recursive: true });
-    }
+    if (!existsSync(this.workingDirectory)) { mkdirSync(this.workingDirectory, { recursive: true }); }
+  }
 
-    get(key: string) {
-        return this.data[key];
-    }
+  get(key: string) {
+    return this.data[key];
+  }
 
-    set(key: string, value: any) {
-        this.data[key] = value;
-    }
+  set(key: string, value: any) {
+    this.data[key] = value;
+  }
 
-    delete(key: string) {
-        delete this.data[key];
-    }
+  delete(key: string) {
+    delete this.data[key];
+  }
 
-    createDataHook(name: string, handler: (key: string, value: any) => void) {
-        const prox = new Proxy(this, {
-            set: (target, key, value) => {
-                if (typeof key === "symbol") key = key.toString();
-                target.set(key, value);
-                handler(key, value);
-                return true;
-            }
-        });
+  createDataHook(name: string, handler: (key: string, value: any) => void) {
+    const prox = new Proxy(this, {
+      set: (target, key, value) => {
+        if (typeof key === "symbol") key = key.toString();
+        target.set(key, value);
+        handler(key, value);
+        return true;
+      },
+    });
 
-        this.hooks[name] = handler;
+    this.hooks[name] = handler;
 
-        return prox;
-    }
+    return prox;
+  }
 
-    removeDataHook(name: string) {
-        delete this.hooks[name];
-    } 
+  removeDataHook(name: string) {
+    delete this.hooks[name];
+  }
 
-    getDataHooks() {
-        return this.hooks;
-    }
+  getDataHooks() {
+    return this.hooks;
+  }
 
-    getDataHook(name: string) {
-        return this.hooks[name];
-    }
+  getDataHook(name: string) {
+    return this.hooks[name];
+  }
 
-    saveToFile(file: string) {
-        if (!existsSync(this.workingDirectory))
-            mkdirSync(this.workingDirectory, { recursive: true });
-        
-        const storeFile = join(this.workingDirectory, file);
+  saveToFile(file: string) {
+    if (!existsSync(this.workingDirectory)) { mkdirSync(this.workingDirectory, { recursive: true }); }
 
-        writeFileSync(storeFile, JSON.stringify(this.data, null, 4), "utf8");
-    }
+    const storeFile = join(this.workingDirectory, file);
 
-    loadFromFile(file: string) {
-        const storeFile = join(storeLocation, this.storeName, file);
-        if(!existsSync(storeFile)) return;
+    writeFileSync(storeFile, JSON.stringify(this.data, null, 4), "utf8");
+  }
 
-        this.data = JSON.parse(readFileSync(storeFile, "utf8"));
-    }
+  loadFromFile(file: string) {
+    const storeFile = join(storeLocation, this.storeName, file);
+    if (!existsSync(storeFile)) return;
 
-    writeRaw(file: string, data: string) {
-        const storeFile = join(this.workingDirectory, file);
+    this.data = JSON.parse(readFileSync(storeFile, "utf8"));
+  }
 
-        writeFileSync(storeFile, data, "utf8");
-    }
+  writeRaw(file: string, data: string) {
+    const storeFile = join(this.workingDirectory, file);
 
-    readRaw(file: string) {
-        const storeFile = join(storeLocation, this.storeName, file);
-        if(!existsSync(storeFile)) return;
+    writeFileSync(storeFile, data, "utf8");
+  }
 
-        return readFileSync(storeFile, "utf8");
-    }
+  readRaw(file: string) {
+    const storeFile = join(storeLocation, this.storeName, file);
+    if (!existsSync(storeFile)) return;
 
-    deleteRaw(file: string) {
-        const storeFile = join(storeLocation, this.storeName, file);
-        if(!existsSync(storeFile)) return;
+    return readFileSync(storeFile, "utf8");
+  }
 
-        writeFileSync(storeFile, JSON.stringify(this.data, null, 4), "utf8");
-    }
+  deleteRaw(file: string) {
+    const storeFile = join(storeLocation, this.storeName, file);
+    if (!existsSync(storeFile)) return;
 
-    copyDirectory(from: string, to: string) {
-        const directory = join(this.workingDirectory, to);
+    writeFileSync(storeFile, JSON.stringify(this.data, null, 4), "utf8");
+  }
 
-        return copy(from, directory);
-    }
+  copyDirectory(from: string, to: string) {
+    const directory = join(this.workingDirectory, to);
 
-    deleteDirectory(from: string) {
-        Logger.warn("Not implemented");
-    }
+    return copy(from, directory);
+  }
+
+  deleteDirectory(from: string) {
+    Logger.warn("Not implemented");
+  }
 }

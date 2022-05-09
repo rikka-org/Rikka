@@ -1,15 +1,14 @@
-import { DiscordPath } from "../typings/discordPath";
 import { join } from "node:path";
 import basePlatform from "Installer/platform/basePlatform";
+import { DiscordPath } from "../typings/discordPath";
 
 /** Finds the Discord installation path based on platform. */
 export function GetDiscordInstallPath(pathType: string) {
-    let discordInstall: DiscordPath;
-    const platformModule = require(`../platform/${process.platform}`).default;
-    const platform = new platformModule() as basePlatform;
+  const PlatformModule = require(`../platform/${process.platform}`).default;
+  const platform = new PlatformModule() as basePlatform;
 
-    discordInstall = platform.GetDiscordInstallPath(pathType);
+  const discordInstall = platform.GetDiscordInstallPath(pathType);
 
-    discordInstall.path = join(discordInstall.path, "resources", "app");
-    return discordInstall;
+  discordInstall.path = join(discordInstall.path, "resources", "app");
+  return discordInstall;
 }

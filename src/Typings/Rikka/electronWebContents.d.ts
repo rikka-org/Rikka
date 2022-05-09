@@ -1,3 +1,7 @@
-declare type WebContents = Electron.WebContents & {
-    _rikkaPreload: string | undefined;
+declare module Electron {
+    interface BrowserWindow {
+        webContents: Electron.WebContents & {
+            _rikkaPreload: string | undefined;
+        }
+    }
 }

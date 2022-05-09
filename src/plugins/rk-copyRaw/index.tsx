@@ -29,7 +29,7 @@ export default class rkCopyRaw extends RikkaPlugin {
 
     if (!this.contextMenu) { return setTimeout(() => this.patchContextMenu(), 1000); }
 
-    this.unpatchMenu = patch(
+    const p = patch(
       this.contextMenu,
       'default',
       (args: any[], res: any) => {
@@ -51,6 +51,8 @@ export default class rkCopyRaw extends RikkaPlugin {
         );
       },
     );
+
+    if (p) this.unpatchMenu = p;
   }
 
   uninject() {

@@ -5,13 +5,13 @@ export default class AsyncComponent extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      Component: null
+      Component: null,
     };
   }
 
   async componentDidMount() {
     this.setState({
-      Component: await this.props._provider()
+      Component: await this.props._provider(),
     });
   }
 
@@ -30,9 +30,7 @@ export default class AsyncComponent extends PureComponent {
    * @returns {React.MemoExoticComponent<function(): React.ReactElement>}
    */
   static from(promise, fallback) {
-    return memo(props =>
-      <AsyncComponent _provider={() => promise} _fallback={fallback} {...props} />
-    );
+    return memo((props) => <AsyncComponent _provider={() => promise} _fallback={fallback} {...props} />);
   }
 
   /**

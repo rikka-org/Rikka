@@ -1,5 +1,5 @@
-import { getModule, getModuleByDisplayName } from "@rikka/API/webpack"
+import { getModule, getModuleByDisplayName } from "@rikka/API/webpack";
 
 export = () => {
-    //
+  //
 }

@@ -6,61 +6,63 @@ type settingsEvents = "change" | "add" | "remove";
 type settingsListener = (eventType: settingsEvents, setting: Setting, value: any) => void;
 
 export default class SettingsCategory {
-    /** Rendered by the Settings visualizer as the name of the plugin. */
-    name: string;
-    /** Rendered by the Settings visualizer as the description of the plugin. */
-    description: string;
+  /** Rendered by the Settings visualizer as the name of the plugin. */
+  name: string;
 
-    settings: Map<string, Setting> = new Map();
-    settingsStore: Store;
+  /** Rendered by the Settings visualizer as the description of the plugin. */
+  description: string;
 
-    private listeners: Map<settingsEvents, settingsListener> = new Map();
+  settings: Map<string, Setting> = new Map();
 
-    constructor(name: string, description: string, settingsStore: Store) {
-        this.name = name;
-        this.description = description;
+  settingsStore: Store;
 
-        this.settingsStore = settingsStore;
-        const settings = this.settingsStore.get(name);
+  private listeners: Map<settingsEvents, settingsListener> = new Map();
 
-        if (settings) {
-            this.settings = settings;
-        }
+  constructor(name: string, description: string, settingsStore: Store) {
+    this.name = name;
+    this.description = description;
 
-        this.settingsStore.set(name, this.settings);
+    this.settingsStore = settingsStore;
+    const settings = this.settingsStore.get(name);
+
+    if (settings) {
+      this.settings = settings;
     }
 
-    addSetting(setting: Setting) {
-        this.settings.set(setting.name, setting);
+    this.settingsStore.set(name, this.settings);
+  }
 
-        this.listeners.forEach((listener, eventType) => {
-            if (eventType !== "add") return;
-            listener(eventType, setting, setting.value);
-        });
-    }
+  addSetting(setting: Setting) {
+    this.settings.set(setting.name, setting);
 
-    // 
-    updateSetting(name: string, value: any) {
-        const setting = this.settings.get(name);
-        if (!setting) return;
+    this.listeners.forEach((listener, eventType) => {
+      if (eventType !== "add") return;
+      listener(eventType, setting, setting.value);
+    });
+  }
 
-        setting.value = value;
-        
-        this.listeners.forEach((listener, eventType) => {
-            if (eventType !== "change") return;
-            listener(eventType, setting, value);
-        });
-    }
+  //
+  updateSetting(name: string, value: any) {
+    const setting = this.settings.get(name);
+    if (!setting) return;
 
-    removeSetting(name: string) {
-        this.settings.delete(name);
-    }
+    setting.value = value;
 
-    getSetting(name: string) {
-        return this.settings.get(name);
-    }
+    this.listeners.forEach((listener, eventType) => {
+      if (eventType !== "change") return;
+      listener(eventType, setting, value);
+    });
+  }
 
-    listen(eventType: settingsEvents, listener: settingsListener) {
-        this.listeners.set(eventType, listener);
-    }
+  removeSetting(name: string) {
+    this.settings.delete(name);
+  }
+
+  getSetting(name: string) {
+    return this.settings.get(name);
+  }
+
+  listen(eventType: settingsEvents, listener: settingsListener) {
+    this.listeners.set(eventType, listener);
+  }
 }

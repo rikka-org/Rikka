@@ -9,10 +9,9 @@
     "prepare": "ts-patch install -s",
     "build": "tsc -p tsconfig.json && npm run copy-files",
     "watch": "tsc -w -p tsconfig.json",
-    "test": "jest",
     "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/style.css src/**/.exists src/**/*.json src/**/*.scss src/**/*.coffee dist/",
     "clean": "rimraf dist",
-    "compile-sass": "sassc --watch src/"
+    "lint": "eslint src/**/*.ts"
   },
   "keywords": [
     "discord",
@@ -51,6 +50,8 @@
     "fs-extra": "^10.1.0",
     "git-repo-info": "^2.1.1",
     "lodash": "^4.17.21",
+    "prettier": "^2.6.2",
+    "prettier-eslint": "^14.0.2",
     "react": "^18.1.0",
     "react-is": "^18.1.0",
     "sass": "^1.50.1",

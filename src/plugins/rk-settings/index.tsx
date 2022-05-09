@@ -8,6 +8,7 @@ import manifest from "./manifest.json";
 
 export default class rkSettings extends RikkaPlugin {
   private settingsStore = new Store("rk-settings");
+
   private settingsCategory = new SettingsCategory("General", "General settings for Rikka", this.settingsStore);
 
   inject() {
@@ -18,7 +19,7 @@ export default class rkSettings extends RikkaPlugin {
   private async enableExperiments() {
     try {
       const experiments = (await getModule(
-        (r: any) => r.isDeveloper !== void 0
+        (r: any) => r.isDeveloper,
       )) as any;
       Object.defineProperty(experiments, "isDeveloper", {
         get: () => true,
@@ -52,22 +53,20 @@ export default class rkSettings extends RikkaPlugin {
               section: "HEADER",
               label: "Rikka",
             },
-            ...Array.from($rk.settingsManager.settings.values()).map((s: any) => {
-              return {
-                section: "rk-general",
-                label: s.name,
-              };
-            }),
+            ...Array.from($rk.settingsManager.settings.values()).map((s: any) => ({
+              section: "rk-general",
+              label: s.name,
+            })),
             {
               section: "DIVIDER",
-            }
+            },
           );
         }
-      }
+      },
     );
   }
 
   uninject() {
-      
+
   }
 }

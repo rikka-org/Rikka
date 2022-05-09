@@ -11,145 +11,143 @@ type pluginStatus = {
 }
 
 export default class PluginsManager {
-    readonly pluginDirectory = PluginsManager.getPluginDirectory();
-    private newPlugins: string[] = [];
+  readonly pluginDirectory = PluginsManager.getPluginDirectory();
 
-    private virtualMachines = new Map<string, NodeVM>();
+  private newPlugins: string[] = [];
 
-    private preferencesStore = new Store("pluginmanager");
-    private pluginRegistry: { [key: string]: pluginStatus };
+  private virtualMachines = new Map<string, NodeVM>();
 
-    constructor() {
-        Logger.log(`Using plugins directory: ${this.pluginDirectory}`);
-        this.preferencesStore.loadFromFile("pluginmanager.json");
+  private preferencesStore = new Store("pluginmanager");
 
-        const pluginRegistry = this.preferencesStore.get("pluginRegistry");
-        if (!pluginRegistry) {
-            this.preferencesStore.set("pluginRegistry", {});
-        }
-        this.pluginRegistry = this.preferencesStore.get("pluginRegistry");
+  private pluginRegistry: { [key: string]: pluginStatus };
+
+  constructor() {
+    Logger.log(`Using plugins directory: ${this.pluginDirectory}`);
+    this.preferencesStore.loadFromFile("pluginmanager.json");
+
+    const pluginRegistry = this.preferencesStore.get("pluginRegistry");
+    if (!pluginRegistry) {
+      this.preferencesStore.set("pluginRegistry", {});
     }
+    this.pluginRegistry = this.preferencesStore.get("pluginRegistry");
+  }
 
-    private loadPlugin(pluginName: string, preload: boolean = false) {
-        try {
-            if (!this.pluginRegistry[pluginName]?.enabled) return;
+  private loadPlugin(pluginName: string, preload: boolean = false) {
+    try {
+      if (!this.pluginRegistry[pluginName]?.enabled) return;
 
-            const currentDir = join(this.pluginDirectory, pluginName);
+      const currentDir = join(this.pluginDirectory, pluginName);
 
-            // Safely read the plugin's manifest directly from the filesystem.
-            const manifest = JSON.parse(readFileSync(join(currentDir, "manifest.json"), 'utf8'));
-            if (!manifest) throw new Error(`Failed to load plugin ${pluginName}: manifest.json is missing`);
-            if (preload && (!manifest.preload || manifest.sandboxed)) return;
+      // Safely read the plugin's manifest directly from the filesystem.
+      const manifest = JSON.parse(readFileSync(join(currentDir, "manifest.json"), 'utf8'));
+      if (!manifest) throw new Error(`Failed to load plugin ${pluginName}: manifest.json is missing`);
+      if (preload && (!manifest.preload || manifest.sandboxed)) return;
 
-            const plugin = require(currentDir).default;
-            const pluginInstance = new plugin() as RikkaPlugin | undefined;
-            if (!pluginInstance) throw new Error(`Failed to load plugin ${pluginName}: plugin is missing`);
+      const Plugin = require(currentDir).default;
+      const pluginInstance = new Plugin() as RikkaPlugin | undefined;
+      if (!pluginInstance) throw new Error(`Failed to load plugin ${pluginName}: plugin is missing`);
 
-            if (pluginInstance.enabled) return;
+      if (pluginInstance.enabled) return;
 
-            pluginInstance.Manifest = manifest;
-            if (preload)
-                pluginInstance._preload();
-            else
-                pluginInstance._load();
-        } catch (e) {
-            Logger.error(`Failed to load plugin ${pluginName}.\n${e}`);
-        }
+      pluginInstance.Manifest = manifest;
+      if (preload) { pluginInstance._preload(); } else { pluginInstance._load(); }
+    } catch (e) {
+      Logger.error(`Failed to load plugin ${pluginName}.\n${e}`);
     }
+  }
 
-    private unloadPlugin(pluginName: string) {
-        try {
-            const currentDir = join(this.pluginDirectory, pluginName);
-            const plugin = require(currentDir).default;
-            const pluginInstance = new plugin() as RikkaPlugin | undefined;
+  private unloadPlugin(pluginName: string) {
+    try {
+      const currentDir = join(this.pluginDirectory, pluginName);
+      const Plugin = require(currentDir).default;
+      const pluginInstance = new Plugin() as RikkaPlugin | undefined;
 
-            if (!pluginInstance) throw new Error(`Failed to unload plugin: ${pluginName}`);
-            if (!pluginInstance.enabled) return;
+      if (!pluginInstance) throw new Error(`Failed to unload plugin: ${pluginName}`);
+      if (!pluginInstance.enabled) return;
 
-            pluginInstance._unload();
-        } catch (e) {
-            Logger.error(e);
-        }
+      pluginInstance._unload();
+    } catch (e) {
+      Logger.error(e);
     }
+  }
 
-    enablePlugin(pluginName: string) {
-        if (!this.pluginRegistry[pluginName]) throw new Error(`Plugin ${pluginName} is not registered`);
+  enablePlugin(pluginName: string) {
+    if (!this.pluginRegistry[pluginName]) throw new Error(`Plugin ${pluginName} is not registered`);
 
         this.pluginRegistry[pluginName]!.enabled = true;
 
         this.loadPlugin(pluginName);
-    }
+  }
 
-    disablePlugin(pluginName: string) {
-        if (!this.pluginRegistry[pluginName]) throw new Error(`Plugin ${pluginName} is not registered`);
+  disablePlugin(pluginName: string) {
+    if (!this.pluginRegistry[pluginName]) throw new Error(`Plugin ${pluginName} is not registered`);
 
         this.pluginRegistry[pluginName]!.enabled = false;
 
         this.unloadPlugin(pluginName);
+  }
+
+  private registerPlugin(pluginName: string) {
+    this.pluginRegistry[pluginName] = {
+      enabled: true,
+      dateAdded: new Date(),
+    };
+  }
+
+  private mountPlugin(pluginName: string, preload: boolean = false) {
+    if (!this.pluginRegistry[pluginName]) {
+      this.registerPlugin(pluginName);
+    } else if (!this.pluginRegistry[pluginName]?.enabled) {
+      return;
     }
+    this.newPlugins.push(pluginName);
+  }
 
-    private registerPlugin(pluginName: string) {
-        this.pluginRegistry[pluginName] = {
-            enabled: true,
-            dateAdded: new Date()
-        };
-    }
+  loadPlugins(preload: boolean = false) {
+    readdirSync(this.pluginDirectory).forEach((file) => this.mountPlugin(file, preload));
+    this.newPlugins.forEach((plugin) => {
+      try {
+        this.loadPlugin(plugin, preload);
+      } catch (e) {
+        Logger.error(e);
+      }
+    });
 
-    private mountPlugin(pluginName: string, preload: boolean = false) {
-        if (!this.pluginRegistry[pluginName]) {
-            this.registerPlugin(pluginName);
-        }
-        else if (!this.pluginRegistry[pluginName]?.enabled) {
-            return;
-        }
-        this.newPlugins.push(pluginName);
-    }
+    this.preferencesStore.saveToFile("pluginmanager.json");
 
-    loadPlugins(preload: boolean = false) {
-        readdirSync(this.pluginDirectory).forEach(file => this.mountPlugin(file, preload));
-        this.newPlugins.forEach((plugin) => {
-            try {
-                this.loadPlugin(plugin, preload);
-            } catch (e) {
-                Logger.error(e);
-            }
-        });
+    // Sandboxed plugins should NEVER be preloaded, as the main thread has higher permissions.
+    if (preload) return;
 
-        this.preferencesStore.saveToFile("pluginmanager.json");
+    this.virtualMachines.forEach((vm, name) => {
+      try {
+        const dir = join(this.pluginDirectory, name);
+        const code = readFileSync(join(dir, "index.js"), 'utf8');
+        vm.run(code);
+      } catch (e) {
+        Logger.error(e);
+      }
+    });
+  }
 
-        // Sandboxed plugins should NEVER be preloaded, as the main thread has higher permissions.
-        if (preload) return;
+  _shutdown() {
+    this.unloadPlugins();
+    this.shutdownVMs();
+    this.preferencesStore.saveToFile("pluginmanager.json");
+  }
 
-        this.virtualMachines.forEach((vm, name) => {
-            try {
-                const dir = join(this.pluginDirectory, name);
-                const code = readFileSync(join(dir, "index.js"), 'utf8');
-                vm.run(code);
-            } catch (e) {
-                Logger.error(e);
-            }
-        });
-    }
+  private unloadPlugins() {
+    this.newPlugins.forEach((plugin) => {
+      this.unloadPlugin(plugin);
+    });
+  }
 
-    _shutdown() {
-        this.unloadPlugins();
-        this.shutdownVMs();
-        this.preferencesStore.saveToFile("pluginmanager.json");
-    }
+  private shutdownVMs() {
+    this.virtualMachines.forEach((vm) => {
+      vm.run(`process.exit(0);`);
+    });
+  }
 
-    private unloadPlugins() {
-        this.newPlugins.forEach((plugin) => {
-            this.unloadPlugin(plugin);
-        });
-    }
-
-    private shutdownVMs() {
-        this.virtualMachines.forEach((vm) => {
-            vm.run(`process.exit(0);`);
-        });
-    }
-
-    static getPluginDirectory() {
-        return resolve(__dirname, '..', '..', 'plugins');
-    }
+  static getPluginDirectory() {
+    return resolve(__dirname, '..', '..', 'plugins');
+  }
 }

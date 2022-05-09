@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 export namespace IPC_Consts {
     export const IPC_MAXIMIZE = "RIKKA_WIN_MAXIMIZE";
     export const IPC_UNMAXIMIZE = "RIKKA_WIN_UNMAXIMIZE";

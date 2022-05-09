@@ -1,14 +1,20 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-unsafe-optional-chaining */
+/* eslint-disable no-setter-return */
+/* eslint-disable no-return-assign */
 import { ipcRenderer, webFrame } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
 import { docFixCallbacks, registerCallback } from "@rikka/modules/util/preloadTils/registerDocFix";
 
+// Initializing Rikka loader
+import Rikka from "@rikka/index";
+
 function setGlobal(key: string, main: boolean = false) {
   Object.defineProperty(main ? (webFrame as any).top?.context : window, key, {
     get: () => (main ? window : (webFrame as any).top?.context)[key],
-    set: (v) => (main ? window : (webFrame as any).top?.context)[key] = v
+    set: (v) => (main ? window : (webFrame as any).top?.context)[key] = v,
   });
 }
-
 
 function fixDocument() {
   let getI = 0;
@@ -19,16 +25,16 @@ function fixDocument() {
    */
   Object.defineProperty(HTMLElement.prototype, '_reactRootContainer', {
     get() {
-      docFixCallbacks.forEach(cb => cb.getDoc(this, getI++, setI));
+      docFixCallbacks.forEach((cb) => cb.getDoc(this, getI++, setI));
 
       return this._reactRootContainer;
     },
     // @ts-ignore this is inherintly unsafe
     set(prop: string | number, value: any) {
-      docFixCallbacks.forEach(cb => cb.setDoc(this, prop, value, getI++, setI++));
+      docFixCallbacks.forEach((cb) => cb.setDoc(this, prop, value, getI++, setI++));
 
       return this && (this[prop] = value);
-    }
+    },
   });
 }
 
@@ -63,10 +69,7 @@ setGlobal('WebSocket', true);
 
 fixDocument();
 
-// Initializing Rikka loader
-import Rikka from "@rikka/index";
 const rikkaInstance = new Rikka();
-//@ts-ignore
 window.rikka = rikkaInstance;
 window.$rk = rikkaInstance;
 
@@ -83,7 +86,7 @@ if (process.platform === 'darwin' && !process.env.PATH?.includes('/usr/local/bin
 
 const discordPreload = ipcRenderer.sendSync(IPC_Consts.GET_PRELOAD);
 if (discordPreload) {
-  //@ts-ignore
+  // @ts-ignore
   process._linkedBinding('electron_common_command_line').appendSwitch('preload', discordPreload);
   require(discordPreload);
 }
