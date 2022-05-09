@@ -1,5 +1,5 @@
 declare module DiscordNative {
-    var window: Window & {
+    const window: Window & {
         setDevtoolsCallbacks(callback: (() => void) | null, callback2: (() => void) | null): void;
     };
     const clipboard: {

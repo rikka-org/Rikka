@@ -5,7 +5,7 @@ export type powercordManifest = {
     theme: string,
     author: string,
     consent: string,
-    license: string,    
+    license: string,
 }
 
 export type vizalityManifest = powercordManifest & {

@@ -1,18 +1,18 @@
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 
 export default class BaseAPI {
-    ready = false;
+  ready = false;
 
-    _load() {
-        this.ready = true;
-    }
+  _load() {
+    this.ready = true;
+  }
 
-    _unload() {
-        
-    }
+  _unload() {
 
-    /** TODO: Implement */
-    pluginHasPermission(plugin: RikkaPlugin, permission: string) {
-        return true;
-    }
+  }
+
+  /** TODO: Implement */
+  pluginHasPermission(plugin: RikkaPlugin, permission: string) {
+    return true;
+  }
 }

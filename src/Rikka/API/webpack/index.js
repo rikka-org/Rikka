@@ -25,7 +25,7 @@ const _getModules = (filter, all = false) => {
   }
 
   const moduleInstances = Object.values(this.instance.c).filter(
-    (m) => m.exports
+    (m) => m.exports,
   );
 
   if (all) {
@@ -45,7 +45,7 @@ const _getModules = (filter, all = false) => {
   }
 
   const expDefault = moduleInstances.find(
-    (m) => m.exports.default && filter(m.exports.default)
+    (m) => m.exports.default && filter(m.exports.default),
   );
 
   if (expDefault) {
@@ -66,12 +66,10 @@ const _getModules = (filter, all = false) => {
 const _getModule = (filter, retry = false, forever = false) => {
   if (Array.isArray(filter)) {
     const keys = filter;
-    filter = (m) =>
-      keys.every(
-        (key) =>
-          m.hasOwnProperty(key) ||
-          (m.__proto__ && m.__proto__.hasOwnProperty(key))
-      );
+    filter = (m) => keys.every(
+      (key) => m.hasOwnProperty(key)
+          || (m.__proto__ && m.__proto__.hasOwnProperty(key)),
+    );
   }
 
   if (!retry) return _getModules(filter);
@@ -118,31 +116,30 @@ export const findComponent = (keyword, exact = false) => {
     return Logger.warn("First argument provided must be a string.");
   }
 
-  let byDisplayName, byDefault, byType;
+  let byDisplayName; let byDefault; let
+    byType;
   const results = {};
 
   if (exact) {
     byDisplayName = this.getModuleByDisplayName(keyword);
     byDefault = this.getModules(
-      (m) => m.default && m.default.displayName === keyword
+      (m) => m.default && m.default.displayName === keyword,
     );
     byType = this.getModules((m) => m.type && m.type.displayName === keyword);
   } else {
     keyword = keyword.toLowerCase();
     byDisplayName = this.getModules(
-      (m) => m.displayName && m.displayName.toLowerCase().indexOf(keyword) > -1
+      (m) => m.displayName && m.displayName.toLowerCase().indexOf(keyword) > -1,
     );
     byDefault = this.getModules(
-      (m) =>
-        m.default &&
-        m.default.displayName &&
-        m.default.displayName.toLowerCase().indexOf(keyword) > -1
+      (m) => m.default
+        && m.default.displayName
+        && m.default.displayName.toLowerCase().indexOf(keyword) > -1,
     );
     byType = this.getModules(
-      (m) =>
-        m.type &&
-        m.type.displayName &&
-        m.type.displayName.toLowerCase().indexOf(keyword) > -1
+      (m) => m.type
+        && m.type.displayName
+        && m.type.displayName.toLowerCase().indexOf(keyword) > -1,
     );
   }
 
@@ -174,7 +171,7 @@ export const findComponent = (keyword, exact = false) => {
     return Logger.warn(
       `No results found for components ${
         exact ? "matching" : "containing"
-      } '${keyword}'`
+      } '${keyword}'`,
     );
   }
 
@@ -186,7 +183,7 @@ export const findComponent = (keyword, exact = false) => {
   Logger.log(
     `${count} ${resultsText} found for components ${
       exact ? "matching" : "containing"
-    } '${keyword}':\n`
+    } '${keyword}':\n`,
   );
 
   return results;
@@ -196,9 +193,7 @@ export const findComponent = (keyword, exact = false) => {
  * Gets all cached Webpack modules.
  * @returns {object[]} Cached Webpack modules
  */
-export const getAllModules = () => {
-  return this.getModules((m) => m);
-};
+export const getAllModules = () => this.getModules((m) => m);
 
 /**
  *
@@ -236,16 +231,13 @@ export const getModule = (...filter) => {
 export const getModuleByDisplayName = (
   displayName,
   retry = false,
-  forever = false
-) => {
-  return _getModule(
-    (m) =>
-      m?.displayName &&
-      m?.displayName?.toLowerCase() === displayName?.toLowerCase(),
-    retry,
-    forever
-  );
-};
+  forever = false,
+) => _getModule(
+  (m) => m?.displayName
+      && m?.displayName?.toLowerCase() === displayName?.toLowerCase(),
+  retry,
+  forever,
+);
 
 /**
  * Grabs a Webpack module by its ID.
@@ -254,9 +246,7 @@ export const getModuleByDisplayName = (
  * @param {boolean} forever If rikkka should try to fetch the module forever. Should be used only if you're in early stages of startup.
  * @returns {Promise<object>|object} The component. A promise will always be returned, unless retry is false.
  */
-export const getModuleById = (id, retry = false, forever = false) => {
-  return _getModule((m) => m?._dispatchToken === `ID_${id}`, retry, forever);
-};
+export const getModuleById = (id, retry = false, forever = false) => _getModule((m) => m?._dispatchToken === `ID_${id}`, retry, forever);
 
 /*
  * @todo: Make this work like getModule, where it accepts the argument as strings... i.e.
@@ -273,14 +263,12 @@ export const getModuleById = (id, retry = false, forever = false) => {
 export const getModuleByPrototypes = (
   filter,
   retry = false,
-  forever = false
-) => {
-  return _getModule(
-    (m) => m.prototype && filter.every((prop) => m.prototype[prop]),
-    retry,
-    forever
-  );
-};
+  forever = false,
+) => _getModule(
+  (m) => m.prototype && filter.every((prop) => m.prototype[prop]),
+  retry,
+  forever,
+);
 
 /**
  * Grabs all found modules from the webpack store.
@@ -290,32 +278,26 @@ export const getModuleByPrototypes = (
 export const getModules = (filter) => {
   if (Array.isArray(filter)) {
     const keys = filter;
-    filter = (m) =>
-      keys.every(
-        (key) =>
-          m.hasOwnProperty(key) ||
-          (m.__proto__ && m.__proto__.hasOwnProperty(key))
-      );
+    filter = (m) => keys.every(
+      (key) => m.hasOwnProperty(key)
+          || (m.__proto__ && m.__proto__.hasOwnProperty(key)),
+    );
   }
   return _getModules(filter, true);
 };
 
-export const getModulesByKeyword = (keyword, exact = false) => {
-  return this.getModules((module) => {
-    const modules = [...Object.keys(module), ...Object.keys(module.__proto__)];
-    for (const mdl of modules) {
-      if (exact) {
-        if (mdl === keyword) {
-          return true;
-        }
-      } else {
-        if (mdl.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
-          return true;
-        }
+export const getModulesByKeyword = (keyword, exact = false) => this.getModules((module) => {
+  const modules = [...Object.keys(module), ...Object.keys(module.__proto__)];
+  for (const mdl of modules) {
+    if (exact) {
+      if (mdl === keyword) {
+        return true;
       }
+    } else if (mdl.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+      return true;
     }
-    return false;
-  });
-};
+  }
+  return false;
+});
 
 export default this;
