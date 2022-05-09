@@ -67,6 +67,6 @@ export default class rkSettings extends RikkaPlugin {
   }
 
   uninject() {
-
+    this.settingsStore.save();
   }
 }

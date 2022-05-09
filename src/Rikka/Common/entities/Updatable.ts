@@ -7,6 +7,7 @@ type updatableInfo = {
     commit: string;
 }
 
+/** Generic updatable class, provides git info and manages updates */
 export default class Updatable extends Events {
   protected updatableInfo: updatableInfo = {
     gitRepo: "",
@@ -35,8 +36,12 @@ export default class Updatable extends Events {
   }
 
   /** @todo */
-  async _checkForUpdates() { }
+  async _checkForUpdates() {
+    throw new Error("Not implemented");
+  }
 
   /** @todo */
-  async _update() { }
+  async _update() {
+    throw new Error("Not implemented");
+  }
 }

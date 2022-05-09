@@ -69,11 +69,19 @@ export class Store {
     writeFileSync(storeFile, JSON.stringify(this.data, null, 4), "utf8");
   }
 
+  save() {
+    this.saveToFile(`${this.storeName}.json`);
+  }
+
   loadFromFile(file: string) {
     const storeFile = join(storeLocation, this.storeName, file);
     if (!existsSync(storeFile)) return;
 
     this.data = JSON.parse(readFileSync(storeFile, "utf8"));
+  }
+
+  load() {
+    this.loadFromFile(`${this.storeName}.json`);
   }
 
   writeRaw(file: string, data: string) {

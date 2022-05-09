@@ -23,7 +23,7 @@ function fixDocument() {
   /**
    * Allow accessing React root container.
    */
-  Object.defineProperty(HTMLElement.prototype, '_reactRootContainer', {
+  Object.defineProperty(HTMLElement.prototype, "_reactRootContainer", {
     get() {
       docFixCallbacks.forEach((cb) => cb.getDoc(this, getI++, setI));
 
@@ -43,29 +43,29 @@ registerCallback({
     const realDoc = (webFrame as any).top?.context.document;
 
     getI++;
-    element.setAttribute('rk-react-root-get', getI);
+    element.setAttribute("rk-react-root-get", getI);
     const elem = realDoc.querySelector(`[rk-react-root-get='${getI}']`);
-    elem?.removeAttribute('rk-react-root-get');
+    elem?.removeAttribute("rk-react-root-get");
     return elem?._reactRootContainer;
   },
   setDoc: (element, prop, value, getI, setI) => {
     const realDoc = (webFrame as any).top?.context.document;
 
     setI++;
-    element.setAttribute('rk-react-root-set', setI);
+    element.setAttribute("rk-react-root-set", setI);
     const elem = realDoc.querySelector(`[rk-react-root-set='${setI}']`);
-    elem?.removeAttribute('rk-react-root-set');
+    elem?.removeAttribute("rk-react-root-set");
     elem[prop] = value;
   },
 });
 
-setGlobal('DiscordSentry');
-setGlobal('__SENTRY__');
-setGlobal('GLOBAL_ENV');
-setGlobal('platform');
-setGlobal('_');
-setGlobal('webpackChunkdiscord_app');
-setGlobal('WebSocket', true);
+setGlobal("DiscordSentry");
+setGlobal("__SENTRY__");
+setGlobal("GLOBAL_ENV");
+setGlobal("platform");
+setGlobal("_");
+setGlobal("webpackChunkdiscord_app");
+setGlobal("WebSocket", true);
 
 fixDocument();
 
@@ -73,21 +73,21 @@ const rikkaInstance = new Rikka();
 window.rikka = rikkaInstance;
 window.$rk = rikkaInstance;
 
-setGlobal('rikka', true);
-setGlobal('discord', true);
-setGlobal('$rk', true);
-setGlobal('$discord', true);
-setGlobal('require', true);
+setGlobal("rikka", true);
+setGlobal("discord", true);
+setGlobal("$rk", true);
+setGlobal("$discord", true);
+setGlobal("require", true);
 
 // https://github.com/electron/electron/issues/9047
-if (process.platform === 'darwin' && !process.env.PATH?.includes('/usr/local/bin')) {
-  process.env.PATH += ':/usr/local/bin';
+if (process.platform === "darwin" && !process.env.PATH?.includes("/usr/local/bin")) {
+  process.env.PATH += ":/usr/local/bin";
 }
 
 const discordPreload = ipcRenderer.sendSync(IPC_Consts.GET_PRELOAD);
 if (discordPreload) {
   // @ts-ignore
-  process._linkedBinding('electron_common_command_line').appendSwitch('preload', discordPreload);
+  process._linkedBinding("electron_common_command_line").appendSwitch("preload", discordPreload);
   require(discordPreload);
 }
 

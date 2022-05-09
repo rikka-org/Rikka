@@ -10,7 +10,6 @@ if (preloader) {
   require(preloader);
 }
 
-// @ts-ignore
 window.__SPLASH__ = true;
 
 function init() {
@@ -22,4 +21,4 @@ function init() {
   console.log("Rikka loaded");
 }
 
-if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", init); } else { init(); }

@@ -4,14 +4,18 @@ import { NodeVM } from "vm2";
 import { Logger } from "@rikka/API/Utils/logger";
 import { Store } from "@rikka/API/storage";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
+import Manager from "./Manager";
 
 type pluginStatus = {
     enabled: boolean;
     dateAdded: Date;
 }
 
-export default class PluginsManager {
-  readonly pluginDirectory = PluginsManager.getPluginDirectory();
+/** The main plugin manager for Rikka.
+ * @param pluginsDir The directory the manager should look for plugins in.
+*/
+export default class PluginsManager extends Manager {
+  readonly pluginDirectory: string = PluginsManager.getPluginDirectory();
 
   private newPlugins: string[] = [];
 
@@ -21,9 +25,11 @@ export default class PluginsManager {
 
   private pluginRegistry: { [key: string]: pluginStatus };
 
-  constructor() {
+  constructor(pluginsDir?: string) {
+    super();
+
     Logger.log(`Using plugins directory: ${this.pluginDirectory}`);
-    this.preferencesStore.loadFromFile("pluginmanager.json");
+    this.preferencesStore.load();
 
     const pluginRegistry = this.preferencesStore.get("pluginRegistry");
     if (!pluginRegistry) {
@@ -39,7 +45,7 @@ export default class PluginsManager {
       const currentDir = join(this.pluginDirectory, pluginName);
 
       // Safely read the plugin's manifest directly from the filesystem.
-      const manifest = JSON.parse(readFileSync(join(currentDir, "manifest.json"), 'utf8'));
+      const manifest = JSON.parse(readFileSync(join(currentDir, "manifest.json"), "utf8"));
       if (!manifest) throw new Error(`Failed to load plugin ${pluginName}: manifest.json is missing`);
       if (preload && (!manifest.preload || manifest.sandboxed)) return;
 
@@ -113,7 +119,7 @@ export default class PluginsManager {
       }
     });
 
-    this.preferencesStore.saveToFile("pluginmanager.json");
+    this.preferencesStore.save();
 
     // Sandboxed plugins should NEVER be preloaded, as the main thread has higher permissions.
     if (preload) return;
@@ -121,7 +127,7 @@ export default class PluginsManager {
     this.virtualMachines.forEach((vm, name) => {
       try {
         const dir = join(this.pluginDirectory, name);
-        const code = readFileSync(join(dir, "index.js"), 'utf8');
+        const code = readFileSync(join(dir, "index.js"), "utf8");
         vm.run(code);
       } catch (e) {
         Logger.error(e);
@@ -130,9 +136,11 @@ export default class PluginsManager {
   }
 
   _shutdown() {
+    super.shutdown();
+
+    this.preferencesStore.save();
     this.unloadPlugins();
     this.shutdownVMs();
-    this.preferencesStore.saveToFile("pluginmanager.json");
   }
 
   private unloadPlugins() {
@@ -148,6 +156,6 @@ export default class PluginsManager {
   }
 
   static getPluginDirectory() {
-    return resolve(__dirname, '..', '..', 'plugins');
+    return resolve(__dirname, "..", "..", "plugins");
   }
 }

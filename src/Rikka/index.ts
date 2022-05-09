@@ -1,3 +1,4 @@
+import { dialog } from "electron";
 import PluginsManager from "./managers/Plugins";
 import StyleManager from "./managers/StyleManager";
 import { saveToFile, Logger } from "./API/Utils/logger";
@@ -56,6 +57,13 @@ export default class Rikka extends Updatable {
       await this.ensureWebpackModules();
     } catch (e) {
       Logger.error(`Something went critically wrong with Rikka's startup function!\n${e}`);
+      dialog.showMessageBox({
+        title: "Rikka",
+        type: "error",
+        message: "Rikka has encountered a serious error and will now close. Please report this issue to the developers.",
+        detail: "Rebuilding Rikka may fix this issue.",
+        buttons: ["OK"],
+      });
     }
 
     await this.start();
