@@ -7,7 +7,11 @@ type updatableInfo = {
     commit: string;
 }
 
-/** Generic updatable class, provides git info and manages updates */
+/**
+ * Generic updatable class, provides git info and manages updates
+ *
+ * @remarks This class is not meant to be used directly, but rather extended by other classes.
+*/
 export default class Updatable extends Events {
   protected updatableInfo: updatableInfo = {
     gitRepo: "",

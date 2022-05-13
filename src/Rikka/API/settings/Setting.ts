@@ -1,4 +1,4 @@
-export default class Setting {
+export class Setting {
   name: string;
 
   description: string;

@@ -1,11 +1,11 @@
 import { Store } from "../storage";
-import Setting from "./Setting";
+import { Setting } from "./Setting";
 
 type settingsEvents = "change" | "add" | "remove";
 
 type settingsListener = (eventType: settingsEvents, setting: Setting, value: any) => void;
 
-export default class SettingsCategory {
+export class SettingsCategory {
   /** Rendered by the Settings visualizer as the name of the plugin. */
   name: string;
 

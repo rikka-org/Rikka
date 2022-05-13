@@ -11,7 +11,8 @@
     "watch": "tsc -w -p tsconfig.json",
     "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/style.css src/**/.exists src/**/*.json src/**/*.scss src/**/*.coffee dist/",
     "clean": "rimraf dist",
-    "lint": "eslint --ext .ts ./src"
+    "lint": "eslint --ext .ts ./src",
+    "doc": "tsdoc"
   },
   "keywords": [
     "discord",
@@ -21,6 +22,8 @@
   "author": "V3L0C1T13S",
   "license": "GPL-3.0",
   "devDependencies": {
+    "@microsoft/tsdoc": "^0.14.1",
+    "@microsoft/tsdoc-config": "^0.16.1",
     "@types/blessed": "^0.1.19",
     "@types/coffeescript": "^2.5.1",
     "@types/electron-devtools-installer": "^2.2.2",
@@ -40,6 +43,7 @@
     "ts-patch": "^2.0.1",
     "tsc-progress": "^1.0.4",
     "tslib": "^2.3.1",
+    "typedoc": "^0.22.15",
     "typescript-transform-paths": "^3.3.1"
   },
   "dependencies": {
