@@ -19,6 +19,7 @@ export default class PatchedWindow extends BrowserWindow {
       originalPL = options.webPreferences.preload;
     } else if (options.webPreferences && options.webPreferences.preload) {
       originalPL = options.webPreferences.preload;
+      // @ts-ignore
       if (options.webPreferences.nativeWindowOpen) {
         // Stupid workaround
         options.webPreferences.contextIsolation = false;
