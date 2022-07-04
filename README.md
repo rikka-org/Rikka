@@ -8,7 +8,7 @@ Rikka was created as a true FOSS modification to Discord. Unlike some client mod
 While most client mods are open source, some are not licensed in such a way that would permit one to create their own version of them.
 
 ## Installation
-- First of all, download Node.js from https://nodejs.org/. If you're on Windows 11, you can use winget, if you're on a Mac, you can use Homebrew, and if you're on Linux, you can use the package manager of your distro. Unless you're on Ubuntu, or any other distro that uses apt, you must download from [here](https://github.com/nodesource/distributions/blob/master/README.md#debinstall) due to the one on apt is very outdated.
+- First of all, download Node.js from https://nodejs.org/. If you're on an Insiders build Windows 10/11, you can use winget, if you're on a Mac, you can use Homebrew, and if you're on Linux, you can use the package manager of your distro. Unless you're on Ubuntu, or any other distro that uses apt, you must download from [here](https://github.com/nodesource/distributions/blob/master/README.md#debinstall) due to the one on apt is very outdated.
 - Next, download Git from https://git-scm.org/. If you're on a Mac, you can use Homebrew, and if you're on Linux, you can use the package manager.
 - Then, you open up your terminal and run `git clone https://github.com/V3L0C1T13S/Rikka --recursive`.
 - Then, you run `cd Rikka`, and then run `npm i`. This will install the dependencies for Rikka to work.
