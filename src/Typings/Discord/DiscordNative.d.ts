@@ -2,7 +2,7 @@ type Env = { [key: string]: string };
 
 interface App {
     dock: Env;
-  }
+}
 
 interface Os {
     release: string;
@@ -19,25 +19,37 @@ interface NativeModules {
     canBootstrapNewUpdater: boolean;
 }
 
+type crashReportMetadata = {
+    user_id: string;
+}
+
+interface CrashReporter {
+    getMetadata: () => crashReportMetadata;
+}
+
+interface GpuSettings {
+    getEnableHardwareAcceleration: () => boolean;
+    setEnableHardwareAcceleration: (enable: boolean) => void;
+}
+
 declare module DiscordNative {
     const window: Window & {
         setDevtoolsCallbacks(callback: (() => void) | null, callback2: (() => void) | null): void;
         USE_OSX_NATIVE_TRAFFIC_LIGHTS: boolean;
-    };
-    const clipboard: {
-        copy: (text: string) => void;
     };
     const isRenderer: boolean;
     const nativeModules: NativeModules;
     const process: Process;
     const os: Os;
     const app: App;
-    const clipboard: Env;
+    const clipboard: {
+        copy: (text: string) => void;
+    };
     const ipc: Env;
-    const gpuSettings: Env;
+    const gpuSettings: GpuSettings;
     const powerMonitor: Env;
     const pellCheck: Env;
-    const crashReporter: Env;
+    const crashReporter: CrashReporter;
     const desktopCapture: Env;
     const fileManager: Env;
     const processUtils: Env;
