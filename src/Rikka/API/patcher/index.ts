@@ -87,7 +87,7 @@ export function createPatch(id: any, moduleToPatch: moddedModule, functionName: 
 
   // @ts-ignore
   moduleToPatch[functionName] = makeOverride(patchData);
-  Object.assign(moduleToPatch[functionName], patchData.originalFunction);
+  Object.assign(moduleToPatch[functionName] as any, patchData.originalFunction);
   // @ts-ignore
   moduleToPatch[functionName].toString = () => patchData.originalFunction.toString();
   // @ts-ignore
