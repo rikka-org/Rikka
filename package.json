@@ -25,7 +25,7 @@
     "@microsoft/tsdoc": "^0.14.1",
     "@microsoft/tsdoc-config": "^0.16.1",
     "@types/blessed": "^0.1.19",
-    "@types/coffeescript": "^2.5.1",
+    "@types/coffeescript": "^2.5.2",
     "@types/electron-devtools-installer": "^2.2.2",
     "@types/fs-extra": "^9.0.13",
     "@types/lodash": "^4.14.182",
