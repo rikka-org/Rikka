@@ -8,7 +8,7 @@
     "rikka:uninstall": "node dist/Installer/uninstall.js",
     "prepare": "ts-patch install -s",
     "build": "tsc -p tsconfig.json && npm run copy-files",
-    "watch": "tsc -w -p tsconfig.json",
+    "dev": "tsc -w -p tsconfig.json",
     "copy-files": "copyfiles -u 1 src/**/*.pem src/**/*.css src/**/style.css src/**/.exists src/**/*.json src/**/*.scss src/**/*.coffee dist/",
     "clean": "rimraf dist",
     "lint": "eslint --ext .ts ./src",

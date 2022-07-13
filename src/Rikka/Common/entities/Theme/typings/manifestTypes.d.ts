@@ -13,5 +13,8 @@ export type vizalityManifest = powercordManifest & {
 }
 
 export type rikkaManifest = vizalityManifest & {
-
+    /**
+     * Source code of the theme
+     */
+    source_url: string;
 }

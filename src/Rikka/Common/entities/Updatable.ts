@@ -31,20 +31,18 @@ export default class Updatable extends Events {
     this.updatableInfo.commit = repoInfo.sha;
   }
 
-  /**
-     * @todo: fetch remote repository
-     *  */
+  // todo: fetch repo
   protected getGitRepo() {
     const repoInfo = getRepoInfo();
     return repoInfo;
   }
 
-  /** @todo */
+  // todo
   async _checkForUpdates() {
     throw new Error("Not implemented");
   }
 
-  /** @todo */
+  // todo
   async _update() {
     throw new Error("Not implemented");
   }

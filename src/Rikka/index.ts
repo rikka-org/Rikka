@@ -43,8 +43,8 @@ export default class Rikka extends Updatable {
   private async ensureWebpackModules() {
     try {
       /**
-             * Initialize the webpack modules.
-             */
+        * Initialize the webpack modules.
+      */
       await initWebpackModules();
 
       await this.handleConnectionOpen();

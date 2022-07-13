@@ -13,9 +13,7 @@ readdirSync(__dirname)
     compilers.set(Compiler.extensions[0], Compiler);
 
     Compiler.extensions.forEach((ext: string) => {
-      Logger.log(`registered compiler for extension: ${ext}`);
       require.extensions[ext] = (module: any, filename: string) => {
-        Logger.log(`Module: ${module}`);
         const compilerModule = new Compiler(filename) as Compiler;
         const compiled = compilerModule.doCompilation();
 
