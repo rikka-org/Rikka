@@ -1,5 +1,5 @@
 /** Electron Notification Abstraction class for sandboxed plugins. */
-export default class notification {
+export default class RkNotification {
   /** The title for this notification */
   private title: string;
 
