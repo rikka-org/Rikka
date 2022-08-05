@@ -80,20 +80,14 @@ const _getModule = (filter: filter, retry: boolean = false, forever: boolean = f
 };
 
 export const init = async () => {
-  while (!window.webpackChunkdiscord_app) {
-    // eslint-disable-next-line no-await-in-loop
-    await sleep(100);
-  }
+  if (!window.webpackChunkdiscord_app) window.webpackChunkdiscord_app = [];
 
-  let instance: any;
   window.webpackChunkdiscord_app.push([
-    ["_rikka"],
+    [Symbol("rikka")],
     {},
     // eslint-disable-next-line no-return-assign
-    (exports: any) => (instance = exports),
+    (exports: any) => (this as any).instance = exports,
   ]);
-
-  (this as any).instance = instance;
 
   for (const mdl in moduleFilters) {
     // @ts-ignore
@@ -107,16 +101,14 @@ export const getModuleByDisplayName = (name: string, retry: boolean = false, for
   retry,
 );
 
-export const getModule = (...filter: [keyof typeof moduleFilters] | extraModules[] | filterType[]) => {
+export const getModule = (...filter: any) => {
   let retry = false;
   let forever = false;
 
   if (typeof filter[filter.length - 1] === "boolean") {
-    // @ts-ignore shut up
-    forever = filter.pop();
+    forever = filter.pop() as boolean;
     if (typeof filter[filter.length - 1] === "boolean") {
-      // @ts-ignore shut up
-      retry = filter.pop();
+      retry = filter.pop() as boolean;
     } else {
       retry = forever;
       forever = false;
@@ -124,12 +116,10 @@ export const getModule = (...filter: [keyof typeof moduleFilters] | extraModules
   }
 
   if (typeof filter[0] === "function") {
-    // @ts-ignore shut up
-    [filter] = filter;
+    [filter] = filter as any;
   }
 
-  // @ts-ignore your mom has a dick
-  return _getModule(filter, retry, forever);
+  return _getModule(filter as unknown as filter, retry, forever);
 };
 
 export const getModuleById = (id: string, retry: boolean = false, forever: boolean = false) => _getModule((m) => m?._dispatchToken === `ID_${id}`, retry, forever);

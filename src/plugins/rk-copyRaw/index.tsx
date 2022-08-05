@@ -24,7 +24,7 @@ export default class rkCopyRaw extends RikkaPlugin {
 
   private async patchContextMenu(): Promise<any> {
     this.contextMenu = (await getModule(
-      (m) => m.default?.displayName === "MessageContextMenu",
+      (m: any) => m.default?.displayName === "MessageContextMenu",
     )) as any;
 
     if (!this.contextMenu) { return setTimeout(() => this.patchContextMenu(), 1000); }

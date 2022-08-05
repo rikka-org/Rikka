@@ -98,7 +98,8 @@ export function createPatch(id: any, moduleToPatch: moddedModule, functionName: 
   return patchData;
 }
 
-/** Patch a webpack module with your custom code
+/**
+ * Patch a webpack module with your custom code
  * @returns A function that unpatches the patch
  */
 export function patch(...args: any[]) {

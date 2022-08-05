@@ -17,7 +17,7 @@ type pluginStatus = {
 export default class PluginsManager extends Manager {
   readonly pluginDirectory: string = PluginsManager.getPluginDirectory();
 
-  private newPlugins: string[] = [];
+  private plugins: string[] = [];
 
   private virtualMachines = new Map<string, NodeVM>();
 
@@ -106,12 +106,12 @@ export default class PluginsManager extends Manager {
     } else if (!this.pluginRegistry[pluginName]?.enabled) {
       return;
     }
-    this.newPlugins.push(pluginName);
+    this.plugins.push(pluginName);
   }
 
   loadPlugins(preload: boolean = false) {
     readdirSync(this.pluginDirectory).forEach((file) => this.mountPlugin(file, preload));
-    this.newPlugins.forEach((plugin) => {
+    this.plugins.forEach((plugin) => {
       try {
         this.loadPlugin(plugin, preload);
       } catch (e) {
@@ -144,7 +144,7 @@ export default class PluginsManager extends Manager {
   }
 
   private unloadPlugins() {
-    this.newPlugins.forEach((plugin) => {
+    this.plugins.forEach((plugin) => {
       this.unloadPlugin(plugin);
     });
   }
