@@ -1,3 +1,5 @@
+import { Store } from "@rikka/API/storage";
+import { Logger } from "@rikka/API/Utils";
 import { readFileSync } from "fs";
 import Updatable from "./Updatable";
 
@@ -14,6 +16,16 @@ export default abstract class RikkaPlugin extends Updatable {
   enabled: boolean = false;
 
   ready: boolean = false;
+
+  /**
+   * A settings store that automatically saves when the plugin is unloaded.
+  */
+  settings: Store;
+
+  constructor() {
+    super();
+    this.settings = new Store(this.id);
+  }
 
   /** Internal preload function */
   _preload() {
@@ -40,6 +52,7 @@ export default abstract class RikkaPlugin extends Updatable {
 
   async _unload() {
     this.uninject();
+    this.settings.save();
   }
 
   /**
@@ -57,5 +70,17 @@ export default abstract class RikkaPlugin extends Updatable {
     const style = document.createElement("style");
     style.innerHTML = styleCode.toString();
     document.head.appendChild(style);
+  }
+
+  protected log(message: string) {
+    Logger.log(`[${this.id}]: ${message}`);
+  }
+
+  protected warn(message: string) {
+    Logger.warn(`[${this.id}]: ${message}`);
+  }
+
+  protected error(message: string) {
+    Logger.error(`[${this.id}]: ${message}`);
   }
 }

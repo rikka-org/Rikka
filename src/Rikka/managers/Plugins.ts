@@ -4,6 +4,7 @@ import { NodeVM } from "vm2";
 import { Logger } from "@rikka/API/Utils/logger";
 import { Store } from "@rikka/API/storage";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
+import { Nullable } from "@rikka/API/typings";
 import Manager from "./Manager";
 
 type pluginStatus = {
@@ -18,6 +19,11 @@ export default class PluginsManager extends Manager {
   readonly pluginDirectory: string = PluginsManager.getPluginDirectory();
 
   private plugins: string[] = [];
+
+  /**
+   * A map of plugin instances by name.
+  */
+  private pluginInstances: Map<string, RikkaPlugin> = new Map();
 
   private virtualMachines = new Map<string, NodeVM>();
 
@@ -50,12 +56,14 @@ export default class PluginsManager extends Manager {
       if (preload && (!manifest.preload || manifest.sandboxed)) return;
 
       const Plugin = require(currentDir).default;
-      const pluginInstance = new Plugin() as RikkaPlugin | undefined;
+      const pluginInstance = new Plugin() as Nullable<RikkaPlugin>;
       if (!pluginInstance) throw new Error(`Failed to load plugin ${pluginName}: plugin is missing`);
 
       if (pluginInstance.enabled) return;
 
       pluginInstance.Manifest = manifest;
+      pluginInstance.enabled = true;
+      this.pluginInstances.set(pluginName, pluginInstance);
       if (preload) { pluginInstance._preload(); } else { pluginInstance._load(); }
     } catch (e) {
       Logger.error(`Failed to load plugin ${pluginName}.\n${e}`);
@@ -64,12 +72,10 @@ export default class PluginsManager extends Manager {
 
   private unloadPlugin(pluginName: string) {
     try {
-      const currentDir = join(this.pluginDirectory, pluginName);
-      const Plugin = require(currentDir).default;
-      const pluginInstance = new Plugin() as RikkaPlugin | undefined;
+      const pluginInstance = this.pluginInstances.get(pluginName);
 
       if (!pluginInstance) throw new Error(`Failed to unload plugin: ${pluginName}`);
-      if (!pluginInstance.enabled) return;
+      if (!pluginInstance.enabled) throw new Error(`Plugin ${pluginName} is not enabled`);
 
       pluginInstance._unload();
     } catch (e) {
@@ -80,17 +86,17 @@ export default class PluginsManager extends Manager {
   enablePlugin(pluginName: string) {
     if (!this.pluginRegistry[pluginName]) throw new Error(`Plugin ${pluginName} is not registered`);
 
-        this.pluginRegistry[pluginName]!.enabled = true;
+    this.pluginRegistry[pluginName]!.enabled = true;
 
-        this.loadPlugin(pluginName);
+    this.loadPlugin(pluginName);
   }
 
   disablePlugin(pluginName: string) {
     if (!this.pluginRegistry[pluginName]) throw new Error(`Plugin ${pluginName} is not registered`);
 
-        this.pluginRegistry[pluginName]!.enabled = false;
+    this.pluginRegistry[pluginName]!.enabled = false;
 
-        this.unloadPlugin(pluginName);
+    this.unloadPlugin(pluginName);
   }
 
   private registerPlugin(pluginName: string) {

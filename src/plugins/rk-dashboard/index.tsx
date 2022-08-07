@@ -1,12 +1,10 @@
 import { patch } from "@rikka/API/patcher";
-import { Logger } from "@rikka/API/Utils";
 import { findInReactTree, forceUpdateElement } from "@rikka/API/Utils/React";
 // @ts-ignore
 import { getModule, contextMenu } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
+import * as React from "react";
 import manifest from "./manifest.json";
-
-const React = require("react");
 
 export default class rkDashboard extends RikkaPlugin {
   inject() {
@@ -51,7 +49,7 @@ export default class rkDashboard extends RikkaPlugin {
             );
           }
         } catch (e) {
-          Logger.error(`Failed to patch ConnectedPrivateChannelsList: ${e}`);
+          this.error(`Failed to patch ConnectedPrivateChannelsList: ${e}`);
         }
         setImmediate(() => forceUpdateElement(`.${channel}`, true));
       },

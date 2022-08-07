@@ -29,7 +29,7 @@ getModule("MenuGroup", true, true).then((contextMenu: any) => {
 });
 
 getModule((m: any) => m.link && m.Hovers, true, true).then((button: any) => {
-  Button.Colors = button.Colors;
+  // Button.Colors = button.Colors;
   Button.Hovers = button.Hovers;
   Button.Link = button.link;
   Button.looks = button.looks;

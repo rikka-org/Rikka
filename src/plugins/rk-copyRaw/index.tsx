@@ -3,19 +3,15 @@ import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import { patch, rkUnpatchFunction } from "@rikka/API/patcher";
 import { ContextMenu } from "@rikka/API/components";
 import { SettingsCategory } from "@rikka/API/settings";
-import { Store } from "@rikka/API/storage";
+import * as React from "react";
 import manifest from "./manifest.json";
-
-const React = require("react");
 
 export default class rkCopyRaw extends RikkaPlugin {
   private contextMenu: any;
 
   private unpatchMenu?: rkUnpatchFunction;
 
-  private storage = new Store("rkCopyRaw");
-
-  private settingsCategory = new SettingsCategory("Copy Raw", "rk-copyRaw", this.storage);
+  private settingsCategory = new SettingsCategory("Copy Raw", "rk-copyRaw", this.settings);
 
   inject() {
     $rk.settingsManager.registerSetting("rk-copyRaw", this.settingsCategory);
@@ -56,6 +52,7 @@ export default class rkCopyRaw extends RikkaPlugin {
   }
 
   uninject() {
+    this.log("Unloading rkCopyRaw");
     if (this.unpatchMenu) this.unpatchMenu();
   }
 }

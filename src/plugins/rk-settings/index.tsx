@@ -1,18 +1,15 @@
 import { patch } from "@rikka/API/patcher";
 import { SettingsCategory } from "@rikka/API/settings";
 import { Store } from "@rikka/API/storage";
-import { Logger } from "@rikka/API/Utils";
 import { getModule, getModuleByDisplayName } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import manifest from "./manifest.json";
 
 export default class rkSettings extends RikkaPlugin {
-  private settingsStore = new Store("rk-settings");
-
-  private settingsCategory = new SettingsCategory("General", "General settings for Rikka", this.settingsStore);
+  private settingsCategory = new SettingsCategory("General", "General settings for Rikka", this.settings);
 
   inject() {
-    this.enableExperiments();
+    // this.enableExperiments();
     this.patchSettingsMenu();
   }
 
@@ -27,9 +24,9 @@ export default class rkSettings extends RikkaPlugin {
 
       // Ensure components do get the update
       experiments._changeCallbacks.forEach((cb: () => any) => cb());
-      Logger.warn("Experiments enabled! Be careful!");
+      this.warn("Experiments enabled! Be careful!");
     } catch (e) {
-      Logger.error(`Failed to enable experiments: ${e}`);
+      this.error(`Failed to enable experiments: ${e}`);
     }
   }
 
@@ -41,8 +38,6 @@ export default class rkSettings extends RikkaPlugin {
       SettingsView.prototype,
       "getPredicateSections",
       (_: any, sections: any) => {
-        Logger.log("mogus");
-
         const changelog = sections.find((c: any) => c.section === "changelog");
         // slap rikka settings right after changelog
         if (changelog) {
@@ -67,6 +62,6 @@ export default class rkSettings extends RikkaPlugin {
   }
 
   uninject() {
-    this.settingsStore.save();
+    this.settings.save();
   }
 }

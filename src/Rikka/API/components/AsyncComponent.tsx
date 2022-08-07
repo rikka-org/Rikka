@@ -1,8 +1,20 @@
-import { getModule, getModuleByDisplayName } from '@rikka/API/webpack';
-import React, { memo, PureComponent } from '@rikka/API/pkg/React';
+import { getModule, getModuleByDisplayName } from "@rikka/API/webpack";
+import { Nullable } from "@rikka/API/typings";
+import React from "@rikka/API/pkg/React";
 
-export default class AsyncComponent extends PureComponent {
-  constructor(props) {
+export type componentFilter = Function | string;
+
+export type asyncComponentProps = {
+  _provider: Function;
+  _fallback?: any;
+}
+
+export type asyncComponentState = {
+  Component?: Nullable<React.Component>;
+}
+
+export default class AsyncComponent extends React.PureComponent<asyncComponentProps, asyncComponentState> {
+  constructor(props: asyncComponentProps | Readonly<asyncComponentProps>) {
     super(props);
     this.state = {
       Component: null,
@@ -18,6 +30,7 @@ export default class AsyncComponent extends PureComponent {
   render() {
     const { Component } = this.state;
     if (Component) {
+      // @ts-ignore yes it does have a constructor
       return <Component {...this.props} />;
     }
     return this.props._fallback || null;
@@ -29,8 +42,8 @@ export default class AsyncComponent extends PureComponent {
    * @param {React.Component} [fallback] Fallback Component
    * @returns {React.MemoExoticComponent<function(): React.ReactElement>}
    */
-  static from(promise, fallback) {
-    return memo((props) => <AsyncComponent _provider={() => promise} _fallback={fallback} {...props} />);
+  static from(promise: Promise<React.Component>, fallback?: React.Component) {
+    return React.memo((props) => <AsyncComponent _provider={() => promise} _fallback={fallback} {...props} />);
   }
 
   /**
@@ -39,7 +52,7 @@ export default class AsyncComponent extends PureComponent {
    * @param {React.Component} [fallback] Fallback Component
    * @returns {React.MemoExoticComponent<function(): React.ReactElement>}
    */
-  static fromDisplayName(displayName, fallback) {
+  static fromDisplayName(displayName: string, fallback?: React.Component) {
     return AsyncComponent.from(getModuleByDisplayName(displayName, true), fallback);
   }
 
@@ -49,7 +62,7 @@ export default class AsyncComponent extends PureComponent {
    * @param {React.Component} [fallback] Fallback Component
    * @returns {React.MemoExoticComponent<function(): React.ReactElement>}
    */
-  static fromProps(filter, fallback) {
+  static fromProps(filter: componentFilter, fallback?: React.Component) {
     return AsyncComponent.from(getModule(filter, true), fallback);
   }
 
@@ -60,7 +73,8 @@ export default class AsyncComponent extends PureComponent {
    * @param {React.Component} [fallback] Fallback Component
    * @returns {React.MemoExoticComponent<function(): React.ReactElement>}
    */
-  static fetchFromProps(filter, prop, fallback) {
+  static fetchFromProps(filter: componentFilter | string, prop?: string, fallback?: React.Component) {
+    // @ts-ignore yes it can be used as an index type
     return AsyncComponent.from((async () => (await getModule(filter, true))[prop || filter])(), fallback);
   }
 }
