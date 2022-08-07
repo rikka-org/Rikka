@@ -15,9 +15,6 @@ export default class Rikka extends Updatable {
 
   settingsManager = new SettingsManager();
 
-  /** Deprecated way of accessing plugin APIs */
-  // private APIManager = new APIManager();
-
   /** Is Rikka fully loaded? */
   private ready: boolean = false;
 
