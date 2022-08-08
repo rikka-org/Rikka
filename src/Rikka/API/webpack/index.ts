@@ -19,10 +19,6 @@ type instanceType = {
     default: any;
 }
 
-type thisType = any & {
-    instance: instanceType;
-}
-
 const _getModules = (filter: filterType, all: boolean = false) => {
   if (!(this as any).instance?.c) return;
 

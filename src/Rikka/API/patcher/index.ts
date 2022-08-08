@@ -3,12 +3,16 @@ import { Logger } from "../Utils/logger";
 
 export type rkUnpatchFunction = () => void;
 
+export type moddedModule = {
+  [x: string]: any;
+};
+
 export type rikkaPatchChild = {
   callback: Function;
   type: string;
   id: string;
   caller: string;
-  moduleToPatch: any;
+  moduleToPatch: moddedModule;
   functionName: string | number;
   unpatch: () => void;
   _errorsOccurred: number;
@@ -16,11 +20,11 @@ export type rikkaPatchChild = {
 }
 
 export type rikkapatch = {
-    id: any;
-    caller: any;
-    moduleToPatch: any;
+    id: string;
+    caller: string;
+    moduleToPatch: moddedModule;
     functionName: string | number;
-    originalFunction: any;
+    originalFunction: Function;
     unpatch: rkUnpatchFunction;
     childs: rikkaPatchChild[];
     count: number;
@@ -29,10 +33,6 @@ export type rikkapatch = {
 
 export const patches: rikkapatch[] = [];
 export const errorLimit = 5;
-
-export type moddedModule = {
-    [x: string]: { [x: string]: any; };
-};
 
 export function runPatches(patches: any[], type: string, returnValue: undefined, _this: { [x: number]: (...args: any[]) => any; }, args: any[]) {
   // eslint-disable-next-line no-restricted-syntax
@@ -81,7 +81,7 @@ export function makeOverride(patch: rikkapatch) {
 export function createPatch(id: any, moduleToPatch: moddedModule, functionName: string | number) {
   const patchData: rikkapatch = {
     id,
-    caller: "unimplemented",
+    caller: getCaller(),
     moduleToPatch,
     functionName,
     originalFunction: moduleToPatch[functionName],
@@ -113,12 +113,8 @@ export function createPatch(id: any, moduleToPatch: moddedModule, functionName: 
  * @returns A function that unpatches the patch
  */
 export function patch(...args: any[]): rkUnpatchFunction {
-  if (typeof args[0] !== "string") {
-    const { stack } = new Error();
-    const caller = getCaller(stack ?? "");
+  if (typeof args[0] !== "string") args.unshift(getCaller());
 
-    args.unshift(caller);
-  }
   // eslint-disable-next-line prefer-const
   let [id, moduleToPatch, func, patchFunction, type = "after", { failSave = true } = {}] = args;
 
@@ -143,7 +139,7 @@ export function patch(...args: any[]): rkUnpatchFunction {
     callback: patchFunction,
     type,
     id,
-    caller: "unimplemented",
+    caller: getCaller(),
     moduleToPatch,
     functionName: func,
     unpatch: () => {

@@ -1,29 +1,30 @@
 /* eslint-disable no-console */
 import { getCaller } from "@rikka/API/Utils/callerutils";
+import { appendDate } from "../strings";
 import { addMessage } from "./dmesg";
 
 export class Logger {
   static rk_msg = `[Rikka]`;
 
   static log(...args: any[]) {
-    const caller = getCaller(new Error().stack ?? "unknown");
-    const msg = `[LOG] ${Logger.rk_msg}::${caller} ${args}`;
+    const caller = getCaller();
+    const msg = appendDate(`[LOG] ${Logger.rk_msg}::${caller} ${args}`);
 
     console.log(msg);
     addMessage("LOG", msg);
   }
 
   static warn(...args: any[]) {
-    const caller = getCaller(new Error().stack ?? "unknown");
-    const msg = `[WARN] ${Logger.rk_msg}::${caller} ${args}`;
+    const caller = getCaller();
+    const msg = appendDate(`[WARN] ${Logger.rk_msg}::${caller} ${args}`);
 
     console.warn(msg);
     addMessage("WARN", msg);
   }
 
   static error(...args: any[]) {
-    const caller = getCaller(new Error().stack ?? "unknown");
-    const msg = `[ERR] ${Logger.rk_msg}::${caller}, ${args}`;
+    const caller = getCaller();
+    const msg = appendDate(`[ERR] ${Logger.rk_msg}::${caller}, ${args}`);
 
     try {
       console.error(msg);
@@ -34,8 +35,8 @@ export class Logger {
   }
 
   static trace(...args: any[]) {
-    const caller = getCaller(new Error().stack ?? "unknown");
-    console.log(`[${this.rk_msg}]::[${caller}]`, ...args);
+    const caller = getCaller();
+    console.log(appendDate(`[${this.rk_msg}]::[${caller}]`), ...args);
   }
 }
 

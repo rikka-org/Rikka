@@ -1,8 +1,20 @@
 import { Logger } from "../logger";
 
-export function getCaller(stack: string) {
+type caller = {
+  prettyName: string;
+  name: string;
+}
+
+export function parseCallerFromStack(stack: string) {
   const caller = stack.split("\n")[2]?.trim();
   return caller?.substring(caller.indexOf("(") + 1, caller.indexOf(")"));
+}
+
+export function getCaller() {
+  const { stack } = new Error();
+  const caller = parseCallerFromStack(stack ?? "") ?? "unknown";
+
+  return caller;
 }
 
 export const getCallerFile = (path: string) => {
