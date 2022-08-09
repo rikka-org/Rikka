@@ -1,7 +1,7 @@
 import { storeLocation } from "@rikka/API/Constants";
 import { Logger } from "@rikka/API/Utils";
 import {
-  existsSync, mkdirSync, readFileSync, writeFileSync,
+  existsSync, mkdirSync, readFileSync, rmdirSync, writeFileSync,
 } from "fs";
 import { join } from "path";
 import { copy } from "fs-extra";
@@ -84,14 +84,17 @@ export class Store {
     this.loadFromFile(`${this.storeName}.json`);
   }
 
-  writeRaw(file: string, data: string) {
-    const storeFile = join(this.workingDirectory, file);
+  writeRaw(file: string, data: string, subdir?: string) {
+    const storeDir = join(this.workingDirectory, subdir ?? "");
+    const storeFile = join(storeDir, file);
+
+    if (!existsSync(storeDir)) { mkdirSync(storeDir, { recursive: true }); }
 
     writeFileSync(storeFile, data, "utf8");
   }
 
-  readRaw(file: string) {
-    const storeFile = join(storeLocation, this.storeName, file);
+  readRaw(file: string, subdir?: string) {
+    const storeFile = join(storeLocation, this.storeName, subdir ?? "", file);
     if (!existsSync(storeFile)) return;
 
     return readFileSync(storeFile, "utf8");
@@ -110,7 +113,7 @@ export class Store {
     return copy(from, directory);
   }
 
-  deleteDirectory(from: string) {
-    Logger.warn("Not implemented");
+  deleteDirectory(subdir: string) {
+    rmdirSync(join(this.workingDirectory, subdir), { recursive: true });
   }
 }
