@@ -8,13 +8,7 @@ import { docFixCallbacks, registerCallback } from "@rikka/modules/util/preloadTi
 
 // Initializing Rikka loader
 import Rikka from "@rikka/index";
-
-function setGlobal(key: string, main: boolean = false) {
-  Object.defineProperty(main ? (webFrame as any).top?.context : window, key, {
-    get: () => (main ? window : (webFrame as any).top?.context)[key],
-    set: (v) => (main ? window : (webFrame as any).top?.context)[key] = v,
-  });
-}
+import { setGlobal } from "@rikka/API/Utils/globals";
 
 function fixDocument() {
   let getI = 0;
