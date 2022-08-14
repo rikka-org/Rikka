@@ -1,4 +1,5 @@
 import { Store } from "@rikka/API/storage";
+import { Logger } from "@rikka/API/Utils";
 import { createHash } from "crypto";
 import Events from "events";
 import { readFileSync } from "fs";
@@ -64,5 +65,26 @@ export default abstract class Compiler extends Events {
       .update(this.compilerInfo)
       .update(fileBuffer)
       .digest("hex");
+  }
+
+  listFiles() {
+    return [this.file];
+  }
+
+  private async watchFiles() {
+    try {
+      const files = this.listFiles();
+
+      Object.keys(this.watchers).forEach((file) => {
+        if (!files.includes(file)) {
+          this.watchers[file]?.close();
+          delete this.watchers[file];
+        }
+      });
+
+      files.forEach((file) => {});
+    } catch (e) {
+      Logger.error(e);
+    }
   }
 }
