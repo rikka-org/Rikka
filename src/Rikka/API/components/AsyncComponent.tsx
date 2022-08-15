@@ -38,12 +38,17 @@ export default class AsyncComponent extends React.PureComponent<asyncComponentPr
 
   /**
    * Creates an AsyncComponent from a promise.
-   * @param {Promise<React.Component>} promise Promise of a React component
-   * @param {React.Component} [fallback] Fallback Component
-   * @returns {React.MemoExoticComponent<function(): React.ReactElement>}
+   * @param promise Promise of a React component
+   * @param fallback Fallback Component
    */
   static from(promise: Promise<React.Component>, fallback?: React.Component) {
-    return React.memo((props) => <AsyncComponent _provider={() => promise} _fallback={fallback} {...props} />);
+    return React.memo(
+      (props) => React.createElement(AsyncComponent, {
+        _provider: () => promise,
+        _fallback: fallback,
+        ...props,
+      }),
+    );
   }
 
   /**

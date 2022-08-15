@@ -2,7 +2,7 @@ import { createElement } from "@rikka/API/Utils/DOM";
 import { getCompiler } from "@rikka/modules/compilers";
 import Compiler from "@rikka/modules/compilers/compiler";
 import { existsSync, readFileSync, statSync } from "fs";
-import { resolve } from "path";
+import { join, resolve } from "path";
 import { powercordManifest, rikkaManifest, vizalityManifest } from "./typings/manifestTypes";
 import Updatable from "../Updatable";
 
@@ -28,11 +28,18 @@ export default class Theme extends Updatable {
 
     if (statSync(file).isDirectory()) {
       // We can assume this has at least one manifest type
-      const manifestFile = resolve(file, "manifest.json");
-      if (existsSync(manifestFile)) {
-        this.themeManifest = JSON.parse(readFileSync(manifestFile, "utf8"));
+      const potentialManifests = [
+        "manifest.json",
+        "powercord_manifest.json",
+      ];
+
+      const manifestFile = potentialManifests.find((manifest) => existsSync(join(file, manifest)));
+      if (manifestFile) {
+        this.themeManifest = JSON.parse(readFileSync(join(file, manifestFile), "utf8"));
         this.file = resolve(file, this.themeManifest!.theme);
-      } else this.file = "";
+      } else {
+        this.file = "";
+      }
     } else this.file = file;
 
     const Compiler = getCompiler(this.file);

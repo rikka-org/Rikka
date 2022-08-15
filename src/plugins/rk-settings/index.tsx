@@ -1,6 +1,5 @@
 import { patch } from "@rikka/API/patcher";
 import { SettingsCategory } from "@rikka/API/settings";
-import { Store } from "@rikka/API/storage";
 import { getModule, getModuleByDisplayName } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import manifest from "./manifest.json";
