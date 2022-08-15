@@ -40,7 +40,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "rimraf": "^3.0.2",
-    "ts-patch": "^2.0.1",
+    "ts-patch": "^2.0.2",
     "tsc-progress": "^1.0.4",
     "tslib": "^2.3.1",
     "typedoc": "^0.23.10",
