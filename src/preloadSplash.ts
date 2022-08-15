@@ -15,11 +15,9 @@ window.__SPLASH__ = true;
 
 function init() {
   document.body.classList.add("rikka");
-  console.log("loading styles");
   const styleman = new StyleManager();
   styleman._loadThemes();
   styleman._applyThemes();
-  console.log("Rikka loaded");
 }
 
 if (document.readyState === "loading") {

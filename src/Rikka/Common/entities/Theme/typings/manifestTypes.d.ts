@@ -3,18 +3,19 @@ export type powercordManifest = {
     version: string;
     description: string;
     theme: string,
+    splashTheme?: string,
     author: string,
     consent: string,
     license: string,
 }
 
 export type vizalityManifest = powercordManifest & {
-    icon: string;
+    icon?: string;
 }
 
 export type rikkaManifest = vizalityManifest & {
     /**
      * Source code of the theme
      */
-    source_url: string;
+    source_url?: string;
 }

@@ -1,18 +1,18 @@
-import { Logger } from "@rikka/API/Utils";
 import { readdirSync } from "fs";
 import { join } from "path";
 import Compiler from "./compiler";
 
-const compilers: Map<string, any> = new Map();
+type Constructor<T> = new (...args: any[]) => T;
+
+const compilers: Map<string, Constructor<Compiler>> = new Map();
 
 readdirSync(__dirname)
   .filter((file) => file !== "index.js" && file !== "compiler.js")
-  // eslint-disable-next-line array-callback-return
-  .map((filename) => {
+  .forEach((filename) => {
     const Compiler = require(join(__dirname, filename)).default;
-    compilers.set(Compiler.extensions[0], Compiler);
 
     Compiler.extensions.forEach((ext: string) => {
+      compilers.set(ext, Compiler);
       require.extensions[ext] = (module: any, filename: string) => {
         const compilerModule = new Compiler(filename) as Compiler;
         const compiled = compilerModule.doCompilation();
@@ -23,17 +23,12 @@ readdirSync(__dirname)
   });
 
 export function getCompiler(file: string) {
-  try {
-    const extension = file.split(".").pop()?.toLowerCase() ?? "";
-    const compiler = require(join(__dirname, extension)).default;
+  const extension = file.split(".").pop()?.toLowerCase() ?? "";
+  const compiler = compilers.get(`.${extension}`);
 
-    if (!compiler) {
-      Logger.warn(`No compiler found for extension: ${extension}`);
-      return;
-    }
-
-    return compiler;
-  } catch (e) {
-    Logger.error(e);
+  if (!compiler) {
+    throw new Error(`No compiler found for extension ${extension}`);
   }
+
+  return compiler;
 }
