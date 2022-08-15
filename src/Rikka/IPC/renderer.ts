@@ -1,7 +1,9 @@
-import { BrowserWindow, ipcRenderer, webFrame } from "electron";
+import { BrowserWindow, ipcRenderer } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
 
 if (!ipcRenderer) throw new Error("Renderer process not found");
+
+// Powercord-like interface for RikkaNative wrapper
 
 // @ts-ignore
 global.RikkaNative = {

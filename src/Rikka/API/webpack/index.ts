@@ -3,6 +3,11 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-proto */
 /* eslint-disable no-prototype-builtins */
+
+/**
+ * Mostly taken from Replugged, but with some modifications and improvements.
+*/
+
 import { Logger, sleep } from "../Utils";
 import { wpModule } from "./typings/wp_module";
 import moduleFilters from "./modules.json";
@@ -28,24 +33,24 @@ const _getModules = (filter: filterType, all: boolean = false) => {
 
   if (all) {
     const exports = instances
-    // @ts-ignore your mom has a dick
+    // @ts-ignore
       .filter((m) => filter(m.exports))
       .map((m) => m.exports);
 
     const exportDefault = instances
-    // @ts-ignore your mom has a dick
+    // @ts-ignore
       .filter((m) => m.exports.default && filter(m.exports.default))
       .map((m) => m.exports.default);
 
     return exports.concat(exportDefault);
   }
 
-  // @ts-ignore your mom has a dick
+  // @ts-ignore
   const exports = instances.find((m) => filter(m.exports));
 
   if (exports) return exports.exports;
 
-  // @ts-ignore your mom has a dick
+  // @ts-ignore
   const exportDefault = instances.find((m) => m.exports.default && filter(m.exports.default));
 
   if (exportDefault) return exportDefault.exports.default;
@@ -75,6 +80,9 @@ const _getModule = (filter: filter, retry: boolean = false, forever: boolean = f
   });
 };
 
+/**
+ * Initializes webpack injection.
+ */
 export const init = async () => {
   if (!window.webpackChunkdiscord_app) window.webpackChunkdiscord_app = [];
 
@@ -120,13 +128,13 @@ export const getModule = (...filter: any) => {
 
 export const getModuleById = (id: string, retry: boolean = false, forever: boolean = false) => _getModule((m) => m?._dispatchToken === `ID_${id}`, retry, forever);
 
+/**
+ * Equivalent to Powercord's GetAllModules function
+ * */
 export const getModules = (filter: any) => {
   if (Array.isArray(filter)) {
     const keys = filter;
-    filter = (m: any) => keys.every(
-      (key) => m.hasOwnProperty(key)
-                || (m.__proto__ && m.__proto__.hasOwnProperty(key)),
-    );
+    filter = (m: any) => keys.every((key) => m.hasOwnProperty(key) || (m.__proto__ && m.__proto__.hasOwnProperty(key)));
   }
 
   return _getModules(filter, true);
@@ -191,6 +199,10 @@ export const findComponent = (keyword: string, precise: boolean = false) => {
   }
 };
 
-export const getAllModules = () => (this as any).getModules((m: any) => m);
-
-export default this;
+/**
+ * Usually used in startup code to get every module.
+ *
+ * Note this is NOT like Powercord's getAllModules function, which accepts a filter.
+ * If you're looking for something like that, use getModules instead.
+ * */
+export const getAllModules = () => getModules((m: any) => m);

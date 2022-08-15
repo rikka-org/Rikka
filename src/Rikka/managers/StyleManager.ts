@@ -7,13 +7,22 @@ export default class StyleManager {
 
   private static readonly themesDirectory = resolve(__dirname, "..", "..", "themes");
 
-  _applyTheme(name: string) {
-    const theme = this.themes.get(name);
-    theme?._load();
+  applyTheme(theme: Theme) {
+    theme._load();
   }
 
-  _removeTheme(theme: Theme) {
+  removeTheme(theme: Theme) {
     theme._unload();
+  }
+
+  applyThemeByName(name: string) {
+    const theme = this.themes.get(name);
+    if (theme) this.applyTheme(theme);
+  }
+
+  removeThemeByName(name: string) {
+    const theme = this.themes.get(name);
+    if (theme) this.removeTheme(theme);
   }
 
   _loadTheme(filename: string, themeDirectory: string) {
@@ -29,8 +38,6 @@ export default class StyleManager {
   }
 
   _applyThemes() {
-    this.themes.forEach((theme) => {
-      theme._load();
-    });
+    this.themes.forEach((theme) => this.applyTheme(theme));
   }
 }
