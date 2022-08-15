@@ -1,4 +1,4 @@
-import electron, { ipcMain, BrowserWindow } from "electron";
+import { ipcMain, BrowserWindow, dialog } from "electron";
 import { IPC_Consts } from "@rikka/API/Constants";
 import {
   clearCache, compileSass, DevToolsClose, DevToolsOpen,
@@ -14,6 +14,16 @@ function createHeadersHook(e: Electron.IpcMainInvokeEvent, name: string, code: s
   // electron.session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders }, done) => eval(code)({ responseHeaders }, done));
 }
 
+function showDialog(e: Electron.IpcMainInvokeEvent, params: Electron.MessageBoxSyncOptions) {
+  dialog.showMessageBox({
+    title: params.title,
+    type: params.type,
+    message: params.message,
+    detail: params.detail,
+    buttons: params.buttons,
+  });
+}
+
 // eslint-disable-next-line no-return-assign
 ipcMain.on(IPC_Consts.GET_PRELOAD, (e) => e.returnValue = (e.sender as any)._rikkaPreload);
 ipcMain.handle(IPC_Consts.OPEN_DEVTOOLS, DevToolsOpen);
@@ -24,3 +34,4 @@ ipcMain.handle(IPC_Consts.GET_WINDOW_MAXIMIZED, (e) => BrowserWindow.fromWebCont
 // eslint-disable-next-line no-return-assign
 ipcMain.on(IPC_Consts.GET_CHROMIUM_FLAGS, (e) => e.returnValue = getChromiumFlags());
 ipcMain.handle(IPC_Consts.ADD_HEADER_HOOK, createHeadersHook);
+ipcMain.handle(IPC_Consts.SHOW_DIALOG, showDialog);

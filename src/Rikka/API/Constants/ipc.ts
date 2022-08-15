@@ -11,4 +11,6 @@ export namespace IPC_Consts {
     export const GET_CHROMIUM_FLAGS = "RIKKA_GET_CHROMIUM_FLAGS";
     export const GET_WINDOW_MAXIMIZED = "RIKKA_GET_WINDOW_MAXIMIZED";
     export const ADD_HEADER_HOOK = "RIKKA_ADD_HEADER_HOOK";
+
+    export const SHOW_DIALOG = "RIKKA_SHOW_DIALOG";
 }

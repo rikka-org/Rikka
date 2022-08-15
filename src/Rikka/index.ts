@@ -1,4 +1,4 @@
-import { dialog } from "electron";
+import { ipcRenderer } from "electron";
 import PluginsManager from "./managers/Plugins";
 import StyleManager from "./managers/StyleManager";
 import { saveToFile, Logger } from "./API/Utils/logger";
@@ -7,6 +7,7 @@ import { saveToFile, Logger } from "./API/Utils/logger";
 import { getAllModules, init as initWebpackModules, FluxDispatcher } from "./API/webpack";
 import Updatable from "./Common/entities/Updatable";
 import SettingsManager from "./managers/SettingsManager";
+import { IPC_Consts } from "./API/Constants";
 
 export default class Rikka extends Updatable {
   private styleManager = new StyleManager();
@@ -55,21 +56,21 @@ export default class Rikka extends Updatable {
       await this.ensureWebpackModules();
     } catch (e) {
       Logger.error(`Something went critically wrong with Rikka's startup function!\n${e}`);
-      dialog.showMessageBox({
+      ipcRenderer.invoke(IPC_Consts.SHOW_DIALOG, ({
         title: "Rikka",
         type: "error",
         message: "Rikka has encountered a serious error and will now close. Please report this issue to the developers.",
         detail: "Rebuilding Rikka may fix this issue.",
         buttons: ["OK"],
-      });
+      }));
     }
 
-    await this.start();
+    this.start();
 
     this.ready = true;
   }
 
-  private async start() {
+  private start() {
     // Make the logs save to file every 5 seconds
     setInterval(() => {
       const logsDir = `${__dirname}`;
@@ -89,7 +90,6 @@ export default class Rikka extends Updatable {
   /** Shut down Rikka entirely, don't call this or death will incur */
   private shutdown() {
     Logger.log("Rikka is shutting down...");
-    // await this.APIManager._shutdown();
     this.PluginManager._shutdown();
 
     Logger.log("Goodbye!");

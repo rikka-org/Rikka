@@ -15,7 +15,7 @@ export default class Theme extends Updatable {
 
   private compiler: Compiler;
 
-  applied: boolean = false;
+  applied = false;
 
   private htmlElement?: HTMLStyleElement;
 
