@@ -53,9 +53,8 @@ export default class AsyncComponent extends React.PureComponent<asyncComponentPr
 
   /**
    * Creates an AsyncComponent from a module by its displayName.
-   * @param {string} displayName Module displayName
-   * @param {React.Component} [fallback] Fallback Component
-   * @returns {React.MemoExoticComponent<function(): React.ReactElement>}
+   * @param displayName Module displayName
+   * @param fallback Fallback Component
    */
   static fromDisplayName(displayName: string, fallback?: React.Component) {
     return AsyncComponent.from(getModuleByDisplayName(displayName, true), fallback);
@@ -63,9 +62,8 @@ export default class AsyncComponent extends React.PureComponent<asyncComponentPr
 
   /**
    * Creates an AsyncComponent from a module by its props.
-   * @param {Function|string} filter Module filter
-   * @param {React.Component} [fallback] Fallback Component
-   * @returns {React.MemoExoticComponent<function(): React.ReactElement>}
+   * @param filter Module filter
+   * @param fallback Fallback Component
    */
   static fromProps(filter: componentFilter, fallback?: React.Component) {
     return AsyncComponent.from(getModule(filter, true), fallback);
@@ -73,10 +71,9 @@ export default class AsyncComponent extends React.PureComponent<asyncComponentPr
 
   /**
    * Creates an AsyncComponent from a module by its props.
-   * @param {Function|string} filter Module filter
-   * @param {string} [prop] Module property
-   * @param {React.Component} [fallback] Fallback Component
-   * @returns {React.MemoExoticComponent<function(): React.ReactElement>}
+   * @param filter Module filter
+   * @param prop Module property
+   * @param fallback Fallback Component
    */
   static fetchFromProps(filter: componentFilter | string, prop?: string, fallback?: React.Component) {
     // @ts-ignore yes it can be used as an index type
