@@ -27,8 +27,20 @@ export default abstract class RikkaPlugin extends Updatable {
     this.settings = new Store(this.id);
   }
 
+  /**
+   * Sets up some internal logic that shouldn't be screwed with.
+   */
+  private sharedInject() {
+    this.enabled = true;
+  }
+
+  private sharedUninject() {
+    this.enabled = false;
+  }
+
   /** Internal preload function */
   _preload() {
+    this.sharedInject();
     this.preInject();
   }
 
@@ -36,28 +48,34 @@ export default abstract class RikkaPlugin extends Updatable {
     * Overriding this runs the risk of your plugin locking up.
   */
   async _load() {
+    this.sharedInject();
     this.inject();
 
     this.ready = true;
   }
 
-  /** Called in the main thread, DOM is inaccessable in the main thread.
+  /**
+    * Called in the main thread, DOM is inaccessable in the main thread.
     * NOTE: It is YOUR responsibility to make sure that you don't block the main thread.
-    * There are no protections against buggy code.
+    * There are no protections against buggy code. You may also need to dynamically
+    * require() modules incase you require a module that needs access to main stuff.
   */
   preInject(): void {}
 
-  // Called when this plugin is being injected into the Discord client.
+  /**
+   * The startup function of this plugin.
+   */
   protected abstract inject(): void;
 
   async _unload() {
+    this.sharedUninject();
     this.uninject();
     this.settings.save();
   }
 
   /**
    * Called when this plugin is about to be uninjected.
-   * You should delete temporary files and uninject your own code here.
+   * You should cleanup any resources here, and unpatch any patches you made.
   */
   protected uninject(): void {}
 

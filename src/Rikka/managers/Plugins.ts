@@ -62,7 +62,7 @@ export default class PluginsManager extends Manager {
       if (pluginInstance.enabled) return;
 
       pluginInstance.Manifest = manifest;
-      pluginInstance.enabled = true;
+      // pluginInstance.enabled = true;
       this.pluginInstances.set(pluginName, pluginInstance);
       if (preload) { pluginInstance._preload(); } else { pluginInstance._load(); }
     } catch (e) {
