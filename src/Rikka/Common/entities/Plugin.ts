@@ -89,16 +89,4 @@ export default abstract class RikkaPlugin extends Updatable {
     style.innerHTML = styleCode.toString();
     document.head.appendChild(style);
   }
-
-  protected log(message: string) {
-    Logger.log(`[${this.id}]: ${message}`);
-  }
-
-  protected warn(message: string) {
-    Logger.warn(`[${this.id}]: ${message}`);
-  }
-
-  protected error(message: string) {
-    Logger.error(`[${this.id}]: ${message}`);
-  }
 }

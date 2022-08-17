@@ -1,7 +1,7 @@
 import { ipcRenderer } from "electron";
 import PluginsManager from "./managers/Plugins";
 import StyleManager from "./managers/StyleManager";
-import { saveToFile, Logger } from "./API/Utils/logger";
+import { saveToFile } from "./API/Utils/logger";
 // @ts-ignore -- FluxDispatcher is added at runtime
 // eslint-disable-next-line import/named
 import { getAllModules, init as initWebpackModules, FluxDispatcher } from "./API/webpack";
@@ -22,7 +22,11 @@ export default class Rikka extends Updatable {
   constructor() {
     super();
 
-    if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", () => this.init()); } else { this.init(); }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => this.init());
+    } else {
+      this.init();
+    }
   }
 
   private async handleConnectionOpen() {
@@ -39,23 +43,16 @@ export default class Rikka extends Updatable {
   }
 
   private async ensureWebpackModules() {
-    try {
-      /**
-        * Initialize the webpack modules.
-      */
-      await initWebpackModules();
+    await initWebpackModules();
 
-      await this.handleConnectionOpen();
-    } catch (errmsg) {
-      Logger.error(`Something went wrong while initializing webpack modules: ${errmsg}`);
-    }
+    await this.handleConnectionOpen();
   }
 
   private async init() {
     try {
       await this.ensureWebpackModules();
     } catch (e) {
-      Logger.error(`Something went critically wrong with Rikka's startup function!\n${e}`);
+      this.error(`Something went critically wrong with Rikka's startup function!\n${e}`);
       ipcRenderer.invoke(IPC_Consts.SHOW_DIALOG, ({
         title: "Rikka",
         type: "error",
@@ -89,10 +86,10 @@ export default class Rikka extends Updatable {
 
   /** Shut down Rikka entirely, don't call this or death will incur */
   private shutdown() {
-    Logger.log("Rikka is shutting down...");
+    this.log("Rikka is shutting down...");
     this.PluginManager.shutdown();
 
-    Logger.log("Goodbye!");
+    this.log("Goodbye!");
     const logsDir = `${__dirname}`;
     saveToFile(`${logsDir}/logs.json`);
   }
