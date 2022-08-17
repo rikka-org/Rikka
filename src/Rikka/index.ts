@@ -90,7 +90,7 @@ export default class Rikka extends Updatable {
   /** Shut down Rikka entirely, don't call this or death will incur */
   private shutdown() {
     Logger.log("Rikka is shutting down...");
-    this.PluginManager._shutdown();
+    this.PluginManager.shutdown();
 
     Logger.log("Goodbye!");
     const logsDir = `${__dirname}`;

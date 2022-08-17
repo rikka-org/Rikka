@@ -20,4 +20,9 @@ type PluginManifest = {
      * (not currently implemented, but future-proofing is nice)
      */
     permissions: permissions;
+    preload?: boolean;
+    /**
+     * @deprecated
+     */
+    sandboxed?: boolean;
 }

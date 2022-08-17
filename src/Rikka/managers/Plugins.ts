@@ -1,10 +1,10 @@
-import { readdirSync, readFileSync } from "fs";
+import { readdirSync, readFileSync, statSync } from "fs";
 import { join, resolve, sep } from "path";
-import { NodeVM } from "vm2";
 import { Logger } from "@rikka/API/Utils/logger";
 import { Store } from "@rikka/API/storage";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import { Nullable } from "@rikka/API/typings";
+import { rikkaManifest } from "@rikka/Common/entities/Theme/typings/manifestTypes";
 import Manager from "./Manager";
 
 type pluginStatus = {
@@ -12,27 +12,30 @@ type pluginStatus = {
     dateAdded: Date;
 }
 
-/** The main plugin manager for Rikka.
- * @param pluginsDir The directory the manager should look for plugins in.
+/**
+ * The main plugin manager for Rikka.
+ * @param preload Whether to put the plugins in preload mode.
 */
 export default class PluginsManager extends Manager {
   readonly pluginDirectory: string = PluginsManager.getPluginDirectory();
 
-  private plugins: string[] = [];
+  private plugins: PluginManifest[] = [];
 
   /**
    * A map of plugin instances by name.
   */
   private pluginInstances: Map<string, RikkaPlugin> = new Map();
 
-  private virtualMachines = new Map<string, NodeVM>();
-
   private preferencesStore = new Store("pluginmanager");
 
   private pluginRegistry: { [key: string]: pluginStatus };
 
-  constructor(pluginsDir?: string) {
+  private preload: boolean;
+
+  constructor(preload = false) {
     super();
+
+    this.preload = preload;
 
     Logger.log(`Using plugins directory: ${this.pluginDirectory}`);
     this.preferencesStore.load();
@@ -44,16 +47,23 @@ export default class PluginsManager extends Manager {
     this.pluginRegistry = this.preferencesStore.get("pluginRegistry");
   }
 
-  private loadPlugin(pluginName: string, preload: boolean = false) {
+  /**
+   * @param pluginName The name of the plugin to load - must be the name of the directory.
+   */
+  private loadPlugin(pluginName: string) {
     try {
-      if (!this.pluginRegistry[pluginName]?.enabled) return;
-
       const currentDir = join(this.pluginDirectory, pluginName);
 
-      // Safely read the plugin's manifest directly from the filesystem.
-      const manifest = JSON.parse(readFileSync(join(currentDir, "manifest.json"), "utf8"));
-      if (!manifest) throw new Error(`Failed to load plugin ${pluginName}: manifest.json is missing`);
-      if (preload && (!manifest.preload || manifest.sandboxed)) return;
+      if (!statSync(currentDir).isDirectory()) {
+        throw new Error(`${currentDir} is not a directory.`);
+      }
+
+      const manifest = JSON.parse(readFileSync(join(currentDir, "manifest.json"), "utf8")) as PluginManifest;
+      if (!manifest || !manifest.name) throw new Error(`Failed to load plugin ${pluginName}: manifest.json is missing`);
+
+      if (!this.pluginRegistry[manifest.name]?.enabled) return;
+
+      if (this.preload && (!manifest.preload)) return;
 
       const Plugin = require(currentDir).default;
       const pluginInstance = new Plugin() as Nullable<RikkaPlugin>;
@@ -62,22 +72,34 @@ export default class PluginsManager extends Manager {
       if (pluginInstance.enabled) return;
 
       pluginInstance.Manifest = manifest;
-      // pluginInstance.enabled = true;
-      this.pluginInstances.set(pluginName, pluginInstance);
-      if (preload) { pluginInstance._preload(); } else { pluginInstance._load(); }
+      this.pluginInstances.set(manifest.name, pluginInstance);
+      if (this.preload) {
+        pluginInstance._preload();
+      } else {
+        pluginInstance._load();
+      }
     } catch (e) {
       Logger.error(`Failed to load plugin ${pluginName}.\n${e}`);
     }
   }
 
-  private unloadPlugin(pluginName: string) {
+  private unloadPlugin(plugin: RikkaPlugin) {
+    try {
+      plugin._unload();
+      this.pluginInstances.delete(plugin.Manifest!.name);
+    } catch (e) {
+      Logger.error(e);
+    }
+  }
+
+  private unloadPluginByName(pluginName: string) {
     try {
       const pluginInstance = this.pluginInstances.get(pluginName);
 
       if (!pluginInstance) throw new Error(`Failed to unload plugin: ${pluginName}`);
       if (!pluginInstance.enabled) throw new Error(`Plugin ${pluginName} is not enabled`);
 
-      pluginInstance._unload();
+      this.unloadPlugin(pluginInstance);
     } catch (e) {
       Logger.error(e);
     }
@@ -96,7 +118,7 @@ export default class PluginsManager extends Manager {
 
     this.pluginRegistry[pluginName]!.enabled = false;
 
-    this.unloadPlugin(pluginName);
+    this.unloadPluginByName(pluginName);
   }
 
   private registerPlugin(pluginName: string) {
@@ -106,58 +128,44 @@ export default class PluginsManager extends Manager {
     };
   }
 
-  private mountPlugin(pluginName: string, preload: boolean = false) {
-    if (!this.pluginRegistry[pluginName]) {
-      this.registerPlugin(pluginName);
-    } else if (!this.pluginRegistry[pluginName]?.enabled) {
+  private mountPlugin(pluginName: string) {
+    const currentDir = join(this.pluginDirectory, pluginName);
+    if (!statSync(currentDir).isDirectory()) {
+      Logger.warn(`${pluginName} is not a directory`);
       return;
     }
-    this.plugins.push(pluginName);
+
+    const manifest = JSON.parse(readFileSync(join(currentDir, "manifest.json"), "utf8")) as PluginManifest;
+    if (!manifest || !manifest.name) {
+      Logger.warn(`${pluginName} has an invalid manifest`);
+      return;
+    }
+
+    if (!this.pluginRegistry[manifest.name]) {
+      this.registerPlugin(manifest.name);
+    }
+    this.plugins.push(manifest);
   }
 
-  loadPlugins(preload: boolean = false) {
-    readdirSync(this.pluginDirectory).forEach((file) => this.mountPlugin(file, preload));
-    this.plugins.forEach((plugin) => {
-      try {
-        this.loadPlugin(plugin, preload);
-      } catch (e) {
-        Logger.error(e);
-      }
+  loadPlugins() {
+    readdirSync(this.pluginDirectory).forEach((file) => {
+      this.mountPlugin(file);
+      this.loadPlugin(file);
     });
 
     this.preferencesStore.save();
-
-    // Sandboxed plugins should NEVER be preloaded, as the main thread has higher permissions.
-    if (preload) return;
-
-    this.virtualMachines.forEach((vm, name) => {
-      try {
-        const dir = join(this.pluginDirectory, name);
-        const code = readFileSync(join(dir, "index.js"), "utf8");
-        vm.run(code);
-      } catch (e) {
-        Logger.error(e);
-      }
-    });
   }
 
-  _shutdown() {
+  shutdown() {
     super.shutdown();
 
     this.preferencesStore.save();
     this.unloadPlugins();
-    this.shutdownVMs();
   }
 
   private unloadPlugins() {
-    this.plugins.forEach((plugin) => {
+    this.pluginInstances.forEach((plugin) => {
       this.unloadPlugin(plugin);
-    });
-  }
-
-  private shutdownVMs() {
-    this.virtualMachines.forEach((vm) => {
-      vm.run(`process.exit(0);`);
     });
   }
 
