@@ -1,10 +1,9 @@
 import { readdirSync, readFileSync, statSync } from "fs";
-import { join, resolve, sep } from "path";
+import { join, resolve } from "path";
 import { Logger } from "@rikka/API/Utils/logger";
 import { Store } from "@rikka/API/storage";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import { Nullable } from "@rikka/API/typings";
-import { rikkaManifest } from "@rikka/Common/entities/Theme/typings/manifestTypes";
 import Manager from "./Manager";
 
 type pluginStatus = {
