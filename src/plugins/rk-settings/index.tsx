@@ -47,7 +47,7 @@ export default class rkSettings extends RikkaPlugin {
               section: "HEADER",
               label: "Rikka",
             },
-            ...Array.from($rk.settingsManager.settings.values()).map((s: any) => ({
+            ...Array.from($rk.settingsManager.settings.values()).map((s) => ({
               section: "rk-general",
               label: s.name,
             })),

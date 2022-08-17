@@ -8,6 +8,8 @@ import { getAllModules, init as initWebpackModules, FluxDispatcher } from "./API
 import Updatable from "./Common/entities/Updatable";
 import SettingsManager from "./managers/SettingsManager";
 import { IPC_Consts } from "./API/Constants";
+import { APIManager } from "./managers/APIManager";
+import { RKApiTypings } from "./RKApi/apiTypings";
 
 export default class Rikka extends Updatable {
   private styleManager = new StyleManager();
@@ -15,6 +17,10 @@ export default class Rikka extends Updatable {
   private PluginManager = new PluginsManager();
 
   settingsManager = new SettingsManager();
+
+  apiManager = new APIManager();
+
+  api: RKApiTypings = {} as RKApiTypings;
 
   /** Is Rikka fully loaded? */
   private ready: boolean = false;
@@ -77,6 +83,8 @@ export default class Rikka extends Updatable {
     // Setup compilers
     require("./modules/compilers");
 
+    this.apiManager.init();
+
     this.styleManager._loadThemes();
     this.styleManager._applyThemes();
     this.PluginManager.loadPlugins();
@@ -87,7 +95,10 @@ export default class Rikka extends Updatable {
   /** Shut down Rikka entirely, don't call this or death will incur */
   private shutdown() {
     this.log("Rikka is shutting down...");
+
     this.PluginManager.shutdown();
+    this.styleManager.shutdown();
+    this.apiManager.unload();
 
     this.log("Goodbye!");
     const logsDir = `${__dirname}`;

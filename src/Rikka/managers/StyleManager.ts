@@ -1,8 +1,9 @@
 import Theme from "@rikka/Common/entities/Theme";
 import { readdirSync } from "fs";
 import { resolve } from "path";
+import Manager from "./Manager";
 
-export default class StyleManager {
+export default class StyleManager extends Manager {
   themes: Map<string, Theme> = new Map();
 
   private static readonly themesDirectory = resolve(__dirname, "..", "..", "themes");

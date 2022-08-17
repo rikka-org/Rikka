@@ -1,5 +1,4 @@
 import { Store } from "@rikka/API/storage";
-import { Logger } from "@rikka/API/Utils";
 import { readFileSync } from "fs";
 import Updatable from "./Updatable";
 
