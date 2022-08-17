@@ -18,8 +18,6 @@ type pluginStatus = {
 export default class PluginsManager extends Manager {
   readonly pluginDirectory: string = PluginsManager.getPluginDirectory();
 
-  private plugins: PluginManifest[] = [];
-
   /**
    * A map of plugin instances by name.
   */
@@ -58,9 +56,9 @@ export default class PluginsManager extends Manager {
       }
 
       const manifest = JSON.parse(readFileSync(join(currentDir, "manifest.json"), "utf8")) as PluginManifest;
-      if (!manifest || !manifest.name) throw new Error(`Failed to load plugin ${pluginName}: manifest.json is missing`);
+      if (!manifest) throw new Error(`Failed to load plugin ${pluginName}: manifest.json is missing`);
 
-      if (!this.pluginRegistry[manifest.name]?.enabled) return;
+      if (!this.pluginRegistry[pluginName]?.enabled) return;
 
       if (this.preload && (!manifest.preload)) return;
 
@@ -71,7 +69,7 @@ export default class PluginsManager extends Manager {
       if (pluginInstance.enabled) return;
 
       pluginInstance.Manifest = manifest;
-      this.pluginInstances.set(manifest.name, pluginInstance);
+      this.pluginInstances.set(pluginName, pluginInstance);
       if (this.preload) {
         pluginInstance._preload();
       } else {
@@ -128,22 +126,9 @@ export default class PluginsManager extends Manager {
   }
 
   private mountPlugin(pluginName: string) {
-    const currentDir = join(this.pluginDirectory, pluginName);
-    if (!statSync(currentDir).isDirectory()) {
-      Logger.warn(`${pluginName} is not a directory`);
-      return;
+    if (!this.pluginRegistry[pluginName]) {
+      this.registerPlugin(pluginName);
     }
-
-    const manifest = JSON.parse(readFileSync(join(currentDir, "manifest.json"), "utf8")) as PluginManifest;
-    if (!manifest || !manifest.name) {
-      Logger.warn(`${pluginName} has an invalid manifest`);
-      return;
-    }
-
-    if (!this.pluginRegistry[manifest.name]) {
-      this.registerPlugin(manifest.name);
-    }
-    this.plugins.push(manifest);
   }
 
   loadPlugins() {
