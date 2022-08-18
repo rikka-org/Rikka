@@ -1,11 +1,11 @@
 import basePlatform from "./basePlatform";
 
 export default class linux extends basePlatform {
-  private readonly shareDir = "/usr/share";
+  protected shareDir = "/usr/share";
 
-  private readonly optDir = "/opt";
+  protected optDir = "/opt";
 
-  private readonly flatpakDir = "/var/lib/flatpak/app/com.discordapp";
+  protected flatpakDir = "/var/lib/flatpak/app/com.discordapp";
 
   private readonly homeFlatpakDir = `${process.env.HOME}/.local/share/flatpak/app/com.discordapp`;
 
