@@ -35,7 +35,7 @@
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.33.1",
     "coffeescript": "^2.7.0",
-    "cpy-cli": "^4.1.0",
+    "cpy-cli": "^4.2.0",
     "eslint": "^8.21.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
