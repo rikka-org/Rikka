@@ -32,7 +32,7 @@
     "@types/node": "^18.7.13",
     "@types/prompt": "^1.1.2",
     "@types/react": "^18.0.17",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.33.1",
     "coffeescript": "^2.7.0",
     "cpy-cli": "^4.1.0",
