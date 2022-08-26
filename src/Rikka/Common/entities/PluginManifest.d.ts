@@ -7,7 +7,7 @@ type permissions = [string];
 
 type PluginManifest = {
     name: string;
-    description: string;
+    description?: string;
     author: author;
     license: string;
     version: string;

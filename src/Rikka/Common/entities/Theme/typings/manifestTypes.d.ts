@@ -1,7 +1,7 @@
 export type powercordManifest = {
     name: string;
     version: string;
-    description: string;
+    description?: string;
     theme: string,
     splashTheme?: string,
     author: string,

@@ -10,11 +10,12 @@ import SettingsManager from "./managers/SettingsManager";
 import { IPC_Consts } from "./API/Constants";
 import { APIManager } from "./managers/APIManager";
 import { RKApiTypings } from "./RKApi/apiTypings";
+import * as coremods from "./modules/coremods";
 
 export default class Rikka extends Updatable {
-  private styleManager = new StyleManager();
+  styleManager = new StyleManager();
 
-  private PluginManager = new PluginsManager();
+  PluginManager = new PluginsManager();
 
   settingsManager = new SettingsManager();
 
@@ -84,6 +85,8 @@ export default class Rikka extends Updatable {
     require("./modules/compilers");
 
     this.apiManager.init();
+
+    coremods.load();
 
     this.styleManager._loadThemes();
     this.styleManager._applyThemes();

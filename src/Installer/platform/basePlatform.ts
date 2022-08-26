@@ -29,6 +29,8 @@ export default abstract class basePlatform {
         }
       });
 
-      return finalpath! ?? "the fuck happened here";
+      if (!finalpath!) throw new Error("No valid discord install found");
+
+      return finalpath;
     }
 }

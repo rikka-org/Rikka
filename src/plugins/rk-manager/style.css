@@ -1,0 +1,33 @@
+/* Ensure Font Awesome icons doesn't get altered by a careless theme or */
+/* by Discord's font overrides for specific languages such as Japanese */
+.fab {
+  /* noinspection CssNoGenericFontName */
+  font-family: "Font Awesome 5 Brands" !important;
+}
+
+.fad {
+  /* noinspection CssNoGenericFontName */
+  font-family: "Font Awesome 5 Duotone" !important;
+}
+
+.fal, .far {
+  /* noinspection CssNoGenericFontName */
+  font-family: "Font Awesome 5 Pro" !important;
+}
+
+.fa, .fas {
+  /* noinspection CssNoGenericFontName */
+  font-family: "Font Awesome 5 Pro" !important;
+}
+
+/* Utility class */
+.rk-text {
+  color: var(--text-normal);
+}
+
+/* Modals */
+.rk-fake-modal-container {
+  width: auto !important;
+  max-width: initial !important;
+  min-height: initial !important;
+}

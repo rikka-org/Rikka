@@ -1,17 +1,10 @@
 /* eslint-disable no-console */
+import { AnsiEscapes } from "@rikka/API/Utils/strings/ansiCodes";
 import { existsSync } from "node:fs";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { join, sep } from "node:path";
 import { GetDiscordInstallPath } from "../Utils/AppFinder";
 import { switchToRoot } from "./su";
-
-const AnsiEscapes = {
-  RESET: "\x1b[0m",
-  BOLD: "\x1b[1m",
-  GREEN: "\x1b[32m",
-  YELLOW: "\x1b[33m",
-  RED: "\x1b[31m",
-};
 
 export async function InjectRikka(branch: string) {
   const discordInstall = GetDiscordInstallPath(branch);
@@ -25,6 +18,16 @@ export async function InjectRikka(branch: string) {
   if (!existsSync(discordInstall.path)) {
     await mkdir(discordInstall.path, { recursive: true })
       .catch((e) => { throw new Error(`${AnsiEscapes.BOLD}${AnsiEscapes.RED}Failed to create directory for Rikka! ${e}${AnsiEscapes.RESET}`); });
+  }
+
+  if (discordInstall.path.includes("flatpak")) {
+    const discordName = (discordInstall.path.includes("DiscordCanary") ? "DiscordCanary" : "Discord");
+    const command = `${discordInstall.needsElevation ? "sudo flatpak override" : "flatpak override --user"} com.discordapp.${discordName} --filesystem=${join(__dirname, "../../..")}`;
+
+    console.log(`${AnsiEscapes.YELLOW}NOTE:${AnsiEscapes.RESET} You seem to be using a flatpak install.`);
+    console.log("You will need to allow Discord access to Rikka's install directory.");
+    console.log(`You can do so by running this command: ${AnsiEscapes.YELLOW}${command}${AnsiEscapes.RESET}`);
+    console.log("Some features of Rikka may not work properly, such as auto updates.", "\n");
   }
 
   // Write a file to the Discord installation directory that calls a require() on the Rikka module.

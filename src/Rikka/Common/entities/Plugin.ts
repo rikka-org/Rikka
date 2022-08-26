@@ -1,4 +1,6 @@
 import { Store } from "@rikka/API/storage";
+import { createElement } from "@rikka/API/Utils/DOM";
+import { getCompiler } from "@rikka/modules/compilers";
 import { readFileSync } from "fs";
 import Updatable from "./Updatable";
 
@@ -23,6 +25,7 @@ export default abstract class RikkaPlugin extends Updatable {
 
   constructor() {
     super();
+
     this.settings = new Store(this.id);
   }
 
@@ -82,10 +85,19 @@ export default abstract class RikkaPlugin extends Updatable {
    * Convenience function that loads a stylesheet, and keeps track of it for you.
   */
   protected loadStyleSheet(file: string) {
-    const styleCode = readFileSync(file);
+    const CompilerModule = getCompiler(file);
+    const compiler = new CompilerModule(file);
+    const styleCode = compiler.doCompilation();
 
-    const style = document.createElement("style");
-    style.innerHTML = styleCode.toString();
+    const id = Math.random().toString(36).slice(2);
+    const style = createElement("style", {
+      id: `style-rkplugin-${id}`,
+      "data-rk": true,
+      "data-rkplugin": true,
+    });
+
     document.head.appendChild(style);
+    style.innerHTML = styleCode;
+    return id;
   }
 }

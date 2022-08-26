@@ -5,11 +5,14 @@ node_modules
 
 /src/plugins/*
 !/src/plugins/rk-*
+/src/addons/*
+!/src/addons/plugins/rk-*
 
 /src/themes/*
 !/src/themes/rk-*
 
 !*.exists
+!*.gitkeep
 /settings
 /storage
 /docs

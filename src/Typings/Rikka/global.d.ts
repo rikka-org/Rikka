@@ -6,11 +6,11 @@ declare global {
     const RikkaNative: any;
     const $rk: Rikka;
     interface Window extends discordWindow {
-        __SPLASH__: boolean;
         $rk: Rikka;
         rikka: Rikka;
         webContents: {
             _rikkaPreload: any
         }
+        __$$DoNotTrackCache?: { [ key: string ]: any};
     }
 }

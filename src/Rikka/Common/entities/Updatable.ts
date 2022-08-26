@@ -19,7 +19,9 @@ export default class Updatable extends Events {
     commit: "",
   };
 
-  protected id: string = this.constructor.name;
+  id: string = this.constructor.name;
+
+  path?: string;
 
   constructor() {
     super();

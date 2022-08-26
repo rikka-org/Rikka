@@ -1,6 +1,6 @@
 import { getModule, getModuleByDisplayName } from "@rikka/API/webpack";
 import { Nullable } from "@rikka/API/typings";
-import React from "@rikka/API/pkg/React";
+import * as React from "react";
 
 export type componentFilter = Function | string;
 

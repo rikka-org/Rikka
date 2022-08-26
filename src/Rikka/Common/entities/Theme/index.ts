@@ -3,6 +3,7 @@ import { getCompiler } from "@rikka/modules/compilers";
 import Compiler from "@rikka/modules/compilers/compiler";
 import { existsSync, readFileSync, statSync } from "fs";
 import { join } from "path";
+import { startCase } from "lodash";
 import { powercordManifest, rikkaManifest, vizalityManifest } from "./typings/manifestTypes";
 import Updatable from "../Updatable";
 
@@ -16,6 +17,8 @@ export default class Theme extends Updatable {
   private compiler: Compiler;
 
   applied = false;
+
+  enabled: boolean = false;
 
   private htmlElement?: HTMLStyleElement;
 
@@ -46,12 +49,19 @@ export default class Theme extends Updatable {
       }
     } else this.file = file;
 
+    this.path = file;
+
     const Compiler = getCompiler(this.file);
     this.compiler = new Compiler(this.file);
+
+    this.id = this.themeManifest?.name ?? file.split("/").pop() ?? this.constructor.name;
   }
 
   async _load() {
     if (this.applied) return;
+
+    this.applied = true;
+    this.enabled = true;
 
     this.cssCode = this.compiler.doCompilation();
     const style = createElement("style", {
@@ -70,5 +80,6 @@ export default class Theme extends Updatable {
 
     document.head.removeChild(this.htmlElement);
     this.applied = false;
+    this.enabled = false;
   }
 }

@@ -1,0 +1,9 @@
+{
+  "name": "Rikka Plugin manager",
+  "description": "The main menu for managing Rikka.",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "author": {
+    "name": "Rikka team"
+  }
+}

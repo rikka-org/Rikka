@@ -1,0 +1,17 @@
+{
+  "RK_PLUGINS": "Plugins",
+  "RK_PLUGINS_DIR": "Open plugins directory",
+  "RK_PLUGINS_FOLDER": "Open folder",
+  "RK_PLUGINS_REPO": "Repository",
+  "RK_PLUGINS_INSTALLED": "Installed Plugins",
+  "RK_PLUGINS_STORE": "Store",
+  "RK_PLUGINS_STORE_ADD_REPO": "Add a store repository",
+  "RK_PLUGINS_LOAD_NEW": "Load new plugins",
+  "RK_PLUGINS_LOAD_NEW_SUCCESS": "Successfully loaded {pluginCount} new plugin{s}",
+  "RK_SETTINGS_CLEAR_CACHE": "Clear Rikka cache",
+  "RK_SETTINGS_CLEAR_CACHE_DESC": "Clears out Rikka's cache. Next restart will feel slower as most plugins and themes will have to be recompiled.",
+  "RK_SETTINGS_REBUILD_ALL": "Rebuild all",
+  "RK_SETTINGS_REBUILD_ALL_DESC": "Rebuilds Rikka. This may fix issues with core components of Rikka.",
+  "RK_SETTINGS_REBUILD_STATUS": "Rebuilding Rikka: {filesBuilt}/{filesTotal}",
+  "RK_SETTINGS_DISCORD_EXPERIMENTS": "Activate Discord experiments"
+}

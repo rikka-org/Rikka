@@ -12,7 +12,7 @@ export default class TSX extends Compiler {
   compile() {
     const tsx = readFileSync(this.file, "utf8");
     return transform(tsx, {
-      transforms: ["jsx", "typescript"],
+      transforms: ["jsx", "typescript", "imports"],
       filePath: this.file,
     }).code;
   }

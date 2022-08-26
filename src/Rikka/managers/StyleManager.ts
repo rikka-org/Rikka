@@ -6,7 +6,7 @@ import Manager from "./Manager";
 export default class StyleManager extends Manager {
   themes: Map<string, Theme> = new Map();
 
-  private static readonly themesDirectory = resolve(__dirname, "..", "..", "themes");
+  private static readonly themesDirectory = resolve(__dirname, "../../../addons/themes");
 
   applyTheme(theme: Theme) {
     theme._load();
@@ -32,7 +32,7 @@ export default class StyleManager extends Manager {
   }
 
   _loadThemes() {
-    readdirSync(StyleManager.themesDirectory).filter((file) => !file.endsWith(".exists")).forEach((file) => {
+    readdirSync(StyleManager.themesDirectory).filter((file) => !file.startsWith(".")).forEach((file) => {
       const filePath = resolve(StyleManager.themesDirectory, file);
       this._loadTheme(file, filePath);
     });

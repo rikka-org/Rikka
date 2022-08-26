@@ -4,6 +4,7 @@ import { Logger } from "@rikka/API/Utils/logger";
 import { Store } from "@rikka/API/storage";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import { Nullable } from "@rikka/API/typings";
+import { getCompiler } from "@rikka/modules/compilers";
 import Manager from "./Manager";
 
 type pluginStatus = {
@@ -21,11 +22,11 @@ export default class PluginsManager extends Manager {
   /**
    * A map of plugin instances by name.
   */
-  private pluginInstances: Map<string, RikkaPlugin> = new Map();
+  pluginInstances: Map<string, RikkaPlugin> = new Map();
 
   private preferencesStore = new Store("pluginmanager");
 
-  private pluginRegistry: { [key: string]: pluginStatus };
+  pluginRegistry: { [key: string]: pluginStatus };
 
   private preload: boolean;
 
@@ -69,6 +70,7 @@ export default class PluginsManager extends Manager {
       if (pluginInstance.enabled) return;
 
       pluginInstance.Manifest = manifest;
+      pluginInstance.path = currentDir;
       this.pluginInstances.set(pluginName, pluginInstance);
       if (this.preload) {
         pluginInstance._preload();
@@ -125,17 +127,23 @@ export default class PluginsManager extends Manager {
     };
   }
 
-  private mountPlugin(pluginName: string) {
+  private mount(pluginName: string) {
     if (!this.pluginRegistry[pluginName]) {
       this.registerPlugin(pluginName);
     }
   }
 
+  isInstalled(id: string) {
+    return this.pluginInstances.has(id);
+  }
+
   loadPlugins() {
-    readdirSync(this.pluginDirectory).forEach((file) => {
-      this.mountPlugin(file);
-      this.loadPlugin(file);
-    });
+    readdirSync(this.pluginDirectory)
+      .filter((file) => !file.startsWith("."))
+      .forEach((file) => {
+        this.mount(file);
+        this.loadPlugin(file);
+      });
 
     this.preferencesStore.save();
   }
@@ -154,6 +162,6 @@ export default class PluginsManager extends Manager {
   }
 
   static getPluginDirectory() {
-    return resolve(__dirname, "..", "..", "plugins");
+    return resolve(__dirname, "../../plugins");
   }
 }
