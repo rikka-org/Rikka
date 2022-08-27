@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { DiscordPath } from "../typings/discordPath";
 import linux from "./linux";
 

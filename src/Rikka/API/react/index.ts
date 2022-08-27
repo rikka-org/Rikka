@@ -152,6 +152,7 @@ patch("rk-react-components-createelement", React, "createElement", ([component]:
   return res;
 });
 
+// eslint-disable-next-line func-names
 React.Component.prototype.componentWillUnmount = function () {
   setComponent(this.constructor);
 };

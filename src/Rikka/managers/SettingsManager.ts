@@ -8,13 +8,15 @@ export type SettingsPage = {
 }
 
 /**
- * @description Public API that plugins can use to access store and retrieve their settings.
+ * Public API that plugins can use to access store and retrieve their settings.
 */
 export default class SettingsManager {
+  /** @deprecated */
   settings: Map<string, SettingsCategory> = new Map();
 
   settingsTabs: { [key: string]: SettingsPage } = {};
 
+  /** @deprecated */
   registerSetting(id: string, category: SettingsCategory) {
     this.settings.set(id, category);
   }
