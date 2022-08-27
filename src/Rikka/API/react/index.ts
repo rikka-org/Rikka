@@ -2,27 +2,35 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable no-restricted-syntax */
-import React from 'react';
-import { patch } from '../patcher';
-import { getOwnerInstance } from '../Utils/React';
-import { waitForElement } from '../Utils/DOM';
-import { getModule } from '../webpack';
-import Logger from '../Utils/logger';
+import React from "react";
+import { patch } from "../patcher";
+import { getOwnerInstance } from "../Utils/React";
+import { waitForElement } from "../Utils/DOM";
+import { getModule } from "../webpack";
+import { Logger } from "../Utils";
 
-export const knownComponents = new Map();
-export const unknownComponents = new Set();
-export const listeners = new Set();
+export const knownComponents: Map<any, any> = new Map();
+export const unknownComponents: Set<any> = new Set();
+export const listeners: Set<any> = new Set();
 
 export class ReactComponent {
-  constructor(component, selector, filter, displayName) {
+  component: React.Component;
+
+  selector: any;
+
+  filter: any;
+
+  displayName: string;
+
+  constructor(component: React.Component, selector: any, filter: any, displayName: string) {
     this.component = component;
     this.selector = selector;
     this.filter = filter;
     this.displayName = displayName;
   }
 
-  forceUpdateAll() {
-    if (!this.selector || !this.selector.startsWith('.')) return false;
+  forceUpdateAll(): any {
+    if (!this.selector || !this.selector.startsWith(".")) return false;
     document.querySelectorAll(this.selector).forEach((node) => {
       const instance = getOwnerInstance(node);
       if (!instance) return;
@@ -31,11 +39,11 @@ export class ReactComponent {
   }
 }
 
-export const addComponentWithName = (component) => {
+export const addComponentWithName = (component: any) => {
   if (!knownComponents.get(component.displayName)) {
     if (!(component instanceof ReactComponent)) {
       // eslint-disable-next-line no-multi-assign
-      component = component = new ReactComponent(component, null, (m) => m.displayName === name, component.displayName);
+      component = component = new ReactComponent(component, null, (m: any) => m.displayName === name, component.displayName);
     }
 
     knownComponents.set(component.displayName, component);
@@ -48,7 +56,7 @@ export const addComponentWithName = (component) => {
   }
 };
 
-export const addComponentWithoutName = (component) => {
+export const addComponentWithoutName = (component: any) => {
   if (unknownComponents.has(component)) return;
   for (const listener of listeners) {
     if (!listener.filter || !listener.filter(component)) continue;
@@ -60,29 +68,29 @@ export const addComponentWithoutName = (component) => {
   if (!component.displayName) unknownComponents.add(component);
 };
 
-export const setComponent = (component) => {
-  if (typeof component !== 'function') return;
+export const setComponent = (component: any) => {
+  if (typeof component !== "function") return;
   if (component.displayName || component.name?.length > 2) {
     component.displayName = component.displayName || component.name;
     addComponentWithName(component);
   } else addComponentWithoutName(component);
 };
 
-export const findComponent = (filter) => {
-  const wrapFilter = (com) => {
+export const findComponent = (filter: any) => {
+  const wrapFilter = (com: any) => {
     try {
       return filter(com);
     } catch { return false; }
   };
 
-  for (const component of unknownComponents) if (wrapFilter(component)) return new ReactComponent(component, null, filter, null);
-  for (const { component } of knownComponents) if (wrapFilter(component)) return component;
+  for (const component of unknownComponents) if (wrapFilter(component)) return new ReactComponent(component, null, filter, null as any);
+  for (const { component } of knownComponents as any) if (wrapFilter(component)) return component;
 };
 
 // eslint-disable-next-line no-async-promise-executor
-export const getComponentBySelector = (selector) => new Promise(async (res) => {
-  const timeout = setTimeout(() => Logger.warn({ labels: ['react-components'], message: `Component with selector '${selector}' was not found after 20 seconds.` }), 20000);
-  const resolve = (component) => {
+export const getComponentBySelector = (selector: any) => new Promise(async (res) => {
+  const timeout = setTimeout(() => Logger.warn({ labels: ["react-components"], message: `Component with selector '${selector}' was not found after 20 seconds.` }), 20000);
+  const resolve = (component: any) => {
     clearTimeout(timeout);
     return res(component);
   };
@@ -99,9 +107,9 @@ export const getComponentBySelector = (selector) => new Promise(async (res) => {
 });
 
 // eslint-disable-next-line default-param-last
-export const getComponent = (displayName = '', selector, filter = (m) => m.displayName === displayName) => {
-  if (typeof displayName !== 'string') return false;
-  const wrapFilter = (comp) => {
+export const getComponent = (displayName = "", selector: any, filter = (m: any) => m.displayName === displayName) => {
+  if (typeof displayName !== "string") return false;
+  const wrapFilter = (comp: any) => {
     try {
       return filter(comp);
     } catch { return false; }
@@ -118,7 +126,7 @@ export const getComponent = (displayName = '', selector, filter = (m) => m.displ
       // eslint-disable-next-line no-continue
       if (!wrapFilter(component)) continue;
       unknownComponents.delete(component);
-      component = new ReactComponent(component, selector ?? null, filter, displayName);
+      component = new ReactComponent(component as any, selector ?? null, filter, displayName);
       resolve(component);
       return knownComponents.set(displayName, component);
     }
@@ -127,7 +135,7 @@ export const getComponent = (displayName = '', selector, filter = (m) => m.displ
     };
     listeners.add(listener);
     if (selector) {
-      getComponentBySelector(selector).then((component) => {
+      getComponentBySelector(selector).then((component: any) => {
         listeners.delete(listener);
         if (component.displayName === displayName) resolve(component);
         addComponentWithName(component);
@@ -137,9 +145,9 @@ export const getComponent = (displayName = '', selector, filter = (m) => m.displ
 };
 
 /* Patches */
-patch('rk-react-components-createelement', React, 'createElement', ([component], res) => {
-  if (typeof component === 'function') setComponent(component);
-  if (typeof component?.type === 'function') setComponent(component.type);
+patch("rk-react-components-createelement", React, "createElement", ([component]: any, res: any) => {
+  if (typeof component === "function") setComponent(component);
+  if (typeof component?.type === "function") setComponent(component.type);
 
   return res;
 });
@@ -148,16 +156,16 @@ React.Component.prototype.componentWillUnmount = function () {
   setComponent(this.constructor);
 };
 
-patch('rk-react-components-component-clone_element', React, 'cloneElement', ([component], res) => {
-  if (typeof component === 'function') setComponent(component);
-  if (typeof component?.type === 'function') setComponent(component.type);
+patch("rk-react-components-component-clone_element", React, "cloneElement", ([component]: any, res: any) => {
+  if (typeof component === "function") setComponent(component);
+  if (typeof component?.type === "function") setComponent(component.type);
 
   return res;
 });
 
-getModule((m) => {
+getModule((m: any) => {
   try {
-    if (typeof m === 'function' && m.toString().indexOf('createElement') > -1) setComponent(m);
+    if (typeof m === "function" && m.toString().indexOf("createElement") > -1) setComponent(m);
   } catch {
     Logger.error("Couldn't patch createElement");
   }
