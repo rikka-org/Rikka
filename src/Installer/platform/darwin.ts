@@ -23,18 +23,9 @@ export default class darwin extends basePlatform {
     },
   ];
 
-  readonly devPaths = [
-    {
-      path: "/Applications/Discord Development.app/Contents",
-      needsElevation: true,
-    },
-  ];
-
   readonly paths = {
     canary: this.canaryPaths,
     ptb: this.ptbPaths,
     stable: this.stablePaths,
-    dev: this.devPaths,
-    development: this.devPaths,
   };
 }
