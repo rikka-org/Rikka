@@ -8,8 +8,6 @@ export default abstract class basePlatform {
 
     readonly abstract stablePaths: DiscordPath[];
 
-    readonly abstract devPaths: DiscordPath[];
-
     readonly abstract paths: { [key: string]: DiscordPath[] };
 
     /** Finds the Discord installation path based on platform. */
