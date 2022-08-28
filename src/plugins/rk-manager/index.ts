@@ -10,12 +10,12 @@ export default class RkManager extends RikkaPlugin {
     this.loadStyleSheet(join(__dirname, "style.css"));
     this.loadStyleSheet(join(__dirname, "scss/style.scss"));
 
-    $rk.settingsManager.registerSettings("rk-manager-plugins", {
+    $rk.settingsManager.registerSettings("core-manager-plugins", {
       category: "moduleManager",
       label: "Plugins",
       render: () => React.createElement(Plugins),
     });
-    $rk.settingsManager.registerSettings("rk-manager-themes", {
+    $rk.settingsManager.registerSettings("core-manager-themes", {
       category: "moduleManager",
       label: "Themes",
       render: () => React.createElement(Themes),

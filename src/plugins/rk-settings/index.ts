@@ -1,7 +1,6 @@
 import AsyncComponent from "@rikka/API/components/AsyncComponent";
 import { patch } from "@rikka/API/patcher";
-import { SettingsCategory } from "@rikka/API/settings";
-import { getModule, getModuleByDisplayName } from "@rikka/API/webpack";
+import { getModuleByDisplayName } from "@rikka/API/webpack";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
 import { join } from "path";
 import React from "react";
@@ -36,20 +35,23 @@ function _makeSection(tabId: string) {
   };
 }
 
+function isCoreSetting(name: string) {
+  return name.startsWith("core-");
+}
+
 export default class rkSettings extends RikkaPlugin {
   inject() {
-    // this.enableExperiments();
     this.patchSettingsMenu();
   }
 
   private async patchSettingsMenu() {
-    $rk.settingsManager.registerSettings("rk-general", {
+    $rk.settingsManager.registerSettings("core-general", {
       category: "rk-general",
       label: () => "General",
       render: () => React.createElement(GeneralSettings),
     });
 
-    this.loadStyleSheet(join(__dirname, "scss", "style.scss"));
+    this.loadStyleSheet(join(__dirname, "scss/style.scss"));
 
     const SettingsView = (await getModuleByDisplayName("SettingsView"));
     patch("rk-settings-items", SettingsView.prototype, "getPredicateSections", (_: any, sections: any) => {
@@ -58,13 +60,26 @@ export default class rkSettings extends RikkaPlugin {
       }
       const changelog = sections.find((c: any) => c.section === "changelog");
       if (changelog) {
-        const settingsSections = Object.keys($rk.settingsManager.settingsTabs).map((s) => _makeSection(s));
+        const coreSections = Object.keys($rk.settingsManager.settingsTabs)
+          .filter((s) => isCoreSetting(s))
+          .map((s) => _makeSection(s));
+
+        const settingsSections = Object.keys($rk.settingsManager.settingsTabs)
+          .filter((s) => !isCoreSetting(s))
+          .map((s) => _makeSection(s));
+
         sections.splice(
           sections.indexOf(changelog),
           0,
           {
             section: "HEADER",
             label: "Rikka",
+          },
+          ...coreSections,
+          { section: "DIVIDER" },
+          {
+            section: "HEADER",
+            label: "Rikka Plugin Settings",
           },
           ...settingsSections,
           { section: "DIVIDER" },
