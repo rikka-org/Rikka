@@ -2,8 +2,6 @@ import { ipcRenderer } from "electron";
 import PluginsManager from "./managers/Plugins";
 import StyleManager from "./managers/StyleManager";
 import { saveToFile } from "./API/Utils/logger";
-// @ts-ignore -- FluxDispatcher is added at runtime
-// eslint-disable-next-line import/named
 import { getAllModules, init as initWebpackModules, FluxDispatcher } from "./API/webpack";
 import Updatable from "./Common/entities/Updatable";
 import SettingsManager from "./managers/SettingsManager";

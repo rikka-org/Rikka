@@ -8,11 +8,10 @@
  * Mostly taken from Replugged, but with some modifications and improvements.
 */
 
+import * as react from "react";
 import { Logger, sleep } from "../Utils";
 import { wpModule } from "./typings/wp_module";
 import moduleFilters from "./modules.json";
-import { extraModules } from "./typings/extraModules";
-import otherModules from "./extraModules.json";
 
 type filter = (m: any) => boolean;
 
@@ -206,3 +205,7 @@ export const findComponent = (keyword: string, precise: boolean = false) => {
  * If you're looking for something like that, use getModules instead.
  * */
 export const getAllModules = () => getModules((m: any) => m);
+
+export declare const FluxDispatcher: any;
+
+export declare const React: typeof react;
