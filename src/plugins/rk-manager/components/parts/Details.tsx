@@ -1,5 +1,5 @@
 import { Tooltip } from "@rikka/API/components";
-import { Tag, Scale, Person } from "@rikka/API/components/settings";
+import { Tag, Scale, Person } from "@rikka/API/components/icons";
 import * as React from "react";
 
 export interface DetailsProps {
