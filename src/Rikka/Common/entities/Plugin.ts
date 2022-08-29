@@ -26,7 +26,11 @@ export default abstract class RikkaPlugin extends Updatable {
   constructor() {
     super();
 
-    this.settings = new Store(this.id);
+    this.settings = new Store(this.id, {
+      autoSave: true,
+    });
+
+    this.settings.load();
   }
 
   /**

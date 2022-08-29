@@ -1,13 +1,20 @@
 import { storeLocation } from "@rikka/API/Constants";
-import { Logger } from "@rikka/API/Utils";
 import {
   existsSync, mkdirSync, readFileSync, rmdirSync, writeFileSync,
 } from "fs";
 import { join } from "path";
 import { copy } from "fs-extra";
 
-export class Store {
-  private data: { [key: string]: any } = {};
+export type storeOptions = {
+  autoSave?: boolean,
+  workingDirectory?: string
+}
+
+/**
+ * An easy way to work with JSON.
+ */
+export class Store<T = any> {
+  private data: { [key: string]: T } = {};
 
   private hooks: { [key: string]: any } = {};
 
@@ -15,18 +22,25 @@ export class Store {
 
   readonly workingDirectory: string;
 
-  constructor(storeName: string) {
-    this.storeName = storeName;
-    this.workingDirectory = join(storeLocation, this.storeName);
+  private autoSave: boolean;
 
-    if (!existsSync(this.workingDirectory)) { mkdirSync(this.workingDirectory, { recursive: true }); }
+  constructor(storeName: string, options?: storeOptions) {
+    this.storeName = storeName;
+    this.workingDirectory = options?.workingDirectory ?? join(storeLocation, this.storeName);
+    this.autoSave = !!options?.autoSave;
+
+    if (!existsSync(this.workingDirectory)) {
+      mkdirSync(this.workingDirectory, { recursive: true });
+    }
   }
 
-  get(key: string) {
-    return this.data[key];
+  get<V = undefined>(key: string, fallback?: V) {
+    return this.data[key] || fallback as V;
   }
 
   set(key: string, value: any) {
+    if (this.autoSave) this.save();
+
     this.data[key] = value;
   }
 
@@ -62,7 +76,9 @@ export class Store {
   }
 
   saveToFile(file: string) {
-    if (!existsSync(this.workingDirectory)) { mkdirSync(this.workingDirectory, { recursive: true }); }
+    if (!existsSync(this.workingDirectory)) {
+      mkdirSync(this.workingDirectory, { recursive: true });
+    }
 
     const storeFile = join(this.workingDirectory, file);
 

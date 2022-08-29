@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from "fs";
-import { join, resolve } from "path";
+import { join } from "path";
 import { Logger } from "@rikka/API/Utils/logger";
 import { Store } from "@rikka/API/storage";
 import RikkaPlugin from "@rikka/Common/entities/Plugin";
@@ -8,25 +8,27 @@ import { getCompiler } from "@rikka/modules/compilers";
 import Manager from "./Manager";
 
 type pluginStatus = {
-    enabled: boolean;
-    dateAdded: Date;
+  enabled: boolean;
+  dateAdded: Date;
 }
+
+type registry = { [key: string]: pluginStatus }
 
 /**
  * The main plugin manager for Rikka.
  * @param preload Whether to put the plugins in preload mode.
 */
 export default class PluginsManager extends Manager {
-  readonly pluginDirectory: string = PluginsManager.getPluginDirectory();
+  readonly pluginDirectory = join(__dirname, "../../plugins");
 
   /**
    * A map of plugin instances by name.
   */
   pluginInstances: Map<string, RikkaPlugin> = new Map();
 
-  private preferencesStore = new Store("pluginmanager");
+  private preferencesStore = new Store<registry>("pluginmanager");
 
-  pluginRegistry: { [key: string]: pluginStatus };
+  pluginRegistry: registry;
 
   private preload: boolean;
 
@@ -38,11 +40,7 @@ export default class PluginsManager extends Manager {
     Logger.log(`Using plugins directory: ${this.pluginDirectory}`);
     this.preferencesStore.load();
 
-    const pluginRegistry = this.preferencesStore.get("pluginRegistry");
-    if (!pluginRegistry) {
-      this.preferencesStore.set("pluginRegistry", {});
-    }
-    this.pluginRegistry = this.preferencesStore.get("pluginRegistry");
+    this.pluginRegistry = this.preferencesStore.get("pluginRegistry", {} as registry);
   }
 
   /**
@@ -159,9 +157,5 @@ export default class PluginsManager extends Manager {
     this.pluginInstances.forEach((plugin) => {
       this.unloadPlugin(plugin);
     });
-  }
-
-  static getPluginDirectory() {
-    return resolve(__dirname, "../../plugins");
   }
 }
