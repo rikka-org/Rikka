@@ -9,6 +9,7 @@ import { IPC_Consts } from "./API/Constants";
 import { APIManager } from "./managers/APIManager";
 import { RKApiTypings } from "./RKApi/apiTypings";
 import * as coremods from "./modules/coremods";
+import { RikkaNative } from "./IPC/renderer";
 
 export default class Rikka extends Updatable {
   styleManager = new StyleManager();
@@ -58,7 +59,7 @@ export default class Rikka extends Updatable {
       await this.ensureWebpackModules();
     } catch (e) {
       this.error(`Something went critically wrong with Rikka's startup function!\n${e}`);
-      ipcRenderer.invoke(IPC_Consts.SHOW_DIALOG, ({
+      RikkaNative.showDialog(({
         title: "Rikka",
         type: "error",
         message: "Rikka has encountered a serious error and will now close. Please report this issue to the developers.",

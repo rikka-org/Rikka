@@ -3,7 +3,6 @@ import { discordWindow } from "Typings/Discord/discordWindow";
 import StyleManager from "../../Rikka/managers/StyleManager";
 
 declare global {
-    const RikkaNative: any;
     const $rk: Rikka;
     interface Window extends discordWindow {
         $rk: Rikka;

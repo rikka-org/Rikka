@@ -3,10 +3,13 @@ import { IPC_Consts } from "@rikka/API/Constants";
 
 if (!ipcRenderer) throw new Error("Renderer process not found");
 
-// Powercord-like interface for RikkaNative wrapper
+/**
+ * Powercord-like interface for RikkaNative wrapper
+ * Mainly here to make it easier for compat layers
+ * such as Topaz to replicate IPC.
+ * */
 
-// @ts-ignore
-global.RikkaNative = {
+export const RikkaNative = {
   openDevTools(opts: Electron.OpenDevToolsOptions, window: BrowserWindow) {
     return ipcRenderer.invoke(IPC_Consts.OPEN_DEVTOOLS, opts, window);
   },
@@ -21,6 +24,10 @@ global.RikkaNative = {
 
   clearCache() {
     return ipcRenderer.invoke(IPC_Consts.CLEAR_CACHE);
+  },
+
+  showDialog(params: Electron.MessageBoxSyncOptions) {
+    return ipcRenderer.invoke(IPC_Consts.SHOW_DIALOG, params);
   },
 
   __compileSass(file: any) {
