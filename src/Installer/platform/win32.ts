@@ -22,10 +22,18 @@ export default class win32 extends basePlatform {
     },
   ];
 
+  readonly devPaths = [
+    {
+      path: join(process.env.LOCALAPPDATA ?? "", "DiscordDevelopment"),
+    },
+  ];
+
   readonly paths: { [key: string]: DiscordPath[] } = {
     canary: this.canaryPaths,
     ptb: this.ptbPaths,
     stable: this.stablePaths,
+    dev: this.devPaths,
+    development: this.devPaths,
   };
 
   /** Finds the Discord installation path based on platform. */

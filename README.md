@@ -12,7 +12,7 @@ While most client mods are open source, some are not licensed in such a way that
 - Then, you'll need to download Node.js and Git. For Ubuntu users, please do not download Node.js from the official repositories because it has a very outdated version of Node.js. Instead, follow this guide on how to download the latest and greatest Node.js. (https://github.com/nodesource/distributions#debinstall)
 - Then, you open up your terminal/cmd and run `git clone https://github.com/V3L0C1T13S/Rikka`. Oh, and if you're on Windows, please do **NOT** open the cmd or PowerShell as admin. It is not recommended at all to save the Rikka folder onto the System32 folder. 
 - Then, you run `cd Rikka`, and then run `npm i`. This will install the dependencies for Rikka to work.
-- Then you run `npm run rikka:install (version)`. This will compile and inject Rikka onto your Discord client. Also make sure to type the version of the Discord client you're using. e.g. If you're using Discord stable, use `stable`. Full command: `npm run rikka:install stable`. Rikka supports every official client version (Stable, Canary, and PTB). 
+- Then you run `npm run rikka:install (version)`. This will compile and inject Rikka onto your Discord client. Also make sure to type the version of the Discord client you're using. e.g. If you're using Discord stable, use `stable`. Full command: `npm run rikka:install stable`. Rikka supports every official client version (Stable, Canary, PTB, and Development). 
  - Fully close your Discord client and reopen it, and Rikka has been injected.
 
 ## Help
