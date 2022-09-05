@@ -40,7 +40,7 @@ export default class PluginsManager extends Manager {
     Logger.log(`Using plugins directory: ${this.pluginDirectory}`);
     this.preferencesStore.load();
 
-    this.pluginRegistry = this.preferencesStore.get("pluginRegistry", {} as registry);
+    this.pluginRegistry = this.preferencesStore.get("pluginRegistry", {});
   }
 
   /**

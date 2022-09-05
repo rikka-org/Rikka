@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-class-members */
 import { storeLocation } from "@rikka/API/Constants";
 import {
   existsSync, mkdirSync, readFileSync, rmdirSync, writeFileSync,
@@ -34,8 +35,10 @@ export class Store<T = any> {
     }
   }
 
-  get<V = undefined>(key: string, fallback?: V) {
-    return this.data[key] || fallback as V;
+  get<F>(key: string, fallback?: F): F extends undefined ? undefined : F
+
+  get<F>(key: string, fallback?: F) {
+    return this.data[key] || fallback;
   }
 
   set(key: string, value: any) {

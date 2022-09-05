@@ -9,6 +9,7 @@ import { docFixCallbacks, registerCallback } from "@rikka/modules/util/preloadTi
 // Initializing Rikka loader
 import Rikka from "@rikka/index";
 import { setGlobal } from "@rikka/API/Utils/globals";
+import { RikkaNative } from "@rikka/IPC/renderer";
 
 function fixDocument() {
   let getI = 0;
@@ -78,7 +79,7 @@ if (process.platform === "darwin" && !process.env.PATH?.includes("/usr/local/bin
   process.env.PATH += ":/usr/local/bin";
 }
 
-const discordPreload = ipcRenderer.sendSync(IPC_Consts.GET_PRELOAD);
+const discordPreload = RikkaNative.getPreload();
 if (discordPreload) {
   // @ts-ignore
   process._linkedBinding("electron_common_command_line").appendSwitch("preload", discordPreload);

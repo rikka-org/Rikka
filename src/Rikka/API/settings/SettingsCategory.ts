@@ -23,7 +23,7 @@ export class SettingsCategory {
     this.description = description;
 
     this.settingsStore = settingsStore;
-    const settings = this.settingsStore.get(name);
+    const settings = this.settingsStore.get(name, new Map());
 
     if (settings) {
       this.settings = settings;

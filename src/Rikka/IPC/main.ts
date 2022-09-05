@@ -6,10 +6,6 @@ import {
 
 if (!ipcMain) throw new Error("Main process not found");
 
-function getChromiumFlags() {
-
-}
-
 function createHeadersHook(e: Electron.IpcMainInvokeEvent, name: string, code: string) {
   // electron.session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders }, done) => eval(code)({ responseHeaders }, done));
 }
@@ -32,6 +28,5 @@ ipcMain.handle(IPC_Consts.CLEAR_CACHE, clearCache);
 ipcMain.handle(IPC_Consts.__COMPILE_SASS, compileSass);
 ipcMain.handle(IPC_Consts.GET_WINDOW_MAXIMIZED, (e) => BrowserWindow.fromWebContents(e.sender)?.isMaximized());
 // eslint-disable-next-line no-return-assign
-ipcMain.on(IPC_Consts.GET_CHROMIUM_FLAGS, (e) => e.returnValue = getChromiumFlags());
 ipcMain.handle(IPC_Consts.ADD_HEADER_HOOK, createHeadersHook);
 ipcMain.handle(IPC_Consts.SHOW_DIALOG, showDialog);
