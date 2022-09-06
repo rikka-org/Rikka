@@ -1,4 +1,4 @@
-import RikkaPlugin from "@rikka/Common/entities/Plugin";
+import { RikkaPlugin } from "@rikka/Common/entities";
 import { join } from "path";
 import React from "react";
 import { Plugins } from "./components/managers/Plugins";

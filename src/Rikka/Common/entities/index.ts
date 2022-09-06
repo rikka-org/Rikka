@@ -1,4 +1,4 @@
 export * from "./API";
-export * from "./Updatable";
-export * from "./Plugin";
-export * from "./Theme";
+export { default as Updatable } from "./Updatable";
+export { default as RikkaPlugin } from "./Plugin";
+export { default as Theme } from "./Theme";
