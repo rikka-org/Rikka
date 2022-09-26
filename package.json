@@ -58,7 +58,7 @@
     "lodash": "^4.17.21",
     "react": "^18.1.0",
     "react-is": "^18.2.0",
-    "sass": "^1.54.0",
+    "sass": "^1.55.0",
     "sucrase": "^3.24.0",
     "sudo-prompt": "^9.2.1",
     "typescript": "^4.7.4"
