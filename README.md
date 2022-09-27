@@ -3,6 +3,33 @@
 
 Rikka is a fast, powerful, and extendable Discord modification. It can load plugins, manage plugins, and features a rich API.
 
+## Status: BROKEN
+With Discord switching their compiler from Babel to SWC, I've decided to abandon this project until a solution is found. If you're still interested, and want to try Rikka out anyways, you can download an older version of Discord using [this guide](https://gist.github.com/mugman174/0a59efe2733407d2041449a0e5815d66).
+You can also try to hack up your own fix, I've written a basic guide that should help you get started with the codebase below.
+
+### Working with the code
+#### Before we begin...
+I'll be honest with you so we can avoid another Vizality vs Powercord situation, most of Rikka's UI components are from Replugged. You can tell just by going into `src/Rikka/API/components`. 
+
+The Webpack code is very clearly taken from Replugged, and adapted to Typescript. A code comment at the top even says so.
+
+The patcher API is a modified version of Vizality's patcher, again adapted to Typescript, although it has some Replugged code snippets in it as well.
+
+The plugin and theme manager UI's are also adapted versions of Replugged's. However, the plugin and theme managers themselves are original.
+
+There's a whole mix of different code snippets inside Rikka, that I'm sure I forgot about in the past couple of months I took off this project, but those are the ones I remember the most clearly. Now that we've got that out of the way, if you'd like to continue with hacking up your own code, feel free to continue.
+
+#### Plugins
+The plugin format is a bit weird if you're used to working with other client mods.
+First of all, some plugins have a "preload" property inside the manifest.json. But what does this mysterious property do? Well, the Plugin Manager is loaded inside both the main and renderer process. The one in the main process will only load all plugins with the preload property set to true. It then calls the preInject() function defined by the plugin.
+This is an incredibly useful feature for compatibility layers, such as [vz-compat](https://github.com/V3L0C1T13S/vz-compat) and [replugged-compat](https://github.com/V3L0C1T13S/replugged-compat), which both only need to reimplement IPC, and then call upon a modified preload.js that doesn't conflict with Rikka's preload.
+
+#### Compilation - A (mostly) unfixable mess
+Developing plugins for Rikka is extremely easy if you're dealing with plain old code, but if you use custom assets stored directly in your plugin, it can get ugly pretty quickly due to TSC not automatically moving them to the output directory.
+Also, unlike other client mods which will use global modules, Rikka instead opted for AOT path translation. For example, `@rikka/API` would get translated to `../../Rikka/API` if you were in `src/plugins/example/index.js`. This becomes messy pretty quickly if you're doing something such as [multifarious plugins](https://github.com/V3L0C1T13S/rkPlugged).
+
+This also makes updating Rikka for the average user an extremely long process, as you have to pull the code, and then recompile it all using `npm run build`, as opposed to just pulling it and then restarting your client.
+
 ## About the Rikka project
 Rikka was created as a true FOSS modification to Discord. Unlike some client mods, Rikka is licensed under a copyleft license, that allow anyone to make their own derivatives of it.
 While most client mods are open source, some are not licensed in such a way that would permit one to create their own version of them.
