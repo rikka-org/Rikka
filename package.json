@@ -56,11 +56,27 @@
     "git-repo-info": "^2.1.1",
     "isomorphic-git": "^1.19.2",
     "lodash": "^4.17.21",
+    "module-alias": "^2.2.2",
     "react": "^18.1.0",
     "react-is": "^18.2.0",
     "sass": "^1.55.0",
     "sucrase": "^3.24.0",
     "sudo-prompt": "^9.2.1",
     "typescript": "^4.7.4"
+  },
+  "_moduleAliases": {
+    "@rikka/api/constants": "src/Rikka/API/Constants",
+    "@rikka/api/electron": "src/Rikka/API/electron",
+    "@rikka/api/injector": "src/Rikka/API/Injector",
+    "@rikka/api/notifications": "src/Rikka/API/Notifications",
+    "@rikka/api/patcher": "src/Rikka/API/patcher", 
+    "@rikka/api/settings": "src/Rikka/API/settings",
+    "@rikka/api/storage": "src/Rikka/API/storage",
+    "@rikka/common": "src/Rikka/Common/entities",
+    "@rikka/components": "src/Rikka/API/components",
+    "@rikka/plugin": "src/Rikka/Common/entities/Plugin.ts",
+    "@rikka/typings": "src/Rikka/API/typings",
+    "@rikka/utils": "src/Rikka/API/Utils",
+    "@rikka/webpack": "src/Rikka/API/webpack"
   }
 }
