@@ -31,7 +31,7 @@
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.6.4",
     "@types/prompt": "^1.1.4",
-    "@types/react": "^18.0.17",
+    "@types/react": "^18.0.25",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
     "coffeescript": "^2.7.0",
